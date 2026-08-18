@@ -1,182 +1,1188 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ink × Yyi · Our Star Bottle</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
-<style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:"Noto Serif SC","PingFang SC",serif;color:#fff;background:#080711}button,textarea{font:inherit}button{cursor:pointer}
-#world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle,#2b2340,#09070e 70%);transition:1s}#fx{position:absolute;inset:0;pointer-events:none}
-.p{position:absolute;border-radius:50%}.rain{width:1px;height:70px;background:linear-gradient(transparent,#d8edff);opacity:.5;animation:rain linear infinite}@keyframes rain{to{transform:translate(-12vw,125vh)}}.ember{width:4px;height:18px;background:#ff6048;box-shadow:0 0 18px #ff3b2b;animation:up linear infinite}@keyframes up{to{transform:translate(-20px,-120vh);opacity:0}}.spark{width:4px;height:4px;background:currentColor;box-shadow:0 0 15px currentColor;animation:sp linear infinite}@keyframes sp{50%{transform:translate(30px,-20px) scale(1.7)}to{transform:translate(-15px,-110vh);opacity:0}}.wave{border:1px solid currentColor;width:18px;height:18px;animation:wa 4s ease-out infinite}@keyframes wa{to{width:70vw;height:70vw;opacity:0;transform:translate(-50%,-50%)}}.wind{width:35vw;height:1px;background:currentColor;animation:wi 1.2s linear infinite}.heart{font-size:18px;color:currentColor;text-shadow:0 0 12px currentColor,0 0 24px currentColor;animation:heart 4s linear infinite}.heart:before{content:"♥"}@keyframes heart{0%{transform:translateY(20vh) scale(.6);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translate(30px,-110vh) scale(1.2);opacity:0}}@keyframes wi{from{transform:translateX(-100vw)}to{transform:translateX(180vw)}}
-#gate{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#09070e;transition:.8s}.hide{opacity:0;pointer-events:none}.intro{text-align:center}.big{font-size:90px;text-shadow:0 0 35px #e8d17d}.intro h1{font-size:38px;font-weight:400;letter-spacing:8px}.intro p{color:#aaa0b1;line-height:2}.btn,.enter{background:#ffffff0b;border:1px solid #d7c58c55;color:#eee5d9;border-radius:99px;padding:11px 20px}
-main{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}.top{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#a69aaa}
-.bottle{position:relative;width:min(440px,90vw);height:min(640px,72vh);filter:drop-shadow(0 35px 60px #000b)}#glass{position:absolute;width:100%;height:100%}#stars{position:absolute;left:16%;right:16%;top:25%;bottom:7%;overflow:hidden;border-radius:40% 40% 18% 18%}.star{position:absolute;width:20px;height:20px;clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);background:var(--c);box-shadow:0 0 12px var(--c),0 0 30px var(--c);cursor:pointer}.trail{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);opacity:.6;animation:tr .55s forwards}@keyframes tr{to{opacity:0;transform:scale(.1)}}
-.stats{display:flex;gap:28px;color:#aaa0b0;font-size:12px}.stats b{color:#e9d68d;font-size:18px;font-weight:400}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
-.panel{position:fixed;inset:0;z-index:8;background:#05040bea;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:16px}.open{display:flex}.card{width:min(650px,95vw);max-height:92vh;overflow:auto;background:#f7eee2;color:#352b31;border-radius:28px;padding:24px}.x{float:right;border:0;background:none;font-size:25px;color:#777}.emotions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.emotion{border:1px solid #d2c4ba;background:#fff;border-radius:14px;padding:8px 2px;font-size:11px}.emotion.on{outline:2px solid var(--c)}.dot{width:22px;height:22px;border-radius:50%;margin:auto auto 5px;background:var(--c);box-shadow:0 0 12px var(--c)}textarea{width:100%;height:300px;margin-top:12px;border:0;outline:0;resize:none;background:repeating-linear-gradient(transparent 0 39px,#ded1c5 40px);font:17px/40px Georgia,"PingFang SC",serif;color:#352b31}.sign{text-align:center;margin:10px}.sign button{border:1px solid #c8bbb2;background:#fff;border-radius:99px;padding:8px 17px}.sign .on{background:#3b2c38;color:#fff}.row{text-align:center}.primary{border:0;border-radius:99px;background:#3b2c38;color:#fff;padding:11px 22px}.note{padding:15px 0;border-bottom:1px solid #ded2c8}.tag{padding:4px 9px;border-radius:99px;color:#fff;font-size:11px}.who{float:right;color:#88747e}.note p{white-space:pre-wrap;line-height:1.8}.status{position:fixed;bottom:15px;right:16px;font-size:10px;color:#a69aaa}
-@media(max-width:520px){.emotions{grid-template-columns:repeat(3,1fr)}.intro h1{font-size:31px}}
-</style></head><body>
-<div id="world"><div id="fx"></div></div><section id="gate"><div class="intro"><div class="big">✦</div><h1>Ink × Yyi</h1><p>我们的星星瓶<br>把想说的话，折成星星。</p><button class="enter" id="enter">打开我们的星星瓶 ✦</button></div></section>
-<main><div class="top"><span id="date"></span><span>OUR STAR BOTTLE</span></div><div class="bottle" id="bottle">
-<svg id="glass" viewBox="0 0 440 640"><defs><linearGradient id="g"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".45" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#9b7ad0" stop-opacity=".18"/></linearGradient><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#e7d19b"/><stop offset="1" stop-color="#725938"/></linearGradient></defs><path d="M158 55h124v78c0 18 48 32 64 65 9 19 13 43 13 73v278c0 48-27 72-75 72H156c-48 0-75-24-75-72V271c0-30 4-54 13-73 16-33 64-47 64-65V55z" fill="url(#g)" stroke="#eee6ff44" stroke-width="3"/><path d="M168 55h104v86c0 18 39 33 54 62 8 16 11 38 11 67v277c0 35-19 53-57 53H160c-38 0-57-18-57-53V270c0-29 3-51 11-67 15-29 54-44 54-62V55z" fill="none" stroke="#fff3" stroke-width="10"/><rect x="149" y="31" width="142" height="30" rx="9" fill="url(#gold)"/><rect x="161" y="21" width="118" height="14" rx="5" fill="#6d5436"/><path d="M112 243c16-44 46-59 66-80M329 279c8 52 8 116 7 181" fill="none" stroke="#fff5" stroke-width="7" stroke-linecap="round"/></svg><div id="stars"></div></div>
-<div class="stats"><span>Ink <b id="ic">0</b> ✦</span><span>Yyi <b id="yc">0</b> ✦</span><span>总计 <b id="tc">0</b></span></div><div class="actions"><button class="btn" id="write">写一封星星信 ✦</button><button class="btn" id="archive">星星档案</button><button class="btn" id="shake">摇一摇 ✦</button></div></main>
-<section class="panel" id="compose"><div class="card"><button class="x" id="close">×</button><h2>把一句话，留下来</h2><div class="emotions" id="emotions"></div><textarea id="text" maxlength="5000" placeholder="写下现在想留下的话……"></textarea><div class="sign"><button class="on" data-who="Ink">Ink 写的</button><button data-who="Yyi">Yyi 写的</button></div><div class="row"><button class="primary" id="fold">折成星星 ✦</button></div></div></section>
-<section class="panel" id="box"><div class="card"><button class="x" id="closeBox">×</button><h2>星星档案</h2><div id="notes"></div></div></section><div class="status" id="status">● 云端连接中</div>
-<script>
-const URL="https://fgerhmqwqflgggnqpuas.supabase.co",KEY="sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi",ROOM="ink-yyi",db=supabase.createClient(URL,KEY);
-const E=[["开心","#f4d24f","happy"],["难过","#78a9df","sad"],["生气","#ef5a4f","angry"],["平静","#79c8b1","calm"],["焦虑","#b58bd8","anxious"],["想念","#8c78e8","miss"]];let ei=0,who="Ink",letters=[],stars=[],last=0,ac=null,lock=0,$=x=>document.getElementById(x);
-const esc=s=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-function status(s){$("status").textContent=s}
-async function cloud(){let r=await db.from("star_letters").select("*").eq("room",ROOM).order("created_at");if(r.error){status("● 云端连接失败");return}letters=r.data||[];render();db.channel("star-bottle").on("postgres_changes",{event:"INSERT",schema:"public",table:"star_letters",filter:"room=eq."+ROOM},p=>{if(!letters.some(x=>x.id===p.new.id)){letters.push(p.new);render()}}).subscribe(s=>status(s==="SUBSCRIBED"?"● 已连接 · 两个人共享同一瓶":"● 云端连接中"))}
-function render(){
-  rebuildStars();
-  $("ic").textContent=letters.filter(x=>x.who==="Ink").length;
-  $("yc").textContent=letters.filter(x=>x.who==="Yyi").length;
-  $("tc").textContent=letters.length;
-}
-function show(n){$("box").classList.add("open");$("notes").innerHTML=`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`}
-function archive(){$("box").classList.add("open");$("notes").innerHTML=letters.length?letters.slice().reverse().map(n=>`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`).join(""):"还没有星星信。"}
-function emo(){ $("emotions").innerHTML=E.map((e,i)=>`<button class="emotion ${i===ei?"on":""}" style="--c:${e[1]}" data-i="${i}"><div class="dot"></div>${e[0]}</button>`).join("");document.querySelectorAll(".emotion").forEach(b=>b.onclick=()=>{ei=+b.dataset.i;emo();fx()})}
-function stop(){ $("fx").innerHTML="";$("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";if(ac)try{ac.close()}catch(e){}ac=null}
-function fx(){stop();let [n,c,k]=E[ei];$("world").style.background={happy:"radial-gradient(circle,#66521d,#0d0a08 68%)",sad:"radial-gradient(circle,#315b82,#07131d 68%)",angry:"radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",calm:"radial-gradient(circle,#27736b,#06181b 68%)",anxious:"radial-gradient(circle,#5d377e,#10091b 68%)",miss:"radial-gradient(circle,#514791,#100c24 68%)"}[k];let cl=k==="sad"?"rain":k==="angry"?"ember":k==="calm"?"wave":k==="anxious"?"wind":"spark";for(let i=0;i<(cl==="rain"?200:cl==="wave"?10:90);i++){let p=document.createElement("i");p.className="p "+cl;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.color=c;p.style.animationDuration=(cl==="rain"?(.35+Math.random()*.55):(2+Math.random()*4))+"s";p.style.animationDelay=-Math.random()*5+"s";$("fx").appendChild(p)}sound(k)}
-let audioMaster=null, audioNodes=[];
-function sound(k){
-  try{
-    const C=window.AudioContext||window.webkitAudioContext;
-    if(!C)return;
-    if(audioMaster){try{audioMaster.close()}catch(e){}}
-    audioMaster=new C();
-    const ctx=audioMaster, master=ctx.createGain();
-    master.gain.value=.12; master.connect(ctx.destination); audioNodes=[master];
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0b0810">
+  <title>只属于我们的星河 ✦ Ink × Yyi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== Reset & Base ===== */
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html, body { width:100%; height:100%; overflow:hidden; font-family:"Noto Serif SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif; background:#0b0810; color:#f0ebe3; -webkit-user-select:none; user-select:none; }
+    textarea { -webkit-user-select:text; user-select:text; }
+    /* ===== 开场 ===== */
+    #intro { position:fixed; inset:0; z-index:300; background:#0b0810; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 1.2s ease; }
+    #intro.hidden { opacity:0; pointer-events:none; }
+    .intro-star { width:12px; height:12px; background:#f5e6d3; border-radius:50%; box-shadow:0 0 40px #f5e6d3; animation:introPulse 2.6s ease-in-out infinite; }
+    @keyframes introPulse { 0%,100%{opacity:0.2;transform:scale(0.6);} 50%{opacity:1;transform:scale(1.2);} }
+    .intro-title { margin-top:32px; font-size:28px; letter-spacing:6px; font-weight:700; color:#f5e6d3; opacity:0; animation:fadeUp 1s ease 0.6s forwards; }
+    .intro-sub { font-size:14px; letter-spacing:4px; color:#b8a08c; margin-top:12px; opacity:0; animation:fadeUp 1s ease 1s forwards; }
+    .intro-quote { font-size:14px; color:#8a7a6a; margin-top:18px; letter-spacing:2px; opacity:0; animation:fadeUp 1s ease 1.4s forwards; }
+    .intro-btn { margin-top:36px; padding:14px 40px; border-radius:60px; border:1.5px solid rgba(245,230,211,0.3); background:transparent; color:#f5e6d3; font-family:inherit; font-size:16px; letter-spacing:4px; cursor:pointer; transition:all 0.4s; opacity:0; animation:fadeUp 1s ease 1.8s forwards; position:relative; overflow:hidden; }
+    .intro-btn:hover { background:rgba(245,230,211,0.08); border-color:#d4a574; box-shadow:0 0 40px rgba(212,165,116,0.15); }
+    @keyframes fadeUp { 0%{opacity:0;transform:translateY(18px);} 100%{opacity:1;transform:translateY(0);} }
 
-    // Every emotion gets an audible soundscape. Sadness additionally gets rain/white noise.
-    const profiles={
-      happy:{tones:[523.25,659.25,783.99],type:"sine",speed:1.6},
-      sad:{tones:[196,246.94,293.66],type:"sine",speed:3.2},
-      angry:{tones:[73.42,92.5,110],type:"sawtooth",speed:.55},
-      calm:{tones:[174.61,220,261.63],type:"sine",speed:5.5},
-      anxious:{tones:[146.83,220,329.63],type:"triangle",speed:1.05},
-      miss:{tones:[261.63,329.63,392],type:"sine",speed:2.6}
-    };
-    const p=profiles[k]||profiles.calm;
-    p.tones.forEach((f,i)=>{
-      const o=ctx.createOscillator(), g=ctx.createGain(), l=ctx.createOscillator(), lg=ctx.createGain();
-      o.type=p.type;o.frequency.value=f;
-      l.frequency.value=p.speed*(.15+i*.07); lg.gain.value=.018;
-      l.connect(lg).connect(g.gain); g.gain.value=.035;
-      o.connect(g).connect(master); o.start(); l.start();
-      audioNodes.push(o,g,l,lg);
-    });
-    if(k==="sad"){
-      const buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate), d=buffer.getChannelData(0);
-      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
-      const n=ctx.createBufferSource(), ng=ctx.createGain(), lp=ctx.createBiquadFilter();
-      n.buffer=buffer;n.loop=true;lp.type="lowpass";lp.frequency.value=2400;ng.gain.value=.085;
-      n.connect(lp).connect(ng).connect(master);n.start();audioNodes.push(n,ng,lp);
+    /* ===== 主场景 ===== */
+    #app { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transition:opacity 1.2s ease; }
+    #app.ready { opacity:1; }
+    .galaxy-bg { position:absolute; inset:0; z-index:0; background:radial-gradient(ellipse 70% 50% at 50% 60%, #1c1428 0%, #0b0810 70%); overflow:hidden; }
+    .galaxy-bg::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 30% at 30% 40%, rgba(140,100,180,0.06), transparent 60%), radial-gradient(ellipse 40% 50% at 80% 70%, rgba(80,120,200,0.04), transparent 50%); pointer-events:none; }
+    .nebula { position:absolute; border-radius:50%; filter:blur(80px); opacity:0.2; animation:nebulaDrift 60s ease-in-out infinite alternate; }
+    .nebula.n1 { width:500px; height:300px; top:10%; left:-10%; background:#5a3a7a; }
+    .nebula.n2 { width:400px; height:400px; bottom:-10%; right:-10%; background:#2a4a6a; animation-delay:-30s; }
+    @keyframes nebulaDrift { 0%{transform:translate(0,0) scale(1);} 100%{transform:translate(30px,20px) scale(1.1);} }
+    .bg-stars { position:absolute; inset:0; z-index:1; pointer-events:none; }
+    .bg-star { position:absolute; background:#fff; border-radius:50%; opacity:0; animation:twinkle var(--dur) ease-in-out infinite; animation-delay:var(--delay); }
+    @keyframes twinkle { 0%,100%{opacity:0.05;transform:scale(0.7);} 50%{opacity:var(--max-op,0.5);transform:scale(1.1);} }
+
+    /* ===== 顶部 ===== */
+    .top-bar { position:fixed; top:max(16px, env(safe-area-inset-top)); left:0; right:0; z-index:20; display:flex; justify-content:space-between; padding:0 20px; pointer-events:none; }
+    .top-bar-left { display:flex; flex-direction:column; }
+    .brand { font-size:14px; letter-spacing:3px; color:#d4c0b0; font-weight:500; text-shadow:0 0 20px rgba(0,0,0,0.6); }
+    .brand small { font-size:11px; color:#8a7a6a; letter-spacing:2px; margin-left:6px; }
+    .top-stats { font-size:12px; color:#8a7a6a; letter-spacing:1px; text-shadow:0 0 20px rgba(0,0,0,0.6); }
+    .top-stats span { color:#d4c0b0; }
+
+    /* ===== 瓶子（大圆筒简洁版） ===== */
+    .bottle-wrapper { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; margin-top:-10px; }
+    .bottle-container { width:min(380px, 85vw); cursor:pointer; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); animation:floatBottle 7s ease-in-out infinite; filter:drop-shadow(0 16px 60px rgba(0,0,0,0.7)); }
+    .bottle-container:active { transform:scale(0.96); }
+    @keyframes floatBottle { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-10px) rotate(0.5deg);} }
+    .bottle-container.jiggle { animation:bottleJiggle 0.5s ease, floatBottle 7s ease-in-out 0.5s infinite; }
+    .bottle-container.big-shake { animation:bottleShake 0.8s ease-in-out; }
+    @keyframes bottleJiggle { 0%,100%{transform:rotate(0deg) translateY(0);} 20%{transform:rotate(-3deg) translateY(-5px);} 60%{transform:rotate(3deg) translateY(-4px);} 80%{transform:rotate(-1.5deg) translateY(0);} }
+    @keyframes bottleShake { 0%,100%{transform:rotate(0deg) translate(0,0);} 15%{transform:rotate(-7deg) translate(-10px,4px);} 35%{transform:rotate(7deg) translate(10px,-4px);} 55%{transform:rotate(-6deg) translate(-8px,3px);} 75%{transform:rotate(6deg) translate(8px,-3px);} }
+    .bottle-svg { width:100%; height:auto; display:block; }
+
+    /* ===== 星星计数 ===== */
+    .star-count-wrap { margin-top:18px; display:flex; align-items:center; gap:28px; z-index:2; flex-wrap:wrap; justify-content:center; }
+    .star-count { font-size:16px; color:#b8a08c; letter-spacing:2px; }
+    .star-count strong { color:#f5e6d3; font-size:22px; font-weight:700; }
+    .star-owner { display:flex; gap:18px; font-size:14px; color:#8a7a6a; }
+    .star-owner span { color:#d4c0b0; }
+    .star-owner .ink { color:#e8c89e; }
+    .star-owner .yyi { color:#a8c8e8; }
+
+    /* ===== 底部菜单 ===== */
+    .bottom-menu { position:fixed; bottom:max(28px, env(safe-area-inset-bottom)); left:0; right:0; z-index:20; display:flex; justify-content:center; gap:18px; flex-wrap:wrap; padding:0 16px; }
+    .menu-item { display:flex; align-items:center; gap:8px; padding:10px 24px; border-radius:40px; border:1px solid rgba(245,230,211,0.08); background:rgba(11,8,16,0.6); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); color:#d4c0b0; font-size:14px; letter-spacing:1px; cursor:pointer; transition:all 0.3s; }
+    .menu-item:hover { background:rgba(245,230,211,0.06); border-color:rgba(212,165,116,0.2); color:#f5e6d3; transform:translateY(-2px); }
+    .menu-item:active { transform:scale(0.94); }
+    .menu-item .icon { font-size:17px; }
+    .menu-item.primary { background:rgba(212,165,116,0.12); border-color:rgba(212,165,116,0.2); color:#f5e6d3; }
+    .menu-item.primary:hover { background:rgba(212,165,116,0.2); border-color:rgba(212,165,116,0.35); }
+    .shake-trigger { display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:40px; border:1px solid rgba(245,230,211,0.06); background:rgba(11,8,16,0.5); backdrop-filter:blur(10px); color:#b8a08c; font-size:14px; cursor:pointer; transition:all 0.3s; }
+    .shake-trigger:hover { border-color:rgba(212,165,116,0.15); color:#f5e6d3; transform:translateY(-2px); }
+
+    /* ===== 模态框 ===== */
+    .modal-overlay { position:fixed; inset:0; z-index:100; background:rgba(11,8,16,0.75); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+    .modal-overlay.active { opacity:1; pointer-events:auto; }
+    .modal-card { width:min(480px, 92vw); max-height:90vh; background:linear-gradient(145deg, #1a1524, #130f1a); border-radius:28px; border:1px solid rgba(245,230,211,0.08); padding:24px 22px 20px; transform:scale(0.92) translateY(20px); transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1); overflow-y:auto; }
+    .modal-overlay.active .modal-card { transform:scale(1) translateY(0); }
+    .modal-card::-webkit-scrollbar { width:4px; }
+    .modal-card::-webkit-scrollbar-thumb { background:rgba(212,165,116,0.2); border-radius:4px; }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+    .modal-header h2 { font-size:18px; letter-spacing:3px; font-weight:500; color:#f5e6d3; }
+    .close-btn { width:32px; height:32px; border-radius:50%; border:none; background:rgba(245,230,211,0.06); color:#b8a08c; font-size:18px; cursor:pointer; transition:all 0.2s; }
+    .close-btn:hover { background:rgba(245,230,211,0.12); }
+    .emotion-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:18px; }
+    .emo-btn { display:flex; flex-direction:column; align-items:center; gap:4px; padding:12px 4px; border-radius:16px; border:2px solid rgba(245,230,211,0.08); background:rgba(255,255,255,0.02); cursor:pointer; transition:all 0.25s; }
+    .emo-btn .emoji { font-size:22px; }
+    .emo-btn .label { font-size:12px; color:#8a7a6a; }
+    .emo-btn.selected { border-color:var(--emo-color); background:rgba(255,255,255,0.06); box-shadow:0 0 30px rgba(0,0,0,0.2); }
+    .emo-btn.selected .label { color:#f5e6d3; }
+    .letter-textarea { width:100%; min-height:120px; background:rgba(255,255,255,0.04); border:1px solid rgba(245,230,211,0.06); border-radius:16px; padding:14px; font-family:inherit; font-size:15px; color:#f0ebe3; resize:vertical; outline:none; line-height:1.8; }
+    .letter-textarea::placeholder { color:#5a4a3a; }
+    .letter-textarea:focus { border-color:rgba(212,165,116,0.2); }
+    .signature-row { display:flex; gap:14px; margin:14px 0; justify-content:center; }
+    .sign-btn { padding:8px 22px; border-radius:40px; border:1.5px solid rgba(245,230,211,0.08); background:transparent; color:#8a7a6a; font-family:inherit; font-size:14px; letter-spacing:1px; cursor:pointer; transition:all 0.3s; }
+    .sign-btn.active { border-color:var(--sig-color); background:rgba(255,255,255,0.04); color:#f5e6d3; box-shadow:0 0 30px rgba(212,165,116,0.06); }
+    .sign-btn.ink.active { --sig-color:#e8c89e; }
+    .sign-btn.yyi.active { --sig-color:#a8c8e8; }
+    .fold-action { width:100%; padding:14px; border:none; border-radius:60px; background:linear-gradient(135deg, #d4a574, #b08860); color:#0b0810; font-family:inherit; font-size:16px; letter-spacing:3px; cursor:pointer; transition:all 0.3s; font-weight:700; }
+    .fold-action:disabled { opacity:0.25; cursor:not-allowed; }
+    .archive-grid { display:flex; flex-direction:column; gap:10px; max-height:50vh; overflow-y:auto; padding-right:4px; }
+    .archive-grid::-webkit-scrollbar { width:3px; }
+    .archive-grid::-webkit-scrollbar-thumb { background:rgba(212,165,116,0.15); border-radius:3px; }
+    .archive-item { display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:16px; background:rgba(255,255,255,0.02); border-left:3px solid var(--emo-color); transition:all 0.2s; }
+    .archive-item .star-icon { width:20px; height:20px; flex-shrink:0; }
+    .archive-item .info { flex:1; }
+    .archive-item .info .date { font-size:12px; color:#6a5a4a; }
+    .archive-item .info .preview { font-size:13px; color:#d4c0b0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:160px; }
+    .archive-item .info .owner { font-size:11px; color:#8a7a6a; }
+    .archive-item .badge { font-size:11px; padding:2px 10px; border-radius:20px; background:var(--emo-color); color:#0b0810; }
+    .filter-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
+    .filter-btn { padding:4px 14px; border-radius:20px; border:1px solid rgba(245,230,211,0.06); background:transparent; color:#8a7a6a; font-size:12px; cursor:pointer; transition:all 0.2s; }
+    .filter-btn.active { border-color:rgba(212,165,116,0.2); color:#f5e6d3; background:rgba(212,165,116,0.06); }
+    /* 情绪特效层（增强版） */
+    .emotion-effect { position:fixed; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity 0.8s ease; }
+    .emotion-effect.active { opacity:1; }
+    .rain-drop { position:absolute; width:1.5px; background:rgba(180,210,240,0.25); animation:rainFall linear infinite; }
+    @keyframes rainFall { 0%{transform:translateY(-20vh) translateX(0) rotate(15deg);} 100%{transform:translateY(120vh) translateX(40px) rotate(15deg);} }
+    .fire-particle { position:absolute; border-radius:50%; background:#e74c3c; box-shadow:0 0 18px #e74c3c; animation:fireRise linear infinite; }
+    @keyframes fireRise { 0%{opacity:0;transform:translateY(0) scale(0.3) rotate(0deg);} 30%{opacity:1;} 100%{opacity:0;transform:translateY(-80vh) scale(1.4) rotate(720deg);} }
+    .heart-float { position:absolute; font-size:26px; animation:heartUp linear infinite; opacity:0; }
+    @keyframes heartUp { 0%{opacity:0;transform:translateY(0) scale(0.5);} 20%{opacity:0.8;} 80%{opacity:0.8;} 100%{opacity:0;transform:translateY(-60vh) scale(1.3);} }
+    .wave-ring { position:absolute; border-radius:50%; border:2px solid rgba(72,201,176,0.2); animation:waveExpand 4s ease-out infinite; }
+    @keyframes waveExpand { 0%{width:0;height:0;opacity:0.6;} 100%{width:200px;height:200px;opacity:0;} }
+    .wind-line { position:absolute; height:1.5px; background:rgba(142,68,173,0.2); animation:windLine 2s linear infinite; }
+    @keyframes windLine { 0%{transform:translateX(-80px) rotate(var(--rot,0deg));opacity:0;} 20%{opacity:0.6;} 80%{opacity:0.6;} 100%{transform:translateX(80vw) rotate(var(--rot,0deg));opacity:0;} }
+    .happy-dust { position:absolute; border-radius:50%; background:rgba(244,208,63,0.5); box-shadow:0 0 12px rgba(244,208,63,0.3); animation:happyDust 3s ease-in-out infinite; }
+    @keyframes happyDust { 0%{opacity:0;transform:translate(0,0) scale(0.3);} 50%{opacity:0.8;} 100%{opacity:0;transform:translate(var(--tx,30px),var(--ty,-50px)) scale(1.5);} }
+
+    @media (max-width:480px) {
+      .intro-title { font-size:22px; letter-spacing:4px; }
+      .bottle-container { width:min(280px, 80vw); }
+      .bottom-menu { gap:12px; }
+      .menu-item { padding:6px 14px; font-size:12px; }
+      .modal-card { padding:18px 16px; }
+      .emotion-grid { grid-template-columns:repeat(3,1fr); }
+      .top-bar .brand { font-size:12px; }
     }
-    if(k==="happy"||k==="miss"){
-      const noise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate),d=noise.getChannelData(0);
-      for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.08;
-      const n=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();
-      n.buffer=noise;n.loop=true;f.type="highpass";f.frequency.value=k==="happy"?1800:900;g.gain.value=.035;
-      n.connect(f).connect(g).connect(master);n.start();audioNodes.push(n,g,f);
+  </style>
+</head>
+<body>
+  <!-- ===== 开场 ===== -->
+  <div id="intro">
+    <div class="intro-star"></div>
+    <div class="intro-title">✦ 只属于我们的星河</div>
+    <div class="intro-sub">Ink × Yyi</div>
+    <div class="intro-quote">把想说的话，变成一颗星星，留在我们的宇宙里。</div>
+    <button class="intro-btn" id="enterBtn">✦ 进入星河</button>
+  </div>
+
+  <!-- ===== 主应用 ===== -->
+  <div id="app">
+    <div class="galaxy-bg">
+      <div class="nebula n1"></div>
+      <div class="nebula n2"></div>
+      <div class="bg-stars" id="bgStars"></div>
+    </div>
+    <div class="emotion-effect" id="emotionEffect"></div>
+
+    <div class="top-bar">
+      <div class="top-bar-left">
+        <div class="brand">只属于我们的星河 <small>Ink × Yyi</small></div>
+      </div>
+      <div class="top-stats">✦ <span id="totalStars">0</span> 颗星星</div>
+    </div>
+
+    <!-- 大圆筒玻璃瓶 -->
+    <div class="bottle-wrapper">
+      <div class="bottle-container" id="bottleContainer">
+        <svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg" class="bottle-svg">
+          <defs>
+            <linearGradient id="glassGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(200,230,250,0.02)"/>
+              <stop offset="20%" stop-color="rgba(220,245,255,0.18)"/>
+              <stop offset="80%" stop-color="rgba(220,245,255,0.10)"/>
+              <stop offset="100%" stop-color="rgba(200,230,250,0.02)"/>
+            </linearGradient>
+            <linearGradient id="corkGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#d4b89a"/><stop offset="50%" stop-color="#b09072"/><stop offset="100%" stop-color="#90725a"/>
+            </linearGradient>
+            <linearGradient id="metalRing" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#d0c0b0"/><stop offset="50%" stop-color="#b0a090"/><stop offset="100%" stop-color="#908070"/>
+            </linearGradient>
+            <radialGradient id="bottomShadow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="rgba(0,0,0,0.15)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+            </radialGradient>
+            <clipPath id="bottleClip">
+              <rect x="50" y="70" width="180" height="200" rx="20"/>
+            </clipPath>
+          </defs>
+          <ellipse cx="140" cy="278" rx="85" ry="10" fill="rgba(0,0,0,0.30)"/>
+          <rect x="112" y="8" width="56" height="10" rx="4" fill="url(#metalRing)" stroke="#f0e0d0" stroke-width="0.4"/>
+          <rect x="118" y="18" width="44" height="20" rx="4" fill="url(#corkGrad)"/>
+          <rect x="118" y="18" width="44" height="4" rx="4" fill="rgba(0,0,0,0.08)"/>
+          <path d="M 116,38 L 116,58 Q 116,66 124,72 L 56,72 L 56,270 Q 56,280 140,280 Q 224,280 224,270 L 224,72 L 156,72 Q 164,66 164,58 L 164,38 Z" fill="url(#glassGrad)" stroke="rgba(180,210,230,0.10)" stroke-width="1.2"/>
+          <ellipse cx="140" cy="38" rx="24" ry="3" fill="rgba(180,210,230,0.04)" stroke="rgba(180,210,230,0.08)" stroke-width="0.8"/>
+          <g clip-path="url(#bottleClip)" id="bottleStars"></g>
+          <path d="M 68,90 L 68,250" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <path d="M 212,100 L 212,230" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <ellipse cx="140" cy="268" rx="40" ry="4" fill="rgba(255,255,255,0.04)"/>
+          <!-- 发光滤镜 -->
+          <filter id="glowTrail" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </svg>
+      </div>
+      <div class="star-count-wrap">
+        <div class="star-count">✦ <strong id="starCount">0</strong> 颗星星</div>
+        <div class="star-owner"><span class="ink">Ink</span> <span id="inkCount">0</span> · <span class="yyi">Yyi</span> <span id="yyiCount">0</span></div>
+      </div>
+    </div>
+
+    <div class="bottom-menu">
+      <div class="menu-item primary" id="writeBtn"><span class="icon">✎</span> 写星星信</div>
+      <div class="menu-item" id="archiveBtn"><span class="icon">✦</span> 星河档案</div>
+      <div class="shake-trigger" id="shakeBtn"><span>✦</span> 摇一摇星河</div>
+    </div>
+  </div>
+
+  <!-- ===== 写信模态框 ===== -->
+  <div class="modal-overlay" id="writeModal">
+    <div class="modal-card">
+      <div class="modal-header"><h2>✎ 写一封星星信</h2><button class="close-btn" id="closeWrite">✕</button></div>
+      <div class="emotion-grid" id="emotionGrid"></div>
+      <textarea class="letter-textarea" id="letterText" placeholder="把想说的话写下来……会变成一颗星星 ✦" maxlength="5000"></textarea>
+      <div class="signature-row">
+        <button class="sign-btn ink" data-owner="Ink">Ink</button>
+        <button class="sign-btn yyi" data-owner="Yyi">Yyi</button>
+      </div>
+      <button class="fold-action" id="foldBtn" disabled>✦ 折成星星</button>
+    </div>
+  </div>
+
+  <!-- ===== 档案模态框 ===== -->
+  <div class="modal-overlay" id="archiveModal">
+    <div class="modal-card">
+      <div class="modal-header"><h2>✦ 星河档案</h2><button class="close-btn" id="closeArchive">✕</button></div>
+      <div class="filter-row" id="filterRow"></div>
+      <div class="archive-grid" id="archiveGrid"></div>
+    </div>
+  </div>
+
+  <script type="module">
+    // ============================================================
+    // Supabase 配置（已填入您的项目信息）
+    // ============================================================
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+    const SUPABASE_URL = 'https://fgerhmqwqflgggnqupas.supabase.co'
+    const SUPABASE_ANON_KEY = 'sb_publishable_gkiY07ycZktk7tzeEfjT2g_C6hjm.'
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+    // ============================================================
+    // 数据状态
+    // ============================================================
+    let letters = []
+    const EMOTIONS = [
+      { id:'happy', label:'开心', color:'#F4D03F', emoji:'✨' },
+      { id:'sad', label:'难过', color:'#5DADE2', emoji:'🌧️' },
+      { id:'angry', label:'生气', color:'#E74C3C', emoji:'🔥' },
+      { id:'calm', label:'平静', color:'#48C9B0', emoji:'🌊' },
+      { id:'anxious', label:'焦虑', color:'#8E44AD', emoji:'🌀' },
+      { id:'miss', label:'想念', color:'#E67E9A', emoji:'💜' }
+    ]
+    function getEmo(id) { return EMOTIONS.find(e=>e.id===id) || EMOTIONS[0] }
+
+    // ============================================================
+    // 离线缓存
+    // ============================================================
+    function cacheLetters(data) {
+      try { localStorage.setItem('offline_letters', JSON.stringify(data)) } catch(e) {}
     }
-  }catch(e){console.warn("audio",e)}
-}
-function stop(){
-  $("fx").innerHTML="";
-  $("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";
-  if(audioMaster){try{audioMaster.close()}catch(e){}audioMaster=null}
-}
-async function fold(){let t=$("text").value.trim();if(!t)return;let e=E[ei],r=await db.from("star_letters").insert({room:ROOM,text:t,emotion:e[0],color:e[1],who}).select().single();if(r.error){status("● 保存失败");return}if(r.data&&!letters.some(x=>x.id===r.data.id))letters.push(r.data);$("text").value="";closeWrite();render()}
-function openWrite(){$("compose").classList.add("open");emo();fx();$("text").focus()}function closeWrite(){$("compose").classList.remove("open");stop()}
-let engine=null,bodies=[],runner=null,physicsStarted=false,lastTrail=0;
-function initPhysics(){
-  if(engine)return;
-  const {Engine,World,Bodies,Runner}=Matter;
-  engine=Engine.create({enableSleeping:false});
-  engine.gravity.y=.38;
-  const c=$("stars"),w=c.clientWidth,h=c.clientHeight,wall=18;
-  const opt={isStatic:true,restitution:.88,friction:.04};
-  bodies=[
-    Bodies.rectangle(w/2,-wall/2,w,wall,opt),
-    Bodies.rectangle(w/2,h+wall/2,w,wall,opt),
-    Bodies.rectangle(-wall/2,h/2,wall,h,opt),
-    Bodies.rectangle(w+wall/2,h/2,wall,h,opt)
-  ];
-  World.add(engine,bodies);
-  runner=Runner.create();
-  Runner.run(runner,engine);
-  physicsStarted=true;
-}
-function updateWalls(){
-  if(!engine)return;
-  const {Body}=Matter,c=$("stars"),w=c.clientWidth,h=c.clientHeight;
-  const wall=18,ws=bodies.filter(b=>b.isStatic);
-  if(ws.length!==4)return;
-  Body.setPosition(ws[0],{x:w/2,y:-wall/2});
-  Body.setPosition(ws[1],{x:w/2,y:h+wall/2});
-  Body.setPosition(ws[2],{x:-wall/2,y:h/2});
-  Body.setPosition(ws[3],{x:w+wall/2,y:h/2});
-  Body.setVertices(ws[0],Matter.Bodies.rectangle(w/2,-wall/2,w,wall).vertices);
-  Body.setVertices(ws[1],Matter.Bodies.rectangle(w/2,h+wall/2,w,wall).vertices);
-  Body.setVertices(ws[2],Matter.Bodies.rectangle(-wall/2,h/2,wall,h).vertices);
-  Body.setVertices(ws[3],Matter.Bodies.rectangle(w+wall/2,h/2,wall,h).vertices);
-}
-function rebuildMatter(){
-  if(!engine)return;
-  const {World,Bodies,Body}=Matter,c=$("stars"),w=c.clientWidth,h=c.clientHeight;
-  bodies.filter(b=>!b.isStatic).forEach(b=>World.remove(engine.world,b));
-  bodies=bodies.filter(b=>b.isStatic);
-  stars.forEach(s=>{
-    let x=(s.x/100)*w,y=(s.y/100)*h;
-    x=Math.max(12,Math.min(w-12,x));y=Math.max(12,Math.min(h-12,y));
-    const b=Bodies.circle(x,y,10,{restitution:.9,friction:.012,frictionAir:.004,density:.006,slop:.01});
-    b.starId=s.id;b.color=s.color;
-    Body.setVelocity(b,{x:(Math.random()-.5)*.7,y:(Math.random()-.5)*.45});
-    Body.setAngularVelocity(b,(Math.random()-.5)*.08);
-    bodies.push(b);World.add(engine.world,b);
-  });
-}
-function syncMatterStars(){
-  if(!engine){requestAnimationFrame(syncMatterStars);return}
-  const c=$("stars"),w=c.clientWidth,h=c.clientHeight;
-  const map=new Map([...c.querySelectorAll('.star')].map(el=>[String(el.dataset.id),el]));
-  bodies.filter(b=>!b.isStatic).forEach(b=>{
-    const el=map.get(String(b.starId));if(!el)return;
-    const x=b.position.x/w*100,y=b.position.y/h*100;
-    el.style.left=x+'%';el.style.top=y+'%';el.style.transform=`translate(-50%,-50%) rotate(${b.angle}rad)`;
-    const speed=Math.hypot(b.velocity.x,b.velocity.y);
-    if(speed>.45 && performance.now()-lastTrail>24 && Math.random()<.35){
-      lastTrail=performance.now();const q=document.createElement('i');q.className='trail';q.style.setProperty('--c',b.color);q.style.left=x+'%';q.style.top=y+'%';c.appendChild(q);setTimeout(()=>q.remove(),560);
+    function getCachedLetters() {
+      try { return JSON.parse(localStorage.getItem('offline_letters') || '[]') } catch(e) { return [] }
     }
-  });
-  requestAnimationFrame(syncMatterStars);
-}
-function shake(p=1){
-  if(!engine)return;
-  const {Body}=Matter;
-  bodies.filter(b=>!b.isStatic).forEach(b=>{
-    Body.applyForce(b,b.position,{x:(Math.random()-.5)*.055*p,y:-((.035+Math.random()*.045)*p)});
-    Body.setAngularVelocity(b,(Math.random()-.5)*.32*p);
-  });
-  $("bottle").animate([{transform:'translateX(0) rotate(0deg)'},{transform:'translateX(-14px) rotate(-4deg)'},{transform:'translateX(16px) rotate(4deg)'},{transform:'translateX(-9px) rotate(-2deg)'},{transform:'translateX(0) rotate(0deg)'}],{duration:950,easing:'cubic-bezier(.2,.8,.2,1)'});
-  if(navigator.vibrate)navigator.vibrate([45,30,70]);
-}
-function rebuildStars(){
-  const old=new Map(stars.map(s=>[String(s.id),s]));
-  stars=letters.map(n=>old.get(String(n.id))||{id:n.id,color:n.color,x:40+Math.random()*25,y:68+Math.random()*20});
-  const layer=$("stars");layer.innerHTML='';
-  letters.forEach(n=>{const el=document.createElement('i');el.className='star';el.style.setProperty('--c',n.color);el.dataset.id=n.id;el.title=n.emotion+' · '+n.who;el.onclick=()=>show(n);layer.appendChild(el)});
-  if(engine)rebuildMatter();
-}
-function physicsFrame(){syncMatterStars()}
-$("enter").onclick=()=>{$("gate").classList.add("hide");initPhysics();cloud();};
-$("write").onclick=openWrite;
-$("close").onclick=closeWrite;
-$("fold").onclick=fold;
-$("archive").onclick=archive;
-$("closeBox").onclick=()=>$("box").classList.remove("open");
-$("shake").onclick=()=>shake();
-document.querySelectorAll(".sign button").forEach(b=>b.onclick=()=>{who=b.dataset.who;document.querySelectorAll(".sign button").forEach(x=>x.classList.toggle("on",x===b))});
-window.addEventListener("resize",()=>{if(engine)updateWalls()});
-let motionLast=0;
-window.addEventListener("devicemotion",e=>{const a=e.accelerationIncludingGravity;if(!a)return;const now=Date.now();if(now-motionLast<180)return;motionLast=now;if(Math.hypot(a.x||0,a.y||0,a.z||0)>23)shake(.8)});
-$("date").textContent=new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"});
-</script></body></html>
+    function cachePending(letter) {
+      try {
+        const q = JSON.parse(localStorage.getItem('pending_letters') || '[]')
+        q.push(letter)
+        localStorage.setItem('pending_letters', JSON.stringify(q))
+      } catch(e) {}
+    }
+    function getPending() {
+      try { return JSON.parse(localStorage.getItem('pending_letters') || '[]') } catch(e) { return [] }
+    }
+    function clearPending() {
+      try { localStorage.removeItem('pending_letters') } catch(e) {}
+    }
+
+    // ============================================================
+    // 数据操作
+    // ============================================================
+    async function loadLetters() {
+      try {
+        const { data, error } = await supabase
+          .from('letters')
+          .select('*')
+          .order('timestamp', { ascending: true })
+        if (error) throw error
+        letters = data || []
+        cacheLetters(letters)
+        await syncPending()
+        return
+      } catch (err) {
+        console.warn('加载失败，使用缓存', err)
+        letters = getCachedLetters()
+      } finally {
+        initPhysics()
+        updateStats()
+        renderArchive()
+      }
+    }
+
+    async function syncPending() {
+      const pending = getPending()
+      if (pending.length === 0) return
+      let success = []
+      for (let p of pending) {
+        try {
+          const { data, error } = await supabase.from('letters').insert([p]).select()
+          if (error) throw error
+          if (data && data[0]) success.push(data[0])
+        } catch (e) {
+          console.warn('同步离线信件失败', p, e)
+        }
+      }
+      if (success.length) {
+        const ids = new Set(letters.map(l=>l.id))
+        success.forEach(s => { if (!ids.has(s.id)) { letters.push(s); ids.add(s.id) } })
+        cacheLetters(letters)
+        const remain = getPending().filter(p => !success.some(s => s.id === p.id))
+        if (remain.length) localStorage.setItem('pending_letters', JSON.stringify(remain))
+        else clearPending()
+        initPhysics()
+        updateStats()
+        renderArchive()
+      }
+    }
+
+    async function saveLetterToSupabase(letter) {
+      try {
+        const { data, error } = await supabase.from('letters').insert([letter]).select()
+        if (error) throw error
+        if (data && data[0]) return data[0]
+        return null
+      } catch (err) {
+        console.warn('保存失败，入离线队列', err)
+        cachePending(letter)
+        return letter
+      }
+    }
+
+    // ============================================================
+    // 实时订阅
+    // ============================================================
+    let subscription = null
+    function subscribeLetters() {
+      if (subscription) return
+      subscription = supabase
+        .channel('letters-channel')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'letters'
+        }, payload => {
+          const newLetter = payload.new
+          if (!letters.find(l => l.id === newLetter.id)) {
+            letters.push(newLetter)
+            cacheLetters(letters)
+            addNewStar(newLetter)
+            updateStats()
+            if (document.getElementById('archiveModal').classList.contains('active')) {
+              renderArchive()
+            }
+          }
+        })
+        .subscribe()
+    }
+
+    // ============================================================
+    // 星星物理（适配大圆筒瓶，强化防穿模）
+    // ============================================================
+    let activeStars = [], pendingStars = [], physRunning = false, physRaf = null, physLast = 0
+    const BOTTLE = {
+      left: 60,
+      right: 220,
+      mouthY: 76,
+      bottomY: function(x) {
+        const cx = 140, cy = 270, ry = 8
+        const t = (x - cx) / 80
+        return cy + ry * (1 - Math.sqrt(1 - t * t))
+      }
+    }
+    const PHYS = { gravity: 620, restitution: 0.40, friction: 0.88, drag: 0.992 }
+    let releaseAccum = 0
+    const TRAIL_LENGTH = 12
+
+    function starColorsFromEmotion(emoId) {
+      const emo = getEmo(emoId)
+      const base = emo.color
+      return { base, light: base+'99', dark: base+'cc', top: '#fff4e0' }
+    }
+
+    function makeStarData(letter, entering) {
+      const sz = Math.min(24, Math.max(14, 24 - letters.length * 0.05))
+      return {
+        x: entering ? (120 + Math.random() * 40) : (120 + (Math.random() - 0.5) * 40),
+        y: entering ? 20 : 20,
+        vx: (Math.random() - 0.5) * 60,
+        vy: 0,
+        r: sz / 2,
+        rot: Math.random() * 360,
+        rotV: (Math.random() - 0.5) * 150,
+        scale: sz / 100,
+        colors: starColorsFromEmotion(letter.emotion),
+        letterId: letter.id,
+        el: null,
+        trail: []
+      }
+    }
+
+    function buildStarDom(data) {
+      const container = document.getElementById('bottleStars')
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      g.setAttribute('class', 'star-group')
+      const trailG = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      trailG.setAttribute('class', 'trail-layer')
+      trailG.setAttribute('filter', 'url(#glowTrail)')
+      const inner = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+      inner.setAttribute('class', 'star-inner')
+      const c = data.colors
+      const faces = `<path d="M 50,8 L 61.8,33.8 L 89.9,37.1 L 69.0,56.2 L 74.7,83.9 L 50,70 L 25.3,83.9 L 31.0,56.2 L 10.1,37.1 L 38.2,33.8 Z" fill="${c.base}" stroke="${c.dark}" stroke-width="1.4" stroke-linejoin="round"/>
+        <polygon points="50,30.5 61.8,33.8 50,8" fill="${c.top}"/>
+        <polygon points="61.8,33.8 89.9,37.1 50,30.5" fill="${c.light}"/>
+        <polygon points="89.9,37.1 69.0,56.2 50,30.5" fill="${c.dark}"/>
+        <polygon points="69.0,56.2 50,70 50,30.5" fill="${c.light}"/>
+        <polygon points="50,70 25.3,83.9 50,30.5" fill="${c.dark}"/>
+        <polygon points="25.3,83.9 31.0,56.2 50,30.5" fill="${c.light}"/>
+        <polygon points="31.0,56.2 10.1,37.1 50,30.5" fill="${c.dark}"/>
+        <polygon points="10.1,37.1 38.2,33.8 50,30.5" fill="${c.light}"/>
+        <polygon points="38.2,33.8 50,8 50,30.5" fill="${c.dark}"/>
+        <path d="M 50,30.5 L 50,8 M 65.96,42.14 L 89.9,37.1 M 59.88,60.86 L 74.7,83.9 M 40.12,60.86 L 25.3,83.9 M 34.04,42.14 L 10.1,37.1" stroke="rgba(255,255,255,0.15)" stroke-width="0.8" fill="none"/>`
+      inner.innerHTML = faces
+      g.appendChild(trailG)
+      g.appendChild(inner)
+      container.appendChild(g)
+      data.el = g
+      data.trailEl = trailG
+      for (let i = 0; i < TRAIL_LENGTH; i++) {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle')
+        circle.setAttribute('r', '0')
+        circle.setAttribute('fill', c.base)
+        circle.setAttribute('opacity', '0')
+        trailG.appendChild(circle)
+      }
+      data.trailDots = trailG.querySelectorAll('circle')
+    }
+
+    function applyBounds(s, dt, REST, FRIC, G) {
+      const r = s.r
+      if (s.y < 76) {
+        let xl = 116 - 60 * Math.max(0, Math.min(1, (s.y - 38) / 38))
+        let xr = 164 + 60 * Math.max(0, Math.min(1, (s.y - 38) / 38))
+        if (s.x < xl + r) { s.x = xl + r; if (s.vx < 0) s.vx = -s.vx * REST }
+        if (s.x > xr - r) { s.x = xr - r; if (s.vx > 0) s.vx = -s.vx * REST }
+      }
+      if (s.x < BOTTLE.left + r) { s.x = BOTTLE.left + r; if (s.vx < 0) s.vx = -s.vx * REST }
+      if (s.x > BOTTLE.right - r) { s.x = BOTTLE.right - r; if (s.vx > 0) s.vx = -s.vx * REST }
+      const by = BOTTLE.bottomY(s.x)
+      if (s.y + r > by) {
+        s.y = by - r
+        if (s.vy > 15) { s.vy = -s.vy * REST; s.rotV += (Math.random() - 0.5) * 80 }
+        else { s.vy = 0; s.vx *= 0.85 }
+        s.vx *= FRIC
+        if (Math.abs(s.vx) < 2) s.vx = 0
+      }
+      if (s.y - r < BOTTLE.mouthY) { s.y = BOTTLE.mouthY + r; if (s.vy < 0) s.vy = 0 }
+      if (s.x < 50) s.x = 50
+      if (s.x > 230) s.x = 230
+      if (s.y < 10) s.y = 10
+      if (s.y > 275) s.y = 275
+    }
+
+    function physicsStep(dt) {
+      releaseAccum += dt * 40
+      let cnt = Math.floor(releaseAccum)
+      releaseAccum -= cnt
+      while (cnt-- && pendingStars.length) {
+        const ps = pendingStars.shift()
+        activeStars.push(ps)
+        buildStarDom(ps)
+      }
+      const n = activeStars.length
+      if (!n) return
+      const G = PHYS.gravity, REST = PHYS.restitution, FRIC = PHYS.friction
+      for (let i = 0; i < n; i++) {
+        const s = activeStars[i]
+        s.vy += G * dt
+        s.vx *= Math.pow(PHYS.drag, dt * 60)
+        s.vy *= Math.pow(PHYS.drag, dt * 60)
+        s.x += s.vx * dt
+        s.y += s.vy * dt
+        s.rot += s.rotV * dt
+        s.rotV *= Math.pow(0.985, dt * 60)
+        applyBounds(s, dt, REST, FRIC, G)
+      }
+      for (let iter = 0; iter < 10; iter++) {
+        for (let i = 0; i < n; i++) {
+          const a = activeStars[i]
+          for (let j = i + 1; j < n; j++) {
+            const b = activeStars[j]
+            const dx = b.x - a.x, dy = b.y - a.y
+            const minD = a.r + b.r
+            const d2 = dx * dx + dy * dy
+            if (d2 >= minD * minD || d2 < 0.0001) continue
+            const d = Math.sqrt(d2)
+            const nx = dx / d, ny = dy / d
+            const overlap = minD - d
+            const wa = b.r / (a.r + b.r), wb = a.r / (a.r + b.r)
+            a.x -= nx * overlap * wa
+            a.y -= ny * overlap * wa
+            b.x += nx * overlap * wb
+            b.y += ny * overlap * wb
+            const na = a.vx * nx + a.vy * ny, nb = b.vx * nx + b.vy * ny
+            const relV = na - nb
+            if (relV > 0) {
+              if (relV < 20) {
+                a.vx -= na * nx; a.vy -= na * ny
+                b.vx -= nb * nx; b.vy -= nb * ny
+              } else {
+                const imp = (1 + REST) * relV * 0.5
+                a.vx -= imp * nx; a.vy -= imp * ny
+                b.vx += imp * nx; b.vy += imp * ny
+                a.rotV += (Math.random() - 0.5) * 30
+                b.rotV += (Math.random() - 0.5) * 30
+              }
+            }
+          }
+        }
+        for (let i = 0; i < n; i++) applyBounds(activeStars[i], dt, REST, FRIC, G)
+      }
+      for (let i = 0; i < n; i++) {
+        const s = activeStars[i]
+        if (Math.abs(s.vx) < 4) s.vx = 0
+        if (Math.abs(s.vy) < 6) s.vy = 0
+        if (Math.abs(s.rotV) < 0.3) s.rotV = 0
+      }
+    }
+
+    function renderPhys() {
+      const n = activeStars.length
+      for (let i = 0; i < n; i++) {
+        const s = activeStars[i]
+        const starInner = s.el.querySelector('.star-inner')
+        if (starInner) {
+          starInner.setAttribute('transform', `translate(${s.x},${s.y}) rotate(${s.rot}) scale(${s.scale})`)
+        }
+        const trailG = s.trailEl
+        if (trailG) {
+          s.trail.push({ x: s.x, y: s.y })
+          if (s.trail.length > TRAIL_LENGTH) s.trail.shift()
+          const dots = s.trailDots
+          const len = s.trail.length
+          for (let j = 0; j < dots.length; j++) {
+            const idx = j < len ? j : len - 1
+            const pos = s.trail[idx] || s.trail[len-1] || { x: s.x, y: s.y }
+            const factor = (j + 1) / dots.length
+            const alpha = 0.7 * (1 - factor) * 0.9
+            const radius = s.r * 0.6 * (1 - factor * 0.5)
+            dots[j].setAttribute('cx', pos.x)
+            dots[j].setAttribute('cy', pos.y)
+            dots[j].setAttribute('r', radius)
+            dots[j].setAttribute('opacity', alpha)
+            dots[j].setAttribute('fill', s.colors.base)
+          }
+        }
+      }
+    }
+
+    function startPhysics() {
+      if (physRunning) return
+      physRunning = true
+      physLast = performance.now()
+      function loop(now) {
+        const dt = Math.min(0.033, (now - physLast) / 1000)
+        physLast = now
+        physicsStep(dt)
+        renderPhys()
+        if (physRunning) physRaf = requestAnimationFrame(loop)
+      }
+      physRaf = requestAnimationFrame(loop)
+    }
+
+    function initPhysics() {
+      document.getElementById('bottleStars').innerHTML = ''
+      activeStars = []
+      pendingStars = []
+      releaseAccum = 0
+      for (let l of letters) {
+        pendingStars.push(makeStarData(l, false))
+      }
+      startPhysics()
+      updateStats()
+    }
+
+    function addNewStar(letter) {
+      const s = makeStarData(letter, true)
+      activeStars.push(s)
+      buildStarDom(s)
+    }
+
+    function shakeStars() {
+      for (let s of activeStars) {
+        s.vx += (Math.random() - 0.5) * 700
+        s.vy -= 200 + Math.random() * 350
+        s.rotV += (Math.random() - 0.5) * 500
+      }
+    }
+
+    // ============================================================
+    // UI 更新
+    // ============================================================
+    function updateStats() {
+      const total = letters.length
+      document.getElementById('starCount').textContent = total
+      document.getElementById('totalStars').textContent = total
+      const ink = letters.filter(l => l.owner === 'Ink').length
+      const yyi = letters.filter(l => l.owner === 'Yyi').length
+      document.getElementById('inkCount').textContent = ink
+      document.getElementById('yyiCount').textContent = yyi
+    }
+
+    // ============================================================
+    // 全新音效引擎（每种情绪独特、舒缓）
+    // ============================================================
+    let audioCtx = null
+    let soundNodes = []
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+      }
+    }
+
+    function stopAllSounds() {
+      soundNodes.forEach(n => {
+        try { n.stop() } catch(e) {}
+        try { n.disconnect() } catch(e) {}
+      })
+      soundNodes = []
+    }
+
+    // 工具：生成白噪音 buffer
+    function createNoiseBuffer(duration, amp = 0.5, freqMod = 0) {
+      const sampleRate = audioCtx.sampleRate
+      const bufferSize = duration * sampleRate
+      const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let i = 0; i < bufferSize; i++) {
+        let val = (Math.random() * 2 - 1) * amp
+        if (freqMod) val += 0.3 * amp * Math.sin(i / freqMod)
+        data[i] = val
+      }
+      return buffer
+    }
+
+    function playEmotionSound(emoId) {
+      initAudio()
+      stopAllSounds()
+      if (!audioCtx) return
+
+      const masterGain = audioCtx.createGain()
+      masterGain.gain.value = 0.20
+      masterGain.connect(audioCtx.destination)
+
+      let osc, gainNode, buffer, source
+
+      if (emoId === 'happy') {
+        // 钟琴音 + 高频泛音闪烁
+        const notes = [523, 659, 784, 1047]
+        notes.forEach((freq, i) => {
+          osc = audioCtx.createOscillator()
+          osc.type = 'sine'
+          osc.frequency.value = freq
+          gainNode = audioCtx.createGain()
+          gainNode.gain.value = 0.03 * (1 - i * 0.15)
+          osc.connect(gainNode)
+          gainNode.connect(masterGain)
+          osc.start()
+          osc.stop(audioCtx.currentTime + 0.6)
+          soundNodes.push(osc)
+          // 颤音
+          const lfo = audioCtx.createOscillator()
+          lfo.frequency.value = 4 + i
+          const lfoGain = audioCtx.createGain()
+          lfoGain.gain.value = 2
+          lfo.connect(lfoGain)
+          lfoGain.connect(osc.frequency)
+          lfo.start()
+          lfo.stop(audioCtx.currentTime + 0.6)
+          soundNodes.push(lfo)
+        })
+        // 白噪音星尘
+        buffer = createNoiseBuffer(2, 0.04, 300)
+        source = audioCtx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.06
+        source.connect(gainNode)
+        gainNode.connect(masterGain)
+        source.start()
+        soundNodes.push(source)
+      } else if (emoId === 'sad') {
+        // 雨声：白噪音 + 低频调制
+        buffer = createNoiseBuffer(4, 0.5, 150)
+        source = audioCtx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.25
+        source.connect(gainNode)
+        gainNode.connect(masterGain)
+        source.start()
+        soundNodes.push(source)
+        // 低沉的雷声（衰减正弦）
+        osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = 80
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.06
+        osc.connect(gainNode)
+        gainNode.connect(masterGain)
+        osc.start()
+        // 缓慢衰减
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 4)
+        soundNodes.push(osc)
+        soundNodes.push(gainNode)
+      } else if (emoId === 'angry') {
+        // 深沉的低音脉冲（非刺耳）
+        osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = 55
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.12
+        osc.connect(gainNode)
+        gainNode.connect(masterGain)
+        osc.start()
+        soundNodes.push(osc)
+        // 低频噪声
+        buffer = createNoiseBuffer(3, 0.08, 100)
+        source = audioCtx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        const gainNoise = audioCtx.createGain()
+        gainNoise.gain.value = 0.08
+        source.connect(gainNoise)
+        gainNoise.connect(masterGain)
+        source.start()
+        soundNodes.push(source)
+        // 缓慢的心跳脉冲
+        const pulse = audioCtx.createOscillator()
+        pulse.type = 'square'
+        pulse.frequency.value = 1.5
+        const gainPulse = audioCtx.createGain()
+        gainPulse.gain.value = 0.02
+        pulse.connect(gainPulse)
+        gainPulse.connect(masterGain)
+        pulse.start()
+        soundNodes.push(pulse)
+      } else if (emoId === 'calm') {
+        // 水波：sine 调制 + 风铃
+        osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = 180
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.04
+        osc.connect(gainNode)
+        gainNode.connect(masterGain)
+        osc.start()
+        soundNodes.push(osc)
+        // LFO 缓慢调制
+        const lfo = audioCtx.createOscillator()
+        lfo.frequency.value = 0.6
+        const lfoGain = audioCtx.createGain()
+        lfoGain.gain.value = 15
+        lfo.connect(lfoGain)
+        lfoGain.connect(osc.frequency)
+        lfo.start()
+        soundNodes.push(lfo)
+        // 白噪音水声
+        buffer = createNoiseBuffer(3, 0.03, 200)
+        source = audioCtx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        const gainWater = audioCtx.createGain()
+        gainWater.gain.value = 0.05
+        source.connect(gainWater)
+        gainWater.connect(masterGain)
+        source.start()
+        soundNodes.push(source)
+      } else if (emoId === 'anxious') {
+        // 风声 + 不规则轻柔脉动
+        buffer = createNoiseBuffer(4, 0.15, 400)
+        source = audioCtx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.10
+        source.connect(gainNode)
+        gainNode.connect(masterGain)
+        source.start()
+        soundNodes.push(source)
+        // 轻微脉动
+        osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = 1.2
+        gainNode = audioCtx.createGain()
+        gainNode.gain.value = 0.02
+        osc.connect(gainNode)
+        gainNode.connect(masterGain)
+        osc.start()
+        soundNodes.push(osc)
+      } else if (emoId === 'miss') {
+        // 温暖 pad 和弦 + 心跳
+        const freqs = [220, 330, 440]
+        freqs.forEach((f, i) => {
+          osc = audioCtx.createOscillator()
+          osc.type = 'sine'
+          osc.frequency.value = f
+          gainNode = audioCtx.createGain()
+          gainNode.gain.value = 0.035 * (1 - i * 0.2)
+          osc.connect(gainNode)
+          gainNode.connect(masterGain)
+          osc.start()
+          soundNodes.push(osc)
+        })
+        // 心跳感
+        const pulse = audioCtx.createOscillator()
+        pulse.type = 'square'
+        pulse.frequency.value = 0.9
+        const gainPulse = audioCtx.createGain()
+        gainPulse.gain.value = 0.025
+        pulse.connect(gainPulse)
+        gainPulse.connect(masterGain)
+        pulse.start()
+        soundNodes.push(pulse)
+        // 柔和噪声
+        buffer = createNoiseBuffer(3, 0.02, 500)
+        source = audioCtx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        const gainNoise = audioCtx.createGain()
+        gainNoise.gain.value = 0.04
+        source.connect(gainNoise)
+        gainNoise.connect(masterGain)
+        source.start()
+        soundNodes.push(source)
+      }
+    }
+
+    // ============================================================
+    // 情绪特效（视觉增强）
+    // ============================================================
+    function clearEffect() {
+      const el = document.getElementById('emotionEffect')
+      el.innerHTML = ''
+      el.classList.remove('active')
+      stopAllSounds()
+    }
+
+    function applyEmotionEffect(emoId) {
+      clearEffect()
+      const el = document.getElementById('emotionEffect')
+      if (emoId === 'sad') {
+        for (let i = 0; i < 80; i++) {
+          const drop = document.createElement('div')
+          drop.className = 'rain-drop'
+          drop.style.left = Math.random() * 100 + '%'
+          drop.style.animationDuration = (0.4 + Math.random() * 0.6) + 's'
+          drop.style.animationDelay = (Math.random() * 2) + 's'
+          drop.style.height = (10 + Math.random() * 20) + 'px'
+          drop.style.opacity = 0.2 + Math.random() * 0.3
+          drop.style.background = 'rgba(180,210,240,0.3)'
+          el.appendChild(drop)
+        }
+        el.classList.add('active')
+        playEmotionSound('sad')
+      } else if (emoId === 'angry') {
+        for (let i = 0; i < 40; i++) {
+          const p = document.createElement('div')
+          p.className = 'fire-particle'
+          p.style.left = Math.random() * 100 + '%'
+          p.style.top = (40 + Math.random() * 50) + '%'
+          p.style.width = (4 + Math.random() * 12) + 'px'
+          p.style.height = p.style.width
+          p.style.animationDuration = (0.8 + Math.random() * 1.2) + 's'
+          p.style.animationDelay = (Math.random() * 2) + 's'
+          p.style.background = ['#e74c3c','#f39c12','#e67e22'][Math.floor(Math.random()*3)]
+          el.appendChild(p)
+        }
+        el.classList.add('active')
+        playEmotionSound('angry')
+      } else if (emoId === 'miss') {
+        const hearts = ['💜', '💕', '✨', '💗', '🌟']
+        for (let i = 0; i < 25; i++) {
+          const h = document.createElement('div')
+          h.className = 'heart-float'
+          h.textContent = hearts[i % hearts.length]
+          h.style.left = (5 + Math.random() * 90) + '%'
+          h.style.bottom = '-10%'
+          h.style.animationDuration = (3 + Math.random() * 5) + 's'
+          h.style.animationDelay = (Math.random() * 4) + 's'
+          h.style.fontSize = (20 + Math.random() * 20) + 'px'
+          el.appendChild(h)
+        }
+        el.classList.add('active')
+        playEmotionSound('miss')
+      } else if (emoId === 'calm') {
+        for (let i = 0; i < 15; i++) {
+          const wave = document.createElement('div')
+          wave.className = 'wave-ring'
+          const size = 40 + Math.random() * 80
+          wave.style.width = size + 'px'
+          wave.style.height = size + 'px'
+          wave.style.left = Math.random() * 100 + '%'
+          wave.style.top = Math.random() * 100 + '%'
+          wave.style.animationDuration = (3 + Math.random() * 3) + 's'
+          wave.style.animationDelay = (Math.random() * 4) + 's'
+          wave.style.borderColor = 'rgba(72,201,176,0.25)'
+          el.appendChild(wave)
+        }
+        el.classList.add('active')
+        playEmotionSound('calm')
+      } else if (emoId === 'anxious') {
+        for (let i = 0; i < 30; i++) {
+          const line = document.createElement('div')
+          const rot = Math.random() * 360
+          line.className = 'wind-line'
+          line.style.left = Math.random() * 100 + '%'
+          line.style.top = Math.random() * 100 + '%'
+          line.style.setProperty('--rot', rot + 'deg')
+          line.style.width = (40 + Math.random() * 80) + 'px'
+          line.style.background = 'rgba(142,68,173,0.25)'
+          el.appendChild(line)
+        }
+        el.classList.add('active')
+        playEmotionSound('anxious')
+      } else {
+        // 开心
+        for (let i = 0; i < 50; i++) {
+          const dust = document.createElement('div')
+          const tx = (Math.random() - 0.5) * 80
+          const ty = -20 - Math.random() * 60
+          dust.className = 'happy-dust'
+          dust.style.left = Math.random() * 100 + '%'
+          dust.style.top = Math.random() * 100 + '%'
+          dust.style.setProperty('--tx', tx + 'px')
+          dust.style.setProperty('--ty', ty + 'px')
+          dust.style.width = (3 + Math.random() * 6) + 'px'
+          dust.style.height = dust.style.width
+          dust.style.animationDuration = (2 + Math.random() * 4) + 's'
+          dust.style.animationDelay = (Math.random() * 3) + 's'
+          dust.style.background = 'rgba(244,208,63,0.6)'
+          el.appendChild(dust)
+        }
+        el.classList.add('active')
+        playEmotionSound('happy')
+      }
+    }
+
+    // ============================================================
+    // 写信逻辑
+    // ============================================================
+    let selectedEmotion = null, selectedOwner = null
+    function renderEmotions() {
+      const grid = document.getElementById('emotionGrid')
+      grid.innerHTML = ''
+      EMOTIONS.forEach(emo => {
+        const btn = document.createElement('div')
+        btn.className = 'emo-btn'
+        btn.style.setProperty('--emo-color', emo.color)
+        btn.dataset.id = emo.id
+        btn.innerHTML = `<span class="emoji">${emo.emoji}</span><span class="label">${emo.label}</span>`
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'))
+          btn.classList.add('selected')
+          selectedEmotion = emo
+          applyEmotionEffect(emo.id)
+          updateFoldBtn()
+        })
+        grid.appendChild(btn)
+      })
+    }
+
+    function updateFoldBtn() {
+      const text = document.getElementById('letterText').value.trim()
+      const btn = document.getElementById('foldBtn')
+      btn.disabled = !(selectedEmotion && text && selectedOwner)
+    }
+
+    document.querySelectorAll('.sign-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('active'))
+        this.classList.add('active')
+        selectedOwner = this.dataset.owner
+        updateFoldBtn()
+      })
+    })
+    document.getElementById('letterText').addEventListener('input', updateFoldBtn)
+
+    document.getElementById('foldBtn').addEventListener('click', async function() {
+      if (!selectedEmotion || !selectedOwner) return
+      const text = document.getElementById('letterText').value.trim()
+      if (!text) return
+      const letter = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        emotion: selectedEmotion.id,
+        emotionLabel: selectedEmotion.label,
+        owner: selectedOwner,
+        content: text,
+        timestamp: Date.now(),
+        resolution: ''
+      }
+      letters.push(letter)
+      addNewStar(letter)
+      updateStats()
+      cacheLetters(letters)
+      const saved = await saveLetterToSupabase(letter)
+      if (saved && saved.id !== letter.id) {
+        const idx = letters.findIndex(l => l.id === letter.id)
+        if (idx !== -1) { letters[idx] = saved; cacheLetters(letters) }
+      }
+      document.getElementById('writeModal').classList.remove('active')
+      clearEffect()
+      document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'))
+      document.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('active'))
+      document.getElementById('letterText').value = ''
+      selectedEmotion = null
+      selectedOwner = null
+      updateFoldBtn()
+      const bc = document.getElementById('bottleContainer')
+      bc.classList.add('jiggle')
+      setTimeout(() => bc.classList.remove('jiggle'), 400)
+    })
+
+    // ============================================================
+    // 档案
+    // ============================================================
+    let filterEmo = 'all'
+    function renderArchive() {
+      const grid = document.getElementById('archiveGrid')
+      grid.innerHTML = ''
+      let filtered = letters
+      if (filterEmo !== 'all') filtered = letters.filter(l => l.emotion === filterEmo)
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="color:#5a4a3a;text-align:center;padding:40px 0;">还没有星星 ✦ 去写一封信吧</div>'
+        return
+      }
+      filtered.slice().reverse().forEach(l => {
+        const emo = getEmo(l.emotion)
+        const div = document.createElement('div')
+        div.className = 'archive-item'
+        div.style.setProperty('--emo-color', emo.color)
+        div.innerHTML = `
+          <div class="star-icon">✦</div>
+          <div class="info">
+            <div class="date">${new Date(l.timestamp).toLocaleDateString()} ${new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+            <div class="preview">${l.content.slice(0, 40)}${l.content.length > 40 ? '…' : ''}</div>
+            <div class="owner">${l.owner}</div>
+          </div>
+          <span class="badge">${emo.label}</span>
+        `
+        grid.appendChild(div)
+      })
+    }
+
+    function renderFilters() {
+      const row = document.getElementById('filterRow')
+      row.innerHTML = `<button class="filter-btn active" data-filter="all">全部</button>`
+      EMOTIONS.forEach(e => {
+        const btn = document.createElement('button')
+        btn.className = 'filter-btn'
+        btn.dataset.filter = e.id
+        btn.textContent = e.label
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
+          this.classList.add('active')
+          filterEmo = this.dataset.filter
+          renderArchive()
+        })
+        row.appendChild(btn)
+      })
+    }
+
+    // ============================================================
+    // 摇一摇
+    // ============================================================
+    document.getElementById('shakeBtn').addEventListener('click', () => {
+      const bc = document.getElementById('bottleContainer')
+      bc.classList.add('big-shake')
+      shakeStars()
+      setTimeout(() => bc.classList.remove('big-shake'), 800)
+    })
+
+    // ============================================================
+    // 背景星星
+    // ============================================================
+    function createBgStars() {
+      const c = document.getElementById('bgStars')
+      for (let i = 0; i < 60; i++) {
+        const s = document.createElement('div')
+        s.className = 'bg-star'
+        s.style.left = Math.random() * 100 + '%'
+        s.style.top = Math.random() * 100 + '%'
+        s.style.setProperty('--delay', (Math.random() * 4) + 's')
+        s.style.setProperty('--dur', (2 + Math.random() * 5) + 's')
+        s.style.setProperty('--max-op', 0.2 + Math.random() * 0.5)
+        const sz = 1 + Math.random() * 2.5
+        s.style.width = sz + 'px'
+        s.style.height = sz + 'px'
+        c.appendChild(s)
+      }
+    }
+
+    // ============================================================
+    // 模态控制
+    // ============================================================
+    function openWrite() {
+      document.getElementById('writeModal').classList.add('active')
+    }
+    function closeWrite() {
+      document.getElementById('writeModal').classList.remove('active')
+      clearEffect()
+    }
+    function openArchive() {
+      renderArchive()
+      document.getElementById('archiveModal').classList.add('active')
+    }
+    function closeArchive() {
+      document.getElementById('archiveModal').classList.remove('active')
+    }
+
+    document.getElementById('writeBtn').addEventListener('click', openWrite)
+    document.getElementById('archiveBtn').addEventListener('click', openArchive)
+    document.getElementById('closeWrite').addEventListener('click', closeWrite)
+    document.getElementById('closeArchive').addEventListener('click', closeArchive)
+    document.querySelectorAll('.modal-overlay').forEach(el => {
+      el.addEventListener('click', function(e) {
+        if (e.target === this) {
+          this.classList.remove('active')
+          clearEffect()
+        }
+      })
+    })
+
+    // ============================================================
+    // 进入
+    // ============================================================
+    document.getElementById('enterBtn').addEventListener('click', () => {
+      document.getElementById('intro').classList.add('hidden')
+      document.getElementById('app').classList.add('ready')
+      setTimeout(() => { document.getElementById('intro').style.display = 'none' }, 1200)
+    })
+
+    // ============================================================
+    // 初始化
+    // ============================================================
+    createBgStars()
+    renderEmotions()
+    renderFilters()
+
+    await loadLetters()
+    subscribeLetters()
+
+    console.log('✦ 只属于我们的星河 · Ink × Yyi (情绪音效全面升级版)')
+  </script>
+</body>
+</html>
