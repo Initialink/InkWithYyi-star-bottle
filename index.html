@@ -6,187 +6,108 @@
 <meta name="theme-color" content="#07060d">
 <title>Ink × Yyi · Our Star Bottle</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+<!--
+  两个 CDN 都使用 defer。
+  即使其中一个加载失败，也不会阻止页面本身启动。
+-->
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
-html,body{
-    margin:0;
+html,
+body{
     width:100%;
     height:100%;
+    margin:0;
     overflow:hidden;
 }
 
 body{
-    font-family:"Noto Serif SC","Songti SC","PingFang SC",serif;
+    font-family:
+        "Noto Serif SC",
+        "Songti SC",
+        "STSong",
+        "PingFang SC",
+        serif;
+
     color:#fff;
     background:#07060d;
 }
 
-button,textarea{font:inherit}
-button{cursor:pointer}
+button,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+}
 
 #world{
     position:fixed;
     inset:0;
     overflow:hidden;
-    transition:background 1s ease;
+
     background:
-        radial-gradient(circle at 50% 38%,#302640 0%,#0a080f 68%,#030207 100%);
+        radial-gradient(
+            circle at 50% 38%,
+            #302640 0%,
+            #0a080f 68%,
+            #030207 100%
+        );
+
+    transition:
+        background 1s ease;
 }
 
 #vignette{
     position:absolute;
     inset:-10%;
+    z-index:10;
     pointer-events:none;
-    background:radial-gradient(circle,transparent 40%,rgba(0,0,0,.75) 100%);
-    z-index:5;
+
+    background:
+        radial-gradient(
+            circle,
+            transparent 38%,
+            rgba(0,0,0,.78) 100%
+        );
 }
 
 #fx{
     position:absolute;
     inset:0;
-    pointer-events:none;
     overflow:hidden;
-}
-
-/* =========================
-   情绪特效
-========================= */
-
-.p{
-    position:absolute;
     pointer-events:none;
 }
 
-.rain{
-    width:1px;
-    height:85px;
-    background:linear-gradient(
-        to bottom,
-        transparent,
-        rgba(220,240,255,.9)
-    );
-    opacity:.5;
-    animation:rainFall linear infinite;
-}
-
-@keyframes rainFall{
-    from{
-        transform:translate3d(0,-120px,0) rotate(10deg);
-    }
-    to{
-        transform:translate3d(-120px,120vh,0) rotate(10deg);
-    }
-}
-
-.ember{
-    width:4px;
-    height:18px;
-    border-radius:50%;
-    background:#ff634f;
-    box-shadow:
-        0 0 8px #ff4a38,
-        0 0 24px #ff321f;
-    animation:emberUp linear infinite;
-}
-
-@keyframes emberUp{
-    from{
-        transform:translate3d(0,110vh,0) rotate(0);
-        opacity:0;
-    }
-    15%{opacity:1}
-    to{
-        transform:translate3d(-60px,-20vh,0) rotate(180deg);
-        opacity:0;
-    }
-}
-
-.spark{
-    width:4px;
-    height:4px;
-    border-radius:50%;
-    background:currentColor;
-    box-shadow:0 0 15px currentColor;
-    animation:sparkMove linear infinite;
-}
-
-@keyframes sparkMove{
-    0%{
-        transform:translate3d(0,20px,0) scale(.5);
-        opacity:0;
-    }
-    30%{opacity:1}
-    60%{
-        transform:translate3d(30px,-40px,0) scale(1.7);
-    }
-    100%{
-        transform:translate3d(-25px,-120vh,0) scale(.2);
-        opacity:0;
-    }
-}
-
-.wave{
-    width:20px;
-    height:20px;
-    border:1px solid currentColor;
-    border-radius:50%;
-    animation:waveExpand ease-out infinite;
-}
-
-@keyframes waveExpand{
-    0%{
-        opacity:.65;
-        transform:translate(-50%,-50%) scale(.1);
-    }
-    100%{
-        opacity:0;
-        transform:translate(-50%,-50%) scale(35);
-    }
-}
-
-.wind{
-    width:35vw;
-    height:1px;
-    background:linear-gradient(
-        90deg,
-        transparent,
-        currentColor,
-        transparent
-    );
-    box-shadow:0 0 8px currentColor;
-    animation:windMove linear infinite;
-}
-
-@keyframes windMove{
-    from{
-        transform:translateX(-100vw);
-    }
-    to{
-        transform:translateX(180vw);
-    }
-}
-
-/* =========================
+/* =========================================================
    开场
-========================= */
+========================================================= */
 
 #gate{
     position:fixed;
     inset:0;
-    z-index:100;
+    z-index:9999;
+
     display:grid;
     place-items:center;
+
     background:
         radial-gradient(
             circle at 50% 40%,
             #30253f,
-            #08070d 70%
+            #08070d 72%
         );
-    transition:opacity .8s ease,visibility .8s ease;
+
+    transition:
+        opacity .8s ease,
+        visibility .8s ease;
 }
 
 #gate.hide{
@@ -201,60 +122,93 @@ button{cursor:pointer}
 }
 
 .big{
-    font-size:92px;
+    font-size:90px;
     line-height:1;
     color:#e9d98f;
+
     text-shadow:
-        0 0 20px #e9d98f,
-        0 0 60px #cdbb70;
-    animation:breathe 4s ease-in-out infinite;
+        0 0 18px #e9d98f,
+        0 0 55px rgba(233,217,143,.6);
+
+    animation:
+        breathe 4s ease-in-out infinite;
 }
 
 @keyframes breathe{
+
     50%{
-        transform:translateY(-8px) scale(1.05);
-        opacity:.7;
+        transform:
+            translateY(-8px)
+            scale(1.05);
+
+        opacity:.72;
     }
+
 }
 
 .intro h1{
     margin:18px 0 10px;
+
     font-size:38px;
     font-weight:400;
+
     letter-spacing:8px;
 }
 
 .intro p{
+    margin:0 0 28px;
+
     color:#aaa0b1;
     line-height:2;
-    margin-bottom:25px;
 }
 
-.enter,
-.btn{
-    border:1px solid rgba(215,197,140,.35);
-    background:rgba(255,255,255,.06);
+.enter{
+    border:
+        1px solid
+        rgba(215,197,140,.4);
+
+    background:
+        rgba(255,255,255,.07);
+
     color:#eee5d9;
+
     border-radius:999px;
-    padding:11px 20px;
-    transition:.25s;
+
+    padding:
+        13px 25px;
+
+    transition:
+        .25s;
 }
 
-.enter:hover,
-.btn:hover{
-    background:rgba(255,255,255,.13);
-    transform:translateY(-2px);
+.enter:hover{
+    background:
+        rgba(255,255,255,.15);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 0 25px
+        rgba(220,200,140,.16);
 }
 
-/* =========================
+.enter:active{
+    transform:
+        scale(.97);
+}
+
+/* =========================================================
    主界面
-========================= */
+========================================================= */
 
 main{
     position:relative;
-    z-index:2;
+    z-index:20;
+
     width:100%;
     height:100%;
+
     display:flex;
     flex-direction:column;
     align-items:center;
@@ -263,126 +217,173 @@ main{
 
 .top{
     position:fixed;
-    top:18px;
+
+    top:
+        max(16px,env(safe-area-inset-top));
+
     left:22px;
     right:22px;
+
     display:flex;
     justify-content:space-between;
+
+    color:#a69aaa;
+
     font-size:10px;
     letter-spacing:3px;
-    color:#a69aaa;
 }
 
-/* =========================
-   星星瓶
-========================= */
+/* =========================================================
+   瓶子
+========================================================= */
 
 .bottle{
     position:relative;
+
     width:min(440px,90vw);
     height:min(640px,72vh);
+
+    transform-origin:center;
+
     filter:
-        drop-shadow(0 30px 55px rgba(0,0,0,.75))
-        drop-shadow(0 0 35px rgba(153,120,220,.1));
-    transform-origin:center center;
-    will-change:transform;
+        drop-shadow(
+            0 30px 55px
+            rgba(0,0,0,.75)
+        )
+        drop-shadow(
+            0 0 35px
+            rgba(153,120,220,.12)
+        );
+
+    will-change:
+        transform;
 }
 
 #glass{
     position:absolute;
     inset:0;
+
     width:100%;
     height:100%;
-    z-index:1;
+
+    z-index:2;
+
     pointer-events:none;
 }
 
 #stars{
     position:absolute;
+
     left:16%;
     right:16%;
     top:25%;
     bottom:7%;
+
+    z-index:3;
+
     overflow:hidden;
-    border-radius:40% 40% 18% 18%;
-    z-index:2;
+
+    border-radius:
+        40%
+        40%
+        18%
+        18%;
 }
 
-/* 星星 */
+/* =========================================================
+   星星
+========================================================= */
 
 .star{
     position:absolute;
+
     width:20px;
     height:20px;
 
-    clip-path:polygon(
-        50% 0,
-        61% 35%,
-        100% 35%,
-        69% 57%,
-        81% 100%,
-        50% 73%,
-        19% 100%,
-        31% 57%,
-        0 35%,
-        39% 35%
-    );
+    background:
+        var(--c);
 
-    background:var(--c);
+    clip-path:
+        polygon(
+            50% 0,
+            61% 35%,
+            100% 35%,
+            69% 57%,
+            81% 100%,
+            50% 73%,
+            19% 100%,
+            31% 57%,
+            0 35%,
+            39% 35%
+        );
 
     box-shadow:
-        0 0 10px var(--c),
-        0 0 24px var(--c),
-        0 0 42px color-mix(in srgb,var(--c),transparent 50%);
-
-    cursor:pointer;
+        0 0 9px var(--c),
+        0 0 22px var(--c),
+        0 0 42px var(--c);
 
     will-change:
         left,
         top,
         transform;
 
-    transition:
-        filter .2s ease;
+    cursor:pointer;
 }
 
 .star:hover{
-    filter:brightness(1.5);
+    filter:
+        brightness(1.5);
 }
 
-/* 拖尾 */
+/* =========================================================
+   拖尾
+========================================================= */
 
 .trail{
     position:absolute;
+
     width:5px;
     height:5px;
+
     border-radius:50%;
-    background:var(--c);
-    box-shadow:0 0 12px var(--c);
+
+    background:
+        var(--c);
+
+    box-shadow:
+        0 0 12px var(--c);
+
     pointer-events:none;
-    animation:trailFade .6s forwards;
+
+    animation:
+        trailFade .6s forwards;
 }
 
 @keyframes trailFade{
+
     to{
         opacity:0;
-        transform:scale(.1);
+        transform:scale(.08);
     }
+
 }
 
-/* =========================
+/* =========================================================
    数据
-========================= */
+========================================================= */
 
 .stats{
     display:flex;
     gap:28px;
+
     color:#aaa0b0;
+
     font-size:12px;
 }
 
 .stats b{
     color:#e9d68d;
+
     font-size:18px;
     font-weight:400;
 }
@@ -390,25 +391,299 @@ main{
 .actions{
     display:flex;
     gap:8px;
+
     margin-top:12px;
+
     flex-wrap:wrap;
     justify-content:center;
 }
 
-/* =========================
+.btn{
+    border:
+        1px solid
+        rgba(215,197,140,.35);
+
+    background:
+        rgba(255,255,255,.06);
+
+    color:#eee5d9;
+
+    border-radius:999px;
+
+    padding:
+        10px 18px;
+
+    transition:.25s;
+}
+
+.btn:hover{
+    background:
+        rgba(255,255,255,.13);
+
+    transform:
+        translateY(-2px);
+}
+
+.btn:active{
+    transform:
+        scale(.97);
+}
+
+/* =========================================================
+   特效
+========================================================= */
+
+.p{
+    position:absolute;
+    pointer-events:none;
+}
+
+/* 雨 */
+
+.rain{
+    width:1px;
+    height:85px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            transparent,
+            rgba(220,240,255,.95)
+        );
+
+    opacity:.55;
+
+    animation:
+        rainFall linear infinite;
+}
+
+@keyframes rainFall{
+
+    from{
+        transform:
+            translate3d(
+                0,
+                -120px,
+                0
+            )
+            rotate(10deg);
+    }
+
+    to{
+        transform:
+            translate3d(
+                -120px,
+                120vh,
+                0
+            )
+            rotate(10deg);
+    }
+
+}
+
+/* 火 */
+
+.ember{
+    width:4px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ff634f;
+
+    box-shadow:
+        0 0 8px #ff4a38,
+        0 0 24px #ff321f;
+
+    animation:
+        emberUp linear infinite;
+}
+
+@keyframes emberUp{
+
+    from{
+        transform:
+            translate3d(
+                0,
+                110vh,
+                0
+            )
+            rotate(0);
+
+        opacity:0;
+    }
+
+    15%{
+        opacity:1;
+    }
+
+    to{
+        transform:
+            translate3d(
+                -60px,
+                -20vh,
+                0
+            )
+            rotate(180deg);
+
+        opacity:0;
+    }
+
+}
+
+/* 星光 */
+
+.spark{
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:
+        currentColor;
+
+    box-shadow:
+        0 0 15px currentColor;
+
+    animation:
+        sparkMove linear infinite;
+}
+
+@keyframes sparkMove{
+
+    0%{
+        transform:
+            translate3d(
+                0,
+                20px,
+                0
+            )
+            scale(.5);
+
+        opacity:0;
+    }
+
+    30%{
+        opacity:1;
+    }
+
+    60%{
+        transform:
+            translate3d(
+                30px,
+                -40px,
+                0
+            )
+            scale(1.7);
+    }
+
+    100%{
+        transform:
+            translate3d(
+                -25px,
+                -120vh,
+                0
+            )
+            scale(.2);
+
+        opacity:0;
+    }
+
+}
+
+/* 平静水波 */
+
+.wave{
+    width:20px;
+    height:20px;
+
+    border:
+        1px solid
+        currentColor;
+
+    border-radius:50%;
+
+    animation:
+        waveExpand ease-out infinite;
+}
+
+@keyframes waveExpand{
+
+    0%{
+        opacity:.65;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.1);
+    }
+
+    100%{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(35);
+    }
+
+}
+
+/* 焦虑风 */
+
+.wind{
+    width:35vw;
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            currentColor,
+            transparent
+        );
+
+    box-shadow:
+        0 0 8px currentColor;
+
+    animation:
+        windMove linear infinite;
+}
+
+@keyframes windMove{
+
+    from{
+        transform:
+            translateX(-100vw);
+    }
+
+    to{
+        transform:
+            translateX(180vw);
+    }
+
+}
+
+/* =========================================================
    弹窗
-========================= */
+========================================================= */
 
 .panel{
     position:fixed;
     inset:0;
-    z-index:50;
-    background:rgba(5,4,11,.9);
-    backdrop-filter:blur(18px);
+
+    z-index:500;
+
     display:none;
+
     align-items:center;
     justify-content:center;
+
     padding:16px;
+
+    background:
+        rgba(5,4,11,.9);
+
+    backdrop-filter:
+        blur(18px);
 }
 
 .panel.open{
@@ -418,12 +693,19 @@ main{
 .card{
     width:min(650px,95vw);
     max-height:92vh;
+
     overflow:auto;
+
     background:#f7eee2;
     color:#352b31;
+
     border-radius:28px;
+
     padding:24px;
-    box-shadow:0 30px 100px rgba(0,0,0,.7);
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.7);
 }
 
 .card h2{
@@ -433,62 +715,85 @@ main{
 
 .x{
     float:right;
+
     border:0;
     background:none;
+
     font-size:25px;
     color:#777;
 }
 
-/* =========================
-   六种情绪
-========================= */
+/* =========================================================
+   情绪
+========================================================= */
 
 .emotions{
     display:grid;
-    grid-template-columns:repeat(6,1fr);
+
+    grid-template-columns:
+        repeat(6,1fr);
+
     gap:7px;
 }
 
 .emotion{
-    border:1px solid #d2c4ba;
+    border:
+        1px solid
+        #d2c4ba;
+
     background:#fff;
+
     border-radius:14px;
+
     padding:8px 2px;
+
     font-size:11px;
+
     color:#463940;
+
     transition:.2s;
 }
 
-.emotion:hover{
-    transform:translateY(-2px);
-}
-
 .emotion.on{
-    outline:2px solid var(--c);
-    box-shadow:0 0 14px var(--c);
+    outline:
+        2px solid
+        var(--c);
+
+    box-shadow:
+        0 0 14px
+        var(--c);
 }
 
 .dot{
     width:22px;
     height:22px;
+
+    margin:
+        0 auto 5px;
+
     border-radius:50%;
-    margin:auto auto 5px;
-    background:var(--c);
+
+    background:
+        var(--c);
+
     box-shadow:
         0 0 8px var(--c),
         0 0 18px var(--c);
 }
 
-/* =========================
+/* =========================================================
    写信
-========================= */
+========================================================= */
 
 textarea{
     width:100%;
     height:300px;
+
     margin-top:12px;
+
     border:0;
     outline:0;
+
     resize:none;
 
     background:
@@ -515,14 +820,21 @@ textarea::placeholder{
 }
 
 .sign button{
-    border:1px solid #c8bbb2;
+    border:
+        1px solid
+        #c8bbb2;
+
     background:#fff;
+
     border-radius:99px;
-    padding:8px 17px;
+
+    padding:
+        8px 17px;
+
     margin:0 3px;
 }
 
-.sign .on{
+.sign button.on{
     background:#3b2c38;
     color:#fff;
 }
@@ -533,26 +845,40 @@ textarea::placeholder{
 
 .primary{
     border:0;
+
     border-radius:99px;
+
     background:#3b2c38;
+
     color:#fff;
-    padding:11px 22px;
+
+    padding:
+        11px 22px;
 }
 
-/* =========================
+/* =========================================================
    信件
-========================= */
+========================================================= */
 
 .note{
-    padding:15px 0;
-    border-bottom:1px solid #ded2c8;
+    padding:
+        15px 0;
+
+    border-bottom:
+        1px solid
+        #ded2c8;
 }
 
 .tag{
     display:inline-block;
-    padding:4px 9px;
+
+    padding:
+        4px 9px;
+
     border-radius:99px;
+
     color:#fff;
+
     font-size:11px;
 }
 
@@ -572,18 +898,26 @@ textarea::placeholder{
 
 .status{
     position:fixed;
-    bottom:15px;
+
+    bottom:
+        max(15px,env(safe-area-inset-bottom));
+
     right:16px;
+
+    z-index:200;
+
     font-size:10px;
+
     color:#a69aaa;
+
     letter-spacing:1px;
-    z-index:20;
 }
 
 @media(max-width:520px){
 
     .emotions{
-        grid-template-columns:repeat(3,1fr);
+        grid-template-columns:
+            repeat(3,1fr);
     }
 
     .intro h1{
@@ -598,6 +932,7 @@ textarea::placeholder{
     .top{
         font-size:8px;
     }
+
 }
 </style>
 </head>
@@ -605,28 +940,47 @@ textarea::placeholder{
 <body>
 
 <div id="world">
+
     <div id="fx"></div>
+
     <div id="vignette"></div>
+
 </div>
 
-<!-- =========================
+
+<!-- =========================================================
      开场
-========================= -->
+========================================================= -->
 
 <section id="gate">
 
     <div class="intro">
 
-        <div class="big">✦</div>
+        <div class="big">
+            ✦
+        </div>
 
-        <h1>Ink × Yyi</h1>
+        <h1>
+            Ink × Yyi
+        </h1>
 
         <p>
             我们的星星瓶<br>
             把想说的话，折成星星。
         </p>
 
-        <button class="enter" id="enter">
+        <!--
+          这里使用原生 onclick。
+          即使后面的云端 / 物理脚本发生错误，
+          这个按钮仍然能够打开。
+        -->
+
+        <button
+            class="enter"
+            id="enter"
+            type="button"
+            onclick="openStarBottle()"
+        >
             打开我们的星星瓶 ✦
         </button>
 
@@ -634,24 +988,39 @@ textarea::placeholder{
 
 </section>
 
-<!-- =========================
+
+<!-- =========================================================
      主界面
-========================= -->
+========================================================= -->
 
 <main>
 
     <div class="top">
+
         <span id="date"></span>
-        <span>OUR STAR BOTTLE</span>
+
+        <span>
+            OUR STAR BOTTLE
+        </span>
+
     </div>
 
-    <div class="bottle" id="bottle">
 
-        <svg id="glass" viewBox="0 0 440 640">
+    <div
+        class="bottle"
+        id="bottle"
+    >
+
+        <svg
+            id="glass"
+            viewBox="0 0 440 640"
+        >
 
             <defs>
 
-                <linearGradient id="glassFill">
+                <linearGradient
+                    id="glassFill"
+                >
 
                     <stop
                         stop-color="#fff"
@@ -672,7 +1041,12 @@ textarea::placeholder{
 
                 </linearGradient>
 
-                <linearGradient id="gold" x2="0" y2="1">
+
+                <linearGradient
+                    id="gold"
+                    x2="0"
+                    y2="1"
+                >
 
                     <stop
                         stop-color="#e7d19b"
@@ -687,7 +1061,6 @@ textarea::placeholder{
 
             </defs>
 
-            <!-- 瓶身 -->
 
             <path
                 d="
@@ -710,7 +1083,6 @@ textarea::placeholder{
                 stroke-width="3"
             />
 
-            <!-- 内层玻璃 -->
 
             <path
                 d="
@@ -733,7 +1105,6 @@ textarea::placeholder{
                 stroke-width="10"
             />
 
-            <!-- 瓶口 -->
 
             <rect
                 x="149"
@@ -744,6 +1115,7 @@ textarea::placeholder{
                 fill="url(#gold)"
             />
 
+
             <rect
                 x="161"
                 y="21"
@@ -753,7 +1125,6 @@ textarea::placeholder{
                 fill="#6d5436"
             />
 
-            <!-- 玻璃高光 -->
 
             <path
                 d="
@@ -770,9 +1141,11 @@ textarea::placeholder{
 
         </svg>
 
+
         <div id="stars"></div>
 
     </div>
+
 
     <div class="stats">
 
@@ -795,17 +1168,30 @@ textarea::placeholder{
 
     </div>
 
+
     <div class="actions">
 
-        <button class="btn" id="write">
+        <button
+            class="btn"
+            id="write"
+            type="button"
+        >
             写一封星星信 ✦
         </button>
 
-        <button class="btn" id="archive">
+        <button
+            class="btn"
+            id="archive"
+            type="button"
+        >
             星星档案
         </button>
 
-        <button class="btn" id="shake">
+        <button
+            class="btn"
+            id="shake"
+            type="button"
+        >
             摇一摇 ✦
         </button>
 
@@ -813,26 +1199,37 @@ textarea::placeholder{
 
 </main>
 
-<!-- =========================
-     写信
-========================= -->
 
-<section class="panel" id="compose">
+<!-- =========================================================
+     写信
+========================================================= -->
+
+<section
+    class="panel"
+    id="compose"
+>
 
     <div class="card">
 
-        <button class="x" id="close">
+        <button
+            class="x"
+            id="close"
+            type="button"
+        >
             ×
         </button>
+
 
         <h2>
             把一句话，留下来
         </h2>
 
+
         <div
             class="emotions"
             id="emotions"
         ></div>
+
 
         <textarea
             id="text"
@@ -840,28 +1237,33 @@ textarea::placeholder{
             placeholder="写下现在想留下的话……"
         ></textarea>
 
+
         <div class="sign">
 
             <button
                 class="on"
                 data-who="Ink"
+                type="button"
             >
                 Ink 写的
             </button>
 
             <button
                 data-who="Yyi"
+                type="button"
             >
                 Yyi 写的
             </button>
 
         </div>
 
+
         <div class="row">
 
             <button
                 class="primary"
                 id="fold"
+                type="button"
             >
                 折成星星 ✦
             </button>
@@ -872,24 +1274,31 @@ textarea::placeholder{
 
 </section>
 
-<!-- =========================
-     档案
-========================= -->
 
-<section class="panel" id="box">
+<!-- =========================================================
+     档案
+========================================================= -->
+
+<section
+    class="panel"
+    id="box"
+>
 
     <div class="card">
 
         <button
             class="x"
             id="closeBox"
+            type="button"
         >
             ×
         </button>
 
+
         <h2>
             星星档案
         </h2>
+
 
         <div id="notes"></div>
 
@@ -897,43 +1306,92 @@ textarea::placeholder{
 
 </section>
 
+
 <div
     class="status"
     id="status"
 >
-    ● 云端连接中
+    ● 等待连接
 </div>
+
 
 <script>
 
-/* ============================================================
-   SUPABASE
-============================================================ */
+/* =========================================================
+   立即定义打开按钮
+   这个函数不依赖任何外部 CDN。
+========================================================= */
 
-const SUPABASE_URL =
-    "https://fgerhmqwqflgggnqpuas.supabase.co";
+function openStarBottle(){
 
-const SUPABASE_KEY =
-    "sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
+    var gate =
+        document.getElementById("gate");
 
-const ROOM =
+    if(gate){
+
+        gate.classList.add("hide");
+
+    }
+
+    /*
+     * 后续初始化全部使用 try/catch。
+     * 任何一个模块失败，都不能阻止网页打开。
+     */
+
+    try{
+
+        if(
+            typeof window.startStarBottle ===
+            "function"
+        ){
+
+            window.startStarBottle();
+
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Star Bottle initialization:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   基础变量
+========================================================= */
+
+(function(){
+
+"use strict";
+
+
+var $ =
+    function(id){
+        return document.getElementById(id);
+    };
+
+
+var ROOM =
     "ink-yyi";
 
-const db =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
+
+var SUPABASE_URL =
+    "https://fgerhmqwqflgggnqpuas.supabase.co";
 
 
-/* ============================================================
-   基础变量
-============================================================ */
+var SUPABASE_KEY =
+    "sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
 
-const $ =
-    id => document.getElementById(id);
 
-const EMOTIONS = [
+var db = null;
+
+
+var EMOTIONS = [
 
     {
         name:"开心",
@@ -973,34 +1431,45 @@ const EMOTIONS = [
 
 ];
 
-let emotionIndex = 0;
 
-let currentWho = "Ink";
+var emotionIndex = 0;
 
-let letters = [];
+var currentWho = "Ink";
 
-let stars = [];
+var letters = [];
 
-let physicsReady = false;
+var engine = null;
 
-let engine = null;
+var physicsBodies = [];
 
-let physicsBodies = [];
+var physicsReady = false;
 
-let animationStarted = false;
+var animationStarted = false;
 
-let audioContext = null;
+var audioContext = null;
 
-let audioMaster = null;
+var audioMaster = null;
 
-let audioSources = [];
+var audioObjects = [];
 
-let lastShake = 0;
+var lastShake = 0;
 
 
-/* ============================================================
-   工具
-============================================================ */
+/* =========================================================
+   状态
+========================================================= */
+
+function setStatus(text){
+
+    $("status").textContent =
+        text;
+
+}
+
+
+/* =========================================================
+   HTML 安全
+========================================================= */
 
 function escapeHTML(value){
 
@@ -1014,19 +1483,196 @@ function escapeHTML(value){
 }
 
 
-function setStatus(text){
+/* =========================================================
+   Supabase 初始化
+========================================================= */
 
-    $("status").textContent =
-        text;
+function initSupabase(){
+
+    try{
+
+        if(
+            window.supabase &&
+            typeof window.supabase.createClient ===
+            "function"
+        ){
+
+            db =
+                window.supabase.createClient(
+                    SUPABASE_URL,
+                    SUPABASE_KEY
+                );
+
+            return true;
+
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Supabase initialization failed:",
+            error
+        );
+
+    }
+
+    return false;
 
 }
 
 
-/* ============================================================
-   AUDIO
-============================================================ */
+/* =========================================================
+   云端读取
+========================================================= */
+
+async function loadCloud(){
+
+    if(!db){
+
+        setStatus(
+            "● 云端未连接 · 本地模式"
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        var result =
+            await db
+                .from("star_letters")
+                .select("*")
+                .eq("room",ROOM)
+                .order(
+                    "created_at",
+                    {
+                        ascending:true
+                    }
+                );
+
+
+        if(result.error){
+
+            console.warn(
+                result.error
+            );
+
+            setStatus(
+                "● 云端连接失败 · 网页仍可使用"
+            );
+
+            return;
+
+        }
+
+
+        letters =
+            result.data || [];
+
+
+        renderAll();
+
+
+        /*
+         * 双向实时同步
+         */
+
+        db
+            .channel(
+                "ink-yyi-star-bottle"
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:"INSERT",
+                    schema:"public",
+                    table:"star_letters",
+                    filter:
+                        "room=eq." + ROOM
+                },
+                function(payload){
+
+                    var newLetter =
+                        payload.new;
+
+
+                    if(
+                        !letters.some(
+                            function(item){
+                                return item.id ===
+                                    newLetter.id;
+                            }
+                        )
+                    ){
+
+                        letters.push(
+                            newLetter
+                        );
+
+                        renderAll();
+
+                    }
+
+                }
+            )
+            .subscribe(
+                function(state){
+
+                    if(
+                        state ===
+                        "SUBSCRIBED"
+                    ){
+
+                        setStatus(
+                            "● 已连接 · 两个人共享同一瓶"
+                        );
+
+                    }
+
+                }
+            );
+
+    }catch(error){
+
+        console.warn(
+            "Cloud error:",
+            error
+        );
+
+        setStatus(
+            "● 云端异常 · 网页仍可使用"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   音频
+========================================================= */
 
 function stopAudio(){
+
+    audioObjects.forEach(
+        function(item){
+
+            try{
+
+                if(item.stop){
+                    item.stop();
+                }
+
+            }catch(e){}
+
+        }
+    );
+
+
+    audioObjects = [];
+
 
     if(audioContext){
 
@@ -1036,11 +1682,10 @@ function stopAudio(){
 
     }
 
+
     audioContext = null;
 
     audioMaster = null;
-
-    audioSources = [];
 
 }
 
@@ -1051,7 +1696,8 @@ function resumeAudio(){
 
         if(
             audioContext &&
-            audioContext.state === "suspended"
+            audioContext.state ===
+            "suspended"
         ){
 
             audioContext.resume();
@@ -1063,177 +1709,199 @@ function resumeAudio(){
 }
 
 
-function createNoiseBuffer(){
+function noiseBuffer(){
 
-    const buffer =
+    var buffer =
         audioContext.createBuffer(
             1,
             audioContext.sampleRate * 2,
             audioContext.sampleRate
         );
 
-    const data =
+
+    var data =
         buffer.getChannelData(0);
 
+
     for(
-        let i = 0;
-        i < data.length;
+        var i=0;
+        i<data.length;
         i++
     ){
 
         data[i] =
-            Math.random() * 2 - 1;
+            Math.random()*2-1;
 
     }
+
 
     return buffer;
 
 }
 
 
-function startEmotionAudio(key){
+function startSound(key){
 
     stopAudio();
 
+
     try{
 
-        const AudioCtx =
+        var AudioContextClass =
             window.AudioContext ||
             window.webkitAudioContext;
 
-        if(!AudioCtx){
+
+        if(!AudioContextClass){
 
             return;
 
         }
 
+
         audioContext =
-            new AudioCtx();
+            new AudioContextClass();
+
 
         audioMaster =
             audioContext.createGain();
 
+
         audioMaster.gain.value =
-            0.16;
+            .18;
+
 
         audioMaster.connect(
             audioContext.destination
         );
 
-        /*
-         * 六种情绪完全不同的声音结构
-         */
 
-        const profiles = {
+        var profiles = {
 
             happy:{
-                tones:[523.25,659.25,783.99],
+                tones:
+                    [523.25,659.25,783.99],
                 type:"sine",
                 volume:.045
             },
 
             sad:{
-                tones:[196,246.94,293.66],
+                tones:
+                    [196,246.94,293.66],
                 type:"sine",
                 volume:.032
             },
 
             angry:{
-                tones:[73.42,92.5,110],
+                tones:
+                    [73.42,92.5,110],
                 type:"sawtooth",
                 volume:.035
             },
 
             calm:{
-                tones:[174.61,220,261.63],
+                tones:
+                    [174.61,220,261.63],
                 type:"sine",
                 volume:.032
             },
 
             anxious:{
-                tones:[146.83,220,329.63],
+                tones:
+                    [146.83,220,329.63],
                 type:"triangle",
                 volume:.035
             },
 
             miss:{
-                tones:[261.63,329.63,392],
+                tones:
+                    [261.63,329.63,392],
                 type:"sine",
                 volume:.035
             }
 
         };
 
-        const profile =
+
+        var profile =
             profiles[key] ||
             profiles.calm;
 
 
-        /*
-         * 主旋律层
-         */
-
         profile.tones.forEach(
-            (frequency,index)=>{
+            function(frequency,index){
 
-                const oscillator =
+                var osc =
                     audioContext.createOscillator();
 
-                const gain =
+
+                var gain =
                     audioContext.createGain();
 
-                oscillator.type =
+
+                osc.type =
                     profile.type;
 
-                oscillator.frequency.value =
+
+                osc.frequency.value =
                     frequency;
+
 
                 gain.gain.value =
                     profile.volume;
 
-                oscillator.connect(gain);
+
+                osc.connect(gain);
 
                 gain.connect(
                     audioMaster
                 );
 
-                oscillator.start();
 
-                audioSources.push(
-                    oscillator,
-                    gain
+                osc.start();
+
+
+                audioObjects.push(
+                    osc
                 );
 
+
                 /*
-                 * 缓慢 LFO
+                 * 缓慢呼吸 LFO
                  */
 
-                const lfo =
+                var lfo =
                     audioContext.createOscillator();
 
-                const lfoGain =
+
+                var lfoGain =
                     audioContext.createGain();
 
+
                 lfo.frequency.value =
-                    0.08 +
-                    index * 0.04;
+                    .08 +
+                    index*.035;
+
 
                 lfoGain.gain.value =
-                    8;
+                    7;
+
 
                 lfo.connect(
                     lfoGain
                 );
 
+
                 lfoGain.connect(
-                    oscillator.frequency
+                    osc.frequency
                 );
+
 
                 lfo.start();
 
-                audioSources.push(
-                    lfo,
-                    lfoGain
+
+                audioObjects.push(
+                    lfo
                 );
 
             }
@@ -1247,44 +1915,49 @@ function startEmotionAudio(key){
 
         if(key === "sad"){
 
-            const rain =
+            var rain =
                 audioContext.createBufferSource();
 
-            const rainGain =
+
+            var rainGain =
                 audioContext.createGain();
 
-            const filter =
+
+            var filter =
                 audioContext.createBiquadFilter();
 
+
             rain.buffer =
-                createNoiseBuffer();
+                noiseBuffer();
+
 
             rain.loop =
                 true;
 
+
             filter.type =
                 "lowpass";
+
 
             filter.frequency.value =
                 2800;
 
+
             rainGain.gain.value =
-                .11;
+                .14;
 
-            rain.connect(filter);
 
-            filter.connect(rainGain);
+            rain
+                .connect(filter)
+                .connect(rainGain)
+                .connect(audioMaster);
 
-            rainGain.connect(
-                audioMaster
-            );
 
             rain.start();
 
-            audioSources.push(
-                rain,
-                rainGain,
-                filter
+
+            audioObjects.push(
+                rain
             );
 
         }
@@ -1292,46 +1965,96 @@ function startEmotionAudio(key){
 
         /*
          * 开心：
-         * 轻微空气感
+         * 高空空气感
          */
 
         if(key === "happy"){
 
-            const noise =
+            var happyNoise =
                 audioContext.createBufferSource();
 
-            const gain =
+
+            var happyGain =
                 audioContext.createGain();
 
-            const filter =
+
+            var happyFilter =
                 audioContext.createBiquadFilter();
 
-            noise.buffer =
-                createNoiseBuffer();
 
-            noise.loop =
+            happyNoise.buffer =
+                noiseBuffer();
+
+
+            happyNoise.loop =
                 true;
 
-            filter.type =
+
+            happyFilter.type =
                 "highpass";
 
-            filter.frequency.value =
-                1800;
 
-            gain.gain.value =
+            happyFilter.frequency.value =
+                1600;
+
+
+            happyGain.gain.value =
                 .025;
 
-            noise
-                .connect(filter)
-                .connect(gain)
+
+            happyNoise
+                .connect(happyFilter)
+                .connect(happyGain)
                 .connect(audioMaster);
 
-            noise.start();
 
-            audioSources.push(
-                noise,
-                gain,
-                filter
+            happyNoise.start();
+
+
+            audioObjects.push(
+                happyNoise
+            );
+
+        }
+
+
+        /*
+         * 生气：
+         * 低频脉冲
+         */
+
+        if(key === "angry"){
+
+            var angryOsc =
+                audioContext.createOscillator();
+
+
+            var angryGain =
+                audioContext.createGain();
+
+
+            angryOsc.type =
+                "square";
+
+
+            angryOsc.frequency.value =
+                2.2;
+
+
+            angryGain.gain.value =
+                .018;
+
+
+            angryOsc
+                .connect(angryGain)
+                .connect(audioMaster);
+
+
+            angryOsc.start();
+
+
+            audioObjects.push(
+                angryOsc
             );
 
         }
@@ -1339,39 +2062,41 @@ function startEmotionAudio(key){
 
         /*
          * 焦虑：
-         * 快速脉冲
+         * 快速颤动
          */
 
         if(key === "anxious"){
 
-            const pulse =
+            var anxiousOsc =
                 audioContext.createOscillator();
 
-            const pulseGain =
+
+            var anxiousGain =
                 audioContext.createGain();
 
-            pulse.type =
+
+            anxiousOsc.type =
                 "triangle";
 
-            pulse.frequency.value =
-                7;
 
-            pulseGain.gain.value =
+            anxiousOsc.frequency.value =
+                6;
+
+
+            anxiousGain.gain.value =
                 .025;
 
-            pulse.connect(
-                pulseGain
-            );
 
-            pulseGain.connect(
-                audioMaster.gain
-            );
+            anxiousOsc
+                .connect(anxiousGain)
+                .connect(audioMaster);
 
-            pulse.start();
 
-            audioSources.push(
-                pulse,
-                pulseGain
+            anxiousOsc.start();
+
+
+            audioObjects.push(
+                anxiousOsc
             );
 
         }
@@ -1382,7 +2107,7 @@ function startEmotionAudio(key){
     }catch(error){
 
         console.warn(
-            "Audio error:",
+            "Audio:",
             error
         );
 
@@ -1391,9 +2116,9 @@ function startEmotionAudio(key){
 }
 
 
-/* ============================================================
-   情绪特效
-============================================================ */
+/* =========================================================
+   特效
+========================================================= */
 
 function clearEffects(){
 
@@ -1414,56 +2139,53 @@ function createParticles(
 ){
 
     for(
-        let i = 0;
-        i < count;
+        var i=0;
+        i<count;
         i++
     ){
 
-        const element =
+        var particle =
             document.createElement("i");
 
-        element.className =
+
+        particle.className =
             "p " + className;
 
-        element.style.left =
-            Math.random() * 100 + "%";
 
-        element.style.top =
-            Math.random() * 100 + "%";
+        particle.style.left =
+            Math.random()*100 + "%";
 
-        element.style.color =
+
+        particle.style.top =
+            Math.random()*100 + "%";
+
+
+        particle.style.color =
             color;
 
-        if(
-            className === "rain"
-        ){
 
-            element.style.animationDuration =
-                (.3 + Math.random() * .7) +
-                "s";
+        if(className === "rain"){
 
-        }else if(
-            className === "wave"
-        ){
-
-            element.style.animationDuration =
-                (3 + Math.random() * 3) +
+            particle.style.animationDuration =
+                (.3 + Math.random()*.7) +
                 "s";
 
         }else{
 
-            element.style.animationDuration =
-                (1.8 + Math.random() * 4) +
+            particle.style.animationDuration =
+                (2 + Math.random()*4) +
                 "s";
 
         }
 
-        element.style.animationDelay =
-            (-Math.random() * 5) +
+
+        particle.style.animationDelay =
+            (-Math.random()*5) +
             "s";
 
+
         $("fx").appendChild(
-            element
+            particle
         );
 
     }
@@ -1475,19 +2197,22 @@ function startEmotionEffect(){
 
     clearEffects();
 
-    const emotion =
+
+    var emotion =
         EMOTIONS[
             emotionIndex
         ];
 
-    const key =
+
+    var key =
         emotion.key;
 
-    const color =
+
+    var color =
         emotion.color;
 
 
-    const backgrounds = {
+    var backgrounds = {
 
         happy:
             "radial-gradient(circle at 50% 40%,#6b561b,#120e07 72%)",
@@ -1514,10 +2239,6 @@ function startEmotionEffect(){
         backgrounds[key];
 
 
-    /*
-     * 每种情绪专属粒子
-     */
-
     if(key === "sad"){
 
         createParticles(
@@ -1543,7 +2264,7 @@ function startEmotionEffect(){
         createParticles(
             "wave",
             color,
-            16
+            18
         );
 
     }
@@ -1553,7 +2274,7 @@ function startEmotionEffect(){
         createParticles(
             "wind",
             color,
-            40
+            42
         );
 
     }
@@ -1569,78 +2290,91 @@ function startEmotionEffect(){
     }
 
 
-    startEmotionAudio(key);
+    startSound(key);
 
 }
 
 
-/* ============================================================
+/* =========================================================
    情绪按钮
-============================================================ */
+========================================================= */
 
 function renderEmotionButtons(){
 
     $("emotions").innerHTML =
         EMOTIONS.map(
-            (emotion,index)=>`
+            function(emotion,index){
 
-                <button
-                    class="emotion ${index === emotionIndex ? "on" : ""}"
-                    style="--c:${emotion.color}"
-                    data-index="${index}"
-                >
+                return `
 
-                    <div
-                        class="dot"
+                    <button
+                        class="emotion ${
+                            index === emotionIndex
+                                ? "on"
+                                : ""
+                        }"
                         style="--c:${emotion.color}"
-                    ></div>
+                        data-index="${index}"
+                        type="button"
+                    >
 
-                    ${emotion.name}
+                        <div
+                            class="dot"
+                            style="--c:${emotion.color}"
+                        ></div>
 
-                </button>
+                        ${emotion.name}
 
-            `
+                    </button>
+
+                `;
+
+            }
         ).join("");
 
 
     document
         .querySelectorAll(".emotion")
-        .forEach(button=>{
+        .forEach(
+            function(button){
 
-            button.onclick =
-                ()=>{
+                button.onclick =
+                    function(){
 
-                    emotionIndex =
-                        Number(
-                            button.dataset.index
-                        );
+                        emotionIndex =
+                            Number(
+                                button.dataset.index
+                            );
 
-                    renderEmotionButtons();
 
-                    startEmotionEffect();
+                        renderEmotionButtons();
 
-                };
 
-        });
+                        startEmotionEffect();
+
+                    };
+
+            }
+        );
 
 }
 
 
-/* ============================================================
-   MATTER PHYSICS
-============================================================ */
+/* =========================================================
+   Matter.js
+========================================================= */
 
 function initPhysics(){
 
     if(
-        typeof Matter === "undefined"
+        !window.Matter
     ){
 
         physicsReady =
             false;
 
         console.warn(
-            "Matter.js failed to load."
+            "Matter.js unavailable"
         );
 
         return;
@@ -1648,121 +2382,144 @@ function initPhysics(){
     }
 
 
-    const {
-        Engine,
-        Runner,
-        World,
-        Bodies
-    } = Matter;
+    try{
+
+        var Engine =
+            Matter.Engine;
+
+        var Runner =
+            Matter.Runner;
+
+        var World =
+            Matter.World;
+
+        var Bodies =
+            Matter.Bodies;
 
 
-    engine =
-        Engine.create({
-
-            enableSleeping:false
-
-        });
+        engine =
+            Engine.create({
+                enableSleeping:false
+            });
 
 
-    engine.gravity.x =
-        0;
-
-    engine.gravity.y =
-        .45;
+        engine.gravity.x =
+            0;
 
 
-    const container =
-        $("stars");
+        engine.gravity.y =
+            .45;
 
 
-    const width =
-        container.clientWidth ||
-        300;
-
-    const height =
-        container.clientHeight ||
-        400;
+        var layer =
+            $("stars");
 
 
-    const wall =
-        20;
+        var width =
+            layer.clientWidth ||
+            300;
 
 
-    const wallOptions = {
-
-        isStatic:true,
-
-        restitution:.9,
-
-        friction:.02
-
-    };
+        var height =
+            layer.clientHeight ||
+            400;
 
 
-    physicsBodies = [
-
-        Bodies.rectangle(
-            width / 2,
-            -wall / 2,
-            width,
-            wall,
-            wallOptions
-        ),
-
-        Bodies.rectangle(
-            width / 2,
-            height + wall / 2,
-            width,
-            wall,
-            wallOptions
-        ),
-
-        Bodies.rectangle(
-            -wall / 2,
-            height / 2,
-            wall,
-            height,
-            wallOptions
-        ),
-
-        Bodies.rectangle(
-            width + wall / 2,
-            height / 2,
-            wall,
-            height,
-            wallOptions
-        )
-
-    ];
+        var wall =
+            20;
 
 
-    World.add(
-        engine.world,
-        physicsBodies
-    );
+        var options = {
+
+            isStatic:true,
+
+            restitution:.95,
+
+            friction:.01
+
+        };
 
 
-    Runner.run(
-        Runner.create(),
-        engine
-    );
+        physicsBodies = [
+
+            Bodies.rectangle(
+                width/2,
+                -wall/2,
+                width,
+                wall,
+                options
+            ),
+
+            Bodies.rectangle(
+                width/2,
+                height+wall/2,
+                width,
+                wall,
+                options
+            ),
+
+            Bodies.rectangle(
+                -wall/2,
+                height/2,
+                wall,
+                height,
+                options
+            ),
+
+            Bodies.rectangle(
+                width+wall/2,
+                height/2,
+                wall,
+                height,
+                options
+            )
+
+        ];
 
 
-    physicsReady =
-        true;
+        World.add(
+            engine.world,
+            physicsBodies
+        );
+
+
+        Runner.run(
+            Runner.create(),
+            engine
+        );
+
+
+        physicsReady =
+            true;
+
+
+        rebuildMatterStars();
+
+    }catch(error){
+
+        console.warn(
+            "Matter initialization:",
+            error
+        );
+
+        physicsReady =
+            false;
+
+    }
 
 }
 
 
-/* ============================================================
-   建立星星
-============================================================ */
+/* =========================================================
+   Matter 星星
+========================================================= */
 
-function createPhysicsStars(){
+function rebuildMatterStars(){
 
     if(
         !physicsReady ||
-        typeof Matter === "undefined"
+        !window.Matter ||
+        !engine
     ){
 
         return;
@@ -1770,147 +2527,160 @@ function createPhysicsStars(){
     }
 
 
-    const {
-        World,
-        Bodies,
-        Body
-    } = Matter;
+    try{
+
+        var World =
+            Matter.World;
+
+        var Bodies =
+            Matter.Bodies;
+
+        var Body =
+            Matter.Body;
 
 
-    const container =
-        $("stars");
+        physicsBodies
+            .filter(
+                function(body){
+                    return !body.isStatic;
+                }
+            )
+            .forEach(
+                function(body){
 
-
-    const width =
-        container.clientWidth;
-
-    const height =
-        container.clientHeight;
-
-
-    /*
-     * 删除旧动态星星
-     */
-
-    physicsBodies
-        .filter(body=>!body.isStatic)
-        .forEach(body=>{
-
-            World.remove(
-                engine.world,
-                body
-            );
-
-        });
-
-
-    physicsBodies =
-        physicsBodies.filter(
-            body=>body.isStatic
-        );
-
-
-    /*
-     * 每封信对应一颗星
-     */
-
-    stars.forEach(
-        (star,index)=>{
-
-            const x =
-                width *
-                (star.x / 100);
-
-            const y =
-                height *
-                (star.y / 100);
-
-
-            const body =
-                Bodies.circle(
-                    x,
-                    y,
-                    10,
-                    {
-
-                        restitution:.92,
-
-                        friction:.01,
-
-                        frictionAir:.004,
-
-                        density:.006,
-
-                        inertia:Infinity
-
-                    }
-                );
-
-
-            body.starId =
-                star.id;
-
-            body.starColor =
-                star.color;
-
-
-            Body.setVelocity(
-                body,
-                {
-
-                    x:
-                        (Math.random() - .5) *
-                        .5,
-
-                    y:
-                        (Math.random() - .5) *
-                        .3
+                    World.remove(
+                        engine.world,
+                        body
+                    );
 
                 }
             );
 
 
-            Body.setAngularVelocity(
-                body,
-                (Math.random() - .5) *
-                .04
+        physicsBodies =
+            physicsBodies.filter(
+                function(body){
+                    return body.isStatic;
+                }
             );
 
 
-            physicsBodies.push(
-                body
-            );
+        var layer =
+            $("stars");
 
 
-            World.add(
-                engine.world,
-                body
-            );
+        var width =
+            layer.clientWidth;
 
-        }
-    );
+
+        var height =
+            layer.clientHeight;
+
+
+        letters.forEach(
+            function(letter,index){
+
+                var x =
+                    width *
+                    (.15 +
+                    Math.random()*.7);
+
+
+                var y =
+                    height *
+                    (.12 +
+                    Math.random()*.7);
+
+
+                var body =
+                    Bodies.circle(
+                        x,
+                        y,
+                        10,
+                        {
+
+                            restitution:.95,
+
+                            friction:.01,
+
+                            frictionAir:.004,
+
+                            density:.006
+
+                        }
+                    );
+
+
+                body.starColor =
+                    letter.color;
+
+
+                body.starId =
+                    letter.id;
+
+
+                Body.setVelocity(
+                    body,
+                    {
+
+                        x:
+                            (Math.random()-.5)*.5,
+
+                        y:
+                            (Math.random()-.5)*.3
+
+                    }
+                );
+
+
+                Body.setAngularVelocity(
+                    body,
+                    (Math.random()-.5)*.08
+                );
+
+
+                physicsBodies.push(
+                    body
+                );
+
+
+                World.add(
+                    engine.world,
+                    body
+                );
+
+            }
+        );
+
+    }catch(error){
+
+        console.warn(
+            "Matter stars:",
+            error
+        );
+
+    }
 
 }
 
 
-/* ============================================================
+/* =========================================================
    星星 DOM
-============================================================ */
+========================================================= */
 
 function renderStars(){
 
-    const layer =
+    var layer =
         $("stars");
 
 
-    layer.innerHTML =
-        "";
+    layer.innerHTML = "";
 
 
     letters.forEach(
-        letter=>{
+        function(letter){
 
-            const star =
+            var star =
                 document.createElement("i");
 
 
@@ -1928,17 +2698,13 @@ function renderStars(){
                 letter.id;
 
 
-            star.title =
-                letter.emotion +
-                " · " +
-                letter.who;
-
-
             star.onclick =
-                ()=>{
+                function(){
+
                     showLetter(
                         letter
                     );
+
                 };
 
 
@@ -1950,131 +2716,135 @@ function renderStars(){
     );
 
 
-    /*
-     * 如果物理引擎已经启动，
-     * 重新建立物理星星
-     */
-
     if(physicsReady){
 
-        createPhysicsStars();
+        rebuildMatterStars();
 
     }
 
 }
 
 
-/* ============================================================
-   物理动画同步 DOM
-============================================================ */
+/* =========================================================
+   星星动画
+========================================================= */
 
 function physicsLoop(){
 
-    if(
-        physicsReady &&
-        typeof Matter !== "undefined"
-    ){
+    try{
 
-        const dynamicBodies =
-            physicsBodies.filter(
-                body=>!body.isStatic
-            );
+        if(
+            physicsReady &&
+            window.Matter &&
+            physicsBodies.length
+        ){
 
-
-        const elements =
-            [
-                ...$("stars").children
-            ];
-
-
-        dynamicBodies.forEach(
-            (body,index)=>{
-
-                const element =
-                    elements[index];
+            var dynamic =
+                physicsBodies.filter(
+                    function(body){
+                        return !body.isStatic;
+                    }
+                );
 
 
-                if(!element){
-                    return;
-                }
+            var elements =
+                Array.from(
+                    $("stars").children
+                );
 
 
-                const container =
-                    $("stars");
+            dynamic.forEach(
+                function(body,index){
+
+                    var element =
+                        elements[index];
 
 
-                const x =
-                    body.position.x /
-                    container.clientWidth *
-                    100;
+                    if(!element){
+                        return;
+                    }
 
 
-                const y =
-                    body.position.y /
-                    container.clientHeight *
-                    100;
+                    var layer =
+                        $("stars");
 
 
-                element.style.left =
-                    x + "%";
+                    var x =
+                        body.position.x /
+                        layer.clientWidth *
+                        100;
 
 
-                element.style.top =
-                    y + "%";
+                    var y =
+                        body.position.y /
+                        layer.clientHeight *
+                        100;
 
 
-                element.style.transform =
-                    `
-                    translate(-50%,-50%)
-                    rotate(${body.angle}rad)
-                    `;
-
-
-                /*
-                 * 拖尾
-                 */
-
-                if(
-                    Math.random() < .22
-                ){
-
-                    const trail =
-                        document.createElement("i");
-
-
-                    trail.className =
-                        "trail";
-
-
-                    trail.style.setProperty(
-                        "--c",
-                        body.starColor
-                    );
-
-
-                    trail.style.left =
+                    element.style.left =
                         x + "%";
 
 
-                    trail.style.top =
+                    element.style.top =
                         y + "%";
 
 
-                    container.appendChild(
-                        trail
-                    );
+                    element.style.transform =
+                        "translate(-50%,-50%) rotate(" +
+                        body.angle +
+                        "rad)";
 
 
-                    setTimeout(
-                        ()=>{
-                            trail.remove();
-                        },
-                        600
-                    );
+                    if(
+                        Math.random() < .18
+                    ){
+
+                        var trail =
+                            document.createElement("i");
+
+
+                        trail.className =
+                            "trail";
+
+
+                        trail.style.setProperty(
+                            "--c",
+                            body.starColor
+                        );
+
+
+                        trail.style.left =
+                            x + "%";
+
+
+                        trail.style.top =
+                            y + "%";
+
+
+                        layer.appendChild(
+                            trail
+                        );
+
+
+                        setTimeout(
+                            function(){
+                                trail.remove();
+                            },
+                            600
+                        );
+
+                    }
 
                 }
+            );
 
-            }
+        }
+
+    }catch(error){
+
+        console.warn(
+            "Physics frame:",
+            error
         );
 
     }
@@ -2087,18 +2857,22 @@ function physicsLoop(){
 }
 
 
-/* ============================================================
+/* =========================================================
    摇一摇
-============================================================ */
+========================================================= */
 
-function shakeBottle(power=1){
+function shakeBottle(power){
 
-    const now =
-        performance.now();
+    power =
+        power || 1;
+
+
+    var now =
+        Date.now();
 
 
     if(
-        now - lastShake < 250
+        now-lastShake < 220
     ){
 
         return;
@@ -2110,122 +2884,135 @@ function shakeBottle(power=1){
         now;
 
 
-    /*
-     * 真正给每颗星施加物理力
-     */
-
     if(
         physicsReady &&
-        typeof Matter !== "undefined"
+        window.Matter
     ){
 
-        const {
-            Body
-        } = Matter;
+        try{
+
+            var Body =
+                Matter.Body;
 
 
-        physicsBodies
-            .filter(body=>!body.isStatic)
-            .forEach(body=>{
+            physicsBodies
+                .filter(
+                    function(body){
+                        return !body.isStatic;
+                    }
+                )
+                .forEach(
+                    function(body){
 
-                Body.applyForce(
-                    body,
-                    body.position,
-                    {
+                        Body.applyForce(
+                            body,
+                            body.position,
+                            {
 
-                        x:
-                            (Math.random() - .5) *
-                            .055 *
-                            power,
+                                x:
+                                    (Math.random()-.5) *
+                                    .055 *
+                                    power,
 
-                        y:
-                            -(
-                                .035 +
-                                Math.random() * .045
-                            ) *
+                                y:
+                                    -(
+                                        .035 +
+                                        Math.random()*.045
+                                    ) *
+                                    power
+
+                            }
+                        );
+
+
+                        Body.setAngularVelocity(
+                            body,
+                            (Math.random()-.5) *
+                            .35 *
                             power
+                        );
 
                     }
                 );
 
+        }catch(error){
 
-                Body.setAngularVelocity(
-                    body,
-                    (Math.random() - .5) *
-                    .35 *
-                    power
-                );
+            console.warn(
+                error
+            );
 
-            });
+        }
 
     }
 
 
     /*
-     * 瓶子本身晃动
+     * 即使物理引擎没加载，
+     * 瓶子本身也会有明显摇动。
      */
 
-    $("bottle").animate(
+    var bottle =
+        $("bottle");
 
-        [
+
+    if(bottle){
+
+        bottle.animate(
+
+            [
+
+                {
+                    transform:
+                        "translateX(0) rotate(0)"
+                },
+
+                {
+                    transform:
+                        "translateX(-15px) rotate(-4deg)"
+                },
+
+                {
+                    transform:
+                        "translateX(17px) rotate(4deg)"
+                },
+
+                {
+                    transform:
+                        "translateX(-10px) rotate(-3deg)"
+                },
+
+                {
+                    transform:
+                        "translateX(6px) rotate(2deg)"
+                },
+
+                {
+                    transform:
+                        "translateX(0) rotate(0)"
+                }
+
+            ],
 
             {
-                transform:
-                    "translateX(0) rotate(0deg)"
-            },
-
-            {
-                transform:
-                    "translateX(-14px) rotate(-4deg)"
-            },
-
-            {
-                transform:
-                    "translateX(16px) rotate(4deg)"
-            },
-
-            {
-                transform:
-                    "translateX(-9px) rotate(-3deg)"
-            },
-
-            {
-                transform:
-                    "translateX(6px) rotate(2deg)"
-            },
-
-            {
-                transform:
-                    "translateX(0) rotate(0deg)"
+                duration:950,
+                easing:
+                    "cubic-bezier(.2,.8,.2,1)"
             }
 
-        ],
+        );
 
-        {
-
-            duration:950,
-
-            easing:
-                "cubic-bezier(.2,.8,.2,1)"
-
-        }
-
-    );
+    }
 
 
     resumeAudio();
 
-
-    /*
-     * 手机震动
-     */
 
     if(
         navigator.vibrate
     ){
 
         navigator.vibrate(
-            [40,30,70]
+            [45,30,70]
         );
 
     }
@@ -2233,17 +3020,19 @@ function shakeBottle(power=1){
 }
 
 
-/* ============================================================
-   手机真实摇动
-============================================================ */
+/* =========================================================
+   手机摇一摇
+========================================================= */
 
-let lastAcceleration = 0;
+var lastMotion =
+    0;
+
 
 window.addEventListener(
     "devicemotion",
-    event=>{
+    function(event){
 
-        const acceleration =
+        var acceleration =
             event.accelerationIncludingGravity;
 
 
@@ -2252,318 +3041,48 @@ window.addEventListener(
         }
 
 
-        const x =
+        var x =
             acceleration.x || 0;
 
-        const y =
+
+        var y =
             acceleration.y || 0;
 
-        const z =
+
+        var z =
             acceleration.z || 0;
 
 
-        const magnitude =
+        var magnitude =
             Math.sqrt(
-                x*x +
-                y*y +
-                z*z
+                x*x+y*y+z*z
             );
+
+
+        var now =
+            Date.now();
 
 
         if(
             magnitude > 20 &&
-            magnitude - lastAcceleration > 7
+            now-lastMotion > 600
         ){
+
+            lastMotion =
+                now;
+
 
             shakeBottle(.8);
 
         }
 
-
-        lastAcceleration =
-            magnitude;
-
     }
 );
 
 
-/* ============================================================
-   云端
-============================================================ */
-
-async function loadLetters(){
-
-    try{
-
-        const result =
-            await db
-                .from("star_letters")
-                .select("*")
-                .eq("room",ROOM)
-                .order(
-                    "created_at",
-                    {
-                        ascending:true
-                    }
-                );
-
-
-        if(result.error){
-
-            console.error(
-                result.error
-            );
-
-            setStatus(
-                "● 云端连接失败"
-            );
-
-            return;
-
-        }
-
-
-        letters =
-            result.data || [];
-
-
-        renderAll();
-
-
-        /*
-         * Realtime
-         */
-
-        db
-            .channel(
-                "star-bottle-room"
-            )
-            .on(
-                "postgres_changes",
-                {
-
-                    event:"INSERT",
-
-                    schema:"public",
-
-                    table:"star_letters",
-
-                    filter:
-                        "room=eq." + ROOM
-
-                },
-
-                payload=>{
-
-                    const newLetter =
-                        payload.new;
-
-
-                    if(
-                        letters.some(
-                            item =>
-                                item.id ===
-                                newLetter.id
-                        )
-                    ){
-
-                        return;
-
-                    }
-
-
-                    letters.push(
-                        newLetter
-                    );
-
-
-                    renderAll();
-
-
-                    /*
-                     * 新星星出现时轻微闪光
-                     */
-
-                    const previous =
-                        emotionIndex;
-
-
-                    const found =
-                        EMOTIONS.findIndex(
-                            e =>
-                                e.name ===
-                                newLetter.emotion
-                        );
-
-
-                    if(found >= 0){
-
-                        emotionIndex =
-                            found;
-
-                        startEmotionEffect();
-
-
-                        setTimeout(
-                            ()=>{
-                                emotionIndex =
-                                    previous;
-
-                                clearEffects();
-                            },
-                            900
-                        );
-
-                    }
-
-                }
-            )
-            .subscribe(
-                state=>{
-
-                    if(
-                        state ===
-                        "SUBSCRIBED"
-                    ){
-
-                        setStatus(
-                            "● 已连接 · 两个人共享同一瓶星星"
-                        );
-
-                    }
-
-                }
-            );
-
-    }catch(error){
-
-        console.error(
-            error
-        );
-
-        setStatus(
-            "● 云端连接失败"
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   保存信件
-============================================================ */
-
-async function saveLetter(){
-
-    const text =
-        $("text").value.trim();
-
-
-    if(!text){
-
-        return;
-
-    }
-
-
-    const emotion =
-        EMOTIONS[
-            emotionIndex
-        ];
-
-
-    const row = {
-
-        room:ROOM,
-
-        text:text,
-
-        emotion:
-            emotion.name,
-
-        color:
-            emotion.color,
-
-        who:
-            currentWho
-
-    };
-
-
-    setStatus(
-        "● 正在保存星星……"
-    );
-
-
-    const result =
-        await db
-            .from("star_letters")
-            .insert(row)
-            .select()
-            .single();
-
-
-    if(result.error){
-
-        console.error(
-            result.error
-        );
-
-        setStatus(
-            "● 保存失败，请检查网络"
-        );
-
-        return;
-
-    }
-
-
-    /*
-     * Realtime 通常会收到，
-     * 但如果当前客户端没有收到，
-     * 自己先补进去。
-     */
-
-    if(
-        result.data &&
-        !letters.some(
-            x =>
-                x.id ===
-                result.data.id
-        )
-    ){
-
-        letters.push(
-            result.data
-        );
-
-    }
-
-
-    $("text").value =
-        "";
-
-
-    closeComposer();
-
-
-    clearEffects();
-
-
-    renderAll();
-
-
-    setStatus(
-        "● 星星已经留下"
-    );
-
-}
-
-
-/* ============================================================
-   UI
-============================================================ */
+/* =========================================================
+   渲染
+========================================================= */
 
 function renderAll(){
 
@@ -2572,13 +3091,17 @@ function renderAll(){
 
     $("ic").textContent =
         letters.filter(
-            x => x.who === "Ink"
+            function(item){
+                return item.who === "Ink";
+            }
         ).length;
 
 
     $("yc").textContent =
         letters.filter(
-            x => x.who === "Yyi"
+            function(item){
+                return item.who === "Yyi";
+            }
         ).length;
 
 
@@ -2588,9 +3111,9 @@ function renderAll(){
 }
 
 
-/* ============================================================
-   查看信
-============================================================ */
+/* =========================================================
+   查看信件
+========================================================= */
 
 function showLetter(letter){
 
@@ -2605,13 +3128,14 @@ function showLetter(letter){
 
             <span
                 class="tag"
-                style="background:${letter.color}"
+                style="background:${escapeHTML(letter.color)}"
             >
                 ${escapeHTML(letter.emotion)}
             </span>
 
             <span class="who">
-                ${escapeHTML(letter.who)} 写的
+                ${escapeHTML(letter.who)}
+                写的
             </span>
 
             <p>
@@ -2619,9 +3143,13 @@ function showLetter(letter){
             </p>
 
             <small>
-                ${new Date(
+                ${
                     letter.created_at
-                ).toLocaleString("zh-CN")}
+                    ? new Date(
+                        letter.created_at
+                    ).toLocaleString("zh-CN")
+                    : ""
+                }
             </small>
 
         </article>
@@ -2631,9 +3159,9 @@ function showLetter(letter){
 }
 
 
-/* ============================================================
+/* =========================================================
    档案
-============================================================ */
+========================================================= */
 
 function openArchive(){
 
@@ -2657,43 +3185,52 @@ function openArchive(){
             .slice()
             .reverse()
             .map(
-                letter=>`
+                function(letter){
 
-                    <article class="note">
+                    return `
 
-                        <span
-                            class="tag"
-                            style="background:${letter.color}"
-                        >
-                            ${escapeHTML(letter.emotion)}
-                        </span>
+                        <article class="note">
 
-                        <span class="who">
-                            ${escapeHTML(letter.who)} 写的
-                        </span>
+                            <span
+                                class="tag"
+                                style="background:${escapeHTML(letter.color)}"
+                            >
+                                ${escapeHTML(letter.emotion)}
+                            </span>
 
-                        <p>
-                            ${escapeHTML(letter.text)}
-                        </p>
+                            <span class="who">
+                                ${escapeHTML(letter.who)}
+                                写的
+                            </span>
 
-                        <small>
-                            ${new Date(
-                                letter.created_at
-                            ).toLocaleString("zh-CN")}
-                        </small>
+                            <p>
+                                ${escapeHTML(letter.text)}
+                            </p>
 
-                    </article>
+                            <small>
+                                ${
+                                    letter.created_at
+                                    ? new Date(
+                                        letter.created_at
+                                    ).toLocaleString("zh-CN")
+                                    : ""
+                                }
+                            </small>
 
-                `
+                        </article>
+
+                    `;
+
+                }
             )
             .join("");
 
 }
 
 
-/* ============================================================
+/* =========================================================
    写信
-============================================================ */
+========================================================= */
 
 function openComposer(){
 
@@ -2705,12 +3242,19 @@ function openComposer(){
     renderEmotionButtons();
 
 
+    /*
+     * 情绪特效从打开写信开始。
+     * 写完之前一直保持。
+     */
+
     startEmotionEffect();
 
 
     setTimeout(
-        ()=>{
+        function(){
+
             $("text").focus();
+
         },
         100
     );
@@ -2730,87 +3274,177 @@ function closeComposer(){
 }
 
 
-/* ============================================================
-   署名
-============================================================ */
+/* =========================================================
+   保存
+========================================================= */
 
-function setupSignatureButtons(){
+async function saveLetter(){
 
-    document
-        .querySelectorAll(
-            ".sign button"
-        )
-        .forEach(button=>{
-
-            button.onclick =
-                ()=>{
-
-                    currentWho =
-                        button.dataset.who;
+    var text =
+        $("text").value.trim();
 
 
-                    document
-                        .querySelectorAll(
-                            ".sign button"
-                        )
-                        .forEach(
-                            other=>{
-                                other.classList.toggle(
-                                    "on",
-                                    other === button
-                                );
-                            }
-                        );
+    if(!text){
 
-                };
+        $("text").focus();
 
-        });
+        return;
+
+    }
+
+
+    var emotion =
+        EMOTIONS[
+            emotionIndex
+        ];
+
+
+    var row = {
+
+        room:ROOM,
+
+        text:text,
+
+        emotion:
+            emotion.name,
+
+        color:
+            emotion.color,
+
+        who:
+            currentWho
+
+    };
+
+
+    setStatus(
+        "● 正在把信折成星星……"
+    );
+
+
+    /*
+     * 云端可用：
+     * 保存到 Supabase
+     */
+
+    if(db){
+
+        try{
+
+            var result =
+                await db
+                    .from("star_letters")
+                    .insert(row)
+                    .select()
+                    .single();
+
+
+            if(
+                result.error
+            ){
+
+                console.warn(
+                    result.error
+                );
+
+                /*
+                 * 云端失败仍然不丢信。
+                 * 本地先保存。
+                 */
+
+                saveLocal(row);
+
+            }else{
+
+                if(
+                    result.data &&
+                    !letters.some(
+                        function(item){
+                            return item.id ===
+                                result.data.id;
+                        }
+                    )
+                ){
+
+                    letters.push(
+                        result.data
+                    );
+
+                }
+
+            }
+
+        }catch(error){
+
+            console.warn(
+                error
+            );
+
+            saveLocal(row);
+
+        }
+
+    }else{
+
+        saveLocal(row);
+
+    }
+
+
+    $("text").value = "";
+
+
+    closeComposer();
+
+
+    renderAll();
+
+
+    setStatus(
+        "● 星星已经留下"
+    );
 
 }
 
 
-/* ============================================================
-   事件
-============================================================ */
+function saveLocal(row){
 
-$("enter").onclick =
-    async ()=>{
+    var localRow =
+        Object.assign(
+            {},
+            row,
+            {
+                id:
+                    "local-" +
+                    Date.now() +
+                    "-" +
+                    Math.random()
+                        .toString(16)
+                        .slice(2),
 
-        /*
-         * 用户第一次点击页面，
-         * 此时允许浏览器启动声音。
-         */
-
-        try{
-
-            const AudioCtx =
-                window.AudioContext ||
-                window.webkitAudioContext;
-
-            if(AudioCtx){
-
-                audioContext =
-                    new AudioCtx();
-
-                await audioContext.resume();
-
-                audioContext.close();
-
-                audioContext =
-                    null;
-
+                created_at:
+                    new Date()
+                        .toISOString()
             }
-
-        }catch(e){}
-
-
-        $("gate").classList.add(
-            "hide"
         );
 
 
+    letters.push(
+        localRow
+    );
+
+}
+
+
+/* =========================================================
+   启动
+========================================================= */
+
+window.startStarBottle =
+    function(){
+
         /*
-         * 物理引擎失败也不能阻止页面打开
+         * 物理
          */
 
         try{
@@ -2820,24 +3454,35 @@ $("enter").onclick =
         }catch(error){
 
             console.warn(
+                "Physics:",
                 error
             );
-
-            physicsReady =
-                false;
 
         }
 
 
         /*
-         * 加载云端
+         * 云端
          */
 
-        loadLetters();
+        try{
+
+            initSupabase();
+
+            loadCloud();
+
+        }catch(error){
+
+            console.warn(
+                "Cloud:",
+                error
+            );
+
+        }
 
 
         /*
-         * 启动星星动画
+         * 动画
          */
 
         if(!animationStarted){
@@ -2851,8 +3496,17 @@ $("enter").onclick =
 
         }
 
+
+        setStatus(
+            "● 星星瓶已打开"
+        );
+
     };
 
+
+/* =========================================================
+   DOM 事件
+========================================================= */
 
 $("write").onclick =
     openComposer;
@@ -2862,34 +3516,74 @@ $("close").onclick =
     closeComposer;
 
 
-$("fold").onclick =
-    saveLetter;
-
-
 $("archive").onclick =
     openArchive;
 
 
 $("closeBox").onclick =
-    ()=>{
+    function(){
+
         $("box").classList.remove(
             "open"
         );
+
     };
 
 
 $("shake").onclick =
-    ()=>{
+    function(){
+
         shakeBottle(1);
+
     };
 
 
-setupSignatureButtons();
+$("fold").onclick =
+    saveLetter;
 
 
-/* ============================================================
+/* =========================================================
+   署名
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".sign button"
+    )
+    .forEach(
+        function(button){
+
+            button.onclick =
+                function(){
+
+                    currentWho =
+                        button.dataset.who;
+
+
+                    document
+                        .querySelectorAll(
+                            ".sign button"
+                        )
+                        .forEach(
+                            function(other){
+
+                                other.classList.toggle(
+                                    "on",
+                                    other === button
+                                );
+
+                            }
+                        );
+
+                };
+
+        }
+    );
+
+
+/* =========================================================
    日期
-============================================================ */
+========================================================= */
 
 $("date").textContent =
     new Date().toLocaleDateString(
@@ -2902,79 +3596,20 @@ $("date").textContent =
     );
 
 
-/* ============================================================
-   窗口变化
-============================================================ */
+/* =========================================================
+   点击背景关闭弹窗
+========================================================= */
 
-window.addEventListener(
-    "resize",
-    ()=>{
-        /*
-         * 不重新创建整个 Matter 引擎，
-         * 避免移动端旋转导致多个物理世界叠加。
-         */
+$("compose").addEventListener(
+    "click",
+    function(event){
 
         if(
-            physicsReady &&
-            typeof Matter !== "undefined"
+            event.target ===
+            $("compose")
         ){
 
-            const container =
-                $("stars");
-
-            const width =
-                container.clientWidth;
-
-            const height =
-                container.clientHeight;
-
-
-            const staticBodies =
-                physicsBodies.filter(
-                    body=>body.isStatic
-                );
-
-
-            if(
-                staticBodies.length === 4
-            ){
-
-                Matter.Body.setPosition(
-                    staticBodies[0],
-                    {
-                        x:width/2,
-                        y:-10
-                    }
-                );
-
-
-                Matter.Body.setPosition(
-                    staticBodies[1],
-                    {
-                        x:width/2,
-                        y:height+10
-                    }
-                );
-
-
-                Matter.Body.setPosition(
-                    staticBodies[2],
-                    {
-                        x:-10,
-                        y:height/2
-                    }
-                );
-
-
-                Matter.Body.setPosition(
-                    staticBodies[3],
-                    {
-                        x:width+10,
-                        y:height/2
-                    }
-                );
-
-            }
+            closeComposer();
 
         }
 
@@ -2982,17 +3617,60 @@ window.addEventListener(
 );
 
 
-/* ============================================================
-   页面关闭时停止音频
-============================================================ */
+$("box").addEventListener(
+    "click",
+    function(event){
 
-window.addEventListener(
-    "pagehide",
-    ()=>{
-        stopAudio();
+        if(
+            event.target ===
+            $("box")
+        ){
+
+            $("box").classList.remove(
+                "open"
+            );
+
+        }
+
     }
 );
 
+
+/* =========================================================
+   窗口尺寸
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    function(){
+
+        /*
+         * 不重新创建整个物理世界。
+         * 避免手机旋转后出现多个 Matter Engine。
+         */
+
+    }
+);
+
+
+/* =========================================================
+   用户第一次触摸页面时尝试恢复音频
+========================================================= */
+
+document.addEventListener(
+    "pointerdown",
+    function(){
+
+        resumeAudio();
+
+    },
+    {
+        passive:true
+    }
+);
+
+
+})();
 </script>
 
 </body>
