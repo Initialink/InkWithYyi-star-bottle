@@ -1,127 +1,38 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#090611">
-<title>给你的一瓶星星 ✦</title>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ink × Yyi · Our Star Bottle</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090611;color:#f5eadb;font-family:"Noto Serif SC","PingFang SC","Microsoft YaHei",serif}
-button,textarea{font:inherit}button{cursor:pointer}textarea{resize:none}
-#sky{position:fixed;inset:0;background:radial-gradient(circle at 50% 75%,#382346 0,#171024 38%,#090611 100%);transition:background 1s;z-index:0}
-#stars{position:fixed;inset:0;pointer-events:none;z-index:1}
-.bgstar{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.15;animation:tw 3s ease-in-out infinite}
-@keyframes tw{50%{opacity:.85;transform:scale(1.8)}}
-#gift{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#2b203b 0,#100b17 55%,#08050d 100%);transition:.8s}
-#gift.hide{opacity:0;visibility:hidden}
-.gcard{text-align:center;width:min(90%,430px)}
-.gstar{font-size:76px;filter:drop-shadow(0 0 28px #f4d26a);animation:float 4s ease-in-out infinite}
-@keyframes float{50%{transform:translateY(-10px) rotate(5deg)}}
-.gcard h1{font-size:42px;font-weight:400;letter-spacing:5px;margin:15px 0 20px}.gcard p{color:#c9bbca;line-height:2;letter-spacing:1px}
-.pill{border:1px solid #a88968;background:#ffffff08;color:#f4e7d5;border-radius:999px;padding:13px 34px;margin-top:22px}
-#app{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
-#top{position:fixed;top:18px;left:20px;right:20px;display:flex;justify-content:space-between;align-items:center;color:#c9b9c9;font-size:13px;z-index:5}
-#bottleWrap{position:relative;width:min(390px,88vw);height:min(600px,72vh);filter:drop-shadow(0 22px 35px #0008)}
-#bottle{position:absolute;inset:0;width:100%;height:100%}
-#bottleGlass{fill:#ffffff08;stroke:#d9c7e855;stroke-width:3}
-#bottleGlow{fill:none;stroke:#ffffff2b;stroke-width:10}
-#phys{position:absolute;left:12%;right:12%;top:25%;bottom:7%;border-radius:42% 42% 18% 18%/17% 17% 8% 8%;overflow:hidden;pointer-events:none}
-.pstar{position:absolute;width:18px;height:18px;transform:translate(-50%,-50%);clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);filter:drop-shadow(0 0 6px currentColor)}
-#count{margin-top:8px;color:#c7b6c7}#count b{color:#f0cf6b}
-#actions{display:flex;gap:10px;margin-top:14px}
-.small{background:#ffffff09;border:1px solid #a8896840;color:#e9dccb;border-radius:20px;padding:8px 16px}
-#compose{position:fixed;inset:0;z-index:30;display:none;align-items:center;justify-content:center;padding:20px;background:#07050dcc;backdrop-filter:blur(10px)}
-#compose.open{display:flex}
-.sheet{width:min(600px,94vw);height:min(700px,92vh);background:#f7efe2;color:#30262d;border-radius:26px;padding:22px;box-shadow:0 25px 80px #0008;position:relative;overflow:hidden}
-.sheet h2{font-weight:400;text-align:center;margin:2px 0 16px}
-.emotions{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}
-.em{border:1px solid #b8a8a044;background:#fff8;border-radius:14px;padding:8px 3px;font-size:12px;color:#40343b}.em.active{border-color:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 22%,transparent);background:color-mix(in srgb,var(--c) 9%,white)}
-.swatch{width:19px;height:19px;border-radius:50%;margin:0 auto 5px;background:var(--c);box-shadow:0 0 9px var(--c)}
-#letter{width:100%;height:300px;border:0;outline:0;background:transparent;color:#332831;font-size:17px;line-height:2;padding:8px 4px}
-.sign{display:flex;justify-content:center;gap:10px;margin:10px 0}.sign button{border:1px solid #b8a8a0;background:#fff8;border-radius:999px;padding:8px 18px}.sign button.active{background:#3b2b38;color:#fff;border-color:#3b2b38}
-.row{display:flex;justify-content:center;gap:10px}.primary{background:#3b2b38;color:white;border:0;border-radius:999px;padding:11px 25px}.close{background:transparent;border:1px solid #a99;color:#55434c;border-radius:999px;padding:10px 20px}
-#effects{position:fixed;inset:0;z-index:25;pointer-events:none;overflow:hidden;opacity:0;transition:opacity .35s}
-#effects.on{opacity:1}
-.rain{position:absolute;top:-20%;width:1px;height:80px;background:linear-gradient(transparent,#b9d9ff);opacity:.48;animation:rain linear infinite}
-@keyframes rain{to{transform:translateY(140vh) translateX(-12vw)}}
-.ember{position:absolute;width:5px;height:14px;border-radius:50%;background:#ff654d;box-shadow:0 0 10px #ff4b3b;animation:up linear infinite}
-@keyframes up{to{transform:translateY(-110vh) scale(.1);opacity:0}}
-.dust{position:absolute;width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 14px currentColor;animation:drift linear infinite}
-@keyframes drift{50%{transform:translate(30px,-30px) scale(1.6)}100%{transform:translate(-20px,-100vh);opacity:0}}
-.wave{position:absolute;border:1px solid currentColor;border-radius:50%;width:20px;height:20px;animation:wave 4s ease-out infinite}
-@keyframes wave{to{width:80vw;height:80vw;opacity:0;transform:translate(-40%,-40%)}}
-.wind{position:absolute;width:35vw;height:1px;background:linear-gradient(90deg,transparent,currentColor,transparent);animation:wind 1.5s linear infinite}
-@keyframes wind{from{transform:translateX(-60vw)}to{transform:translateX(160vw)}}
-#saved{position:fixed;inset:0;z-index:35;display:none;align-items:center;justify-content:center;background:#08050de8;backdrop-filter:blur(10px);padding:20px}
-#saved.open{display:flex}.savedbox{width:min(600px,94vw);max-height:82vh;overflow:auto;background:#f7efe2;color:#332831;border-radius:24px;padding:24px}
-.note{padding:15px 0;border-bottom:1px solid #d9cbbd}.note:last-child{border:0}.tag{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;background:var(--c);color:#fff}.sig{float:right;color:#88727c}
-@media(max-width:520px){.emotions{grid-template-columns:repeat(3,1fr)}#letter{height:330px}.sheet{padding:18px}.gcard h1{font-size:34px}#bottleWrap{height:66vh}}
-</style>
-</head>
-<body>
-<div id="sky"></div><div id="stars"></div>
-<div id="effects"></div>
-<section id="gift"><div class="gcard"><div class="gstar">✦</div><h1>给你的一瓶星星</h1><p>有些话，想说给你听。<br>所以我把它们一颗一颗，放进这里。</p><button class="pill" id="enter">打开看看 ✦</button></div></section>
-<main id="app">
-<div id="top"><span id="date"></span><span>Ink × Yyi</span></div>
-<div id="bottleWrap">
-<svg id="bottle" viewBox="0 0 390 600" preserveAspectRatio="none">
-<defs><linearGradient id="glass" x1="0" x2="1"><stop stop-color="#fff" stop-opacity=".18"/><stop offset=".45" stop-color="#fff" stop-opacity=".03"/><stop offset="1" stop-color="#b99be0" stop-opacity=".13"/></linearGradient></defs>
-<path d="M142 50h106v65c0 12 50 35 62 65 10 16 14 38 14 67v267c0 43-24 68-67 68H133c-43 0-67-25-67-68V247c0-29 4-51 14-67 12-30 62-53 62-65V50z" fill="url(#glass)" stroke="#d9c7e855" stroke-width="3"/>
-<path d="M147 50h96v72c0 16 42 32 57 63 8 16 11 35 11 61v262c0 34-18 50-54 50H133c-36 0-54-16-54-50V246c0-26 3-45 11-61 15-31 57-47 57-63V50z" fill="none" stroke="#fff2" stroke-width="9"/>
-<rect x="135" y="31" width="120" height="30" rx="10" fill="#c4a36f" opacity=".85"/><rect x="145" y="21" width="100" height="15" rx="6" fill="#806544"/>
-<path d="M88 225c10-44 40-57 62-76" fill="none" stroke="#fff4" stroke-width="7" stroke-linecap="round"/>
-</svg><div id="phys"></div></div>
-<div id="count">瓶中有 <b>0</b> 颗星星</div><div id="actions"><button class="small" id="write">写一封星星信 ✦</button><button class="small" id="letters">看信件</button><button class="small" id="shake">摇一摇</button></div>
-</main>
-
-<section id="compose"><div class="sheet"><button id="x" class="close" style="float:right">×</button><h2>写一封星星信</h2>
-<div class="emotions" id="emotions"></div>
-<textarea id="letter" maxlength="5000" placeholder="想对 TA 说些什么……"></textarea>
-<div class="sign"><button data-sig="Ink" class="active">Ink 写的</button><button data-sig="Yyi">Yyi 写的</button></div>
-<div class="row"><button class="close" id="cancel">放下这封信</button><button class="primary" id="fold">折成星星 ✦</button></div>
-</div></section>
-<section id="saved"><div class="savedbox"><button id="closeSaved" class="close" style="float:right">×</button><h2>收集的星星</h2><div id="notes"></div></div></section>
-
+*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:"Noto Serif SC","PingFang SC",serif;color:#fff;background:#080711}button,textarea{font:inherit}button{cursor:pointer}
+#world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle,#2b2340,#09070e 70%);transition:1s}#fx{position:absolute;inset:0;pointer-events:none}
+.p{position:absolute;border-radius:50%}.rain{width:1px;height:70px;background:linear-gradient(transparent,#d8edff);opacity:.5;animation:rain linear infinite}@keyframes rain{to{transform:translate(-12vw,125vh)}}.ember{width:4px;height:18px;background:#ff6048;box-shadow:0 0 18px #ff3b2b;animation:up linear infinite}@keyframes up{to{transform:translate(-20px,-120vh);opacity:0}}.spark{width:4px;height:4px;background:currentColor;box-shadow:0 0 15px currentColor;animation:sp linear infinite}@keyframes sp{50%{transform:translate(30px,-20px) scale(1.7)}to{transform:translate(-15px,-110vh);opacity:0}}.wave{border:1px solid currentColor;width:18px;height:18px;animation:wa 4s ease-out infinite}@keyframes wa{to{width:70vw;height:70vw;opacity:0;transform:translate(-50%,-50%)}}.wind{width:35vw;height:1px;background:currentColor;animation:wi 1.2s linear infinite}@keyframes wi{from{transform:translateX(-100vw)}to{transform:translateX(180vw)}}
+#gate{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#09070e;transition:.8s}.hide{opacity:0;pointer-events:none}.intro{text-align:center}.big{font-size:90px;text-shadow:0 0 35px #e8d17d}.intro h1{font-size:38px;font-weight:400;letter-spacing:8px}.intro p{color:#aaa0b1;line-height:2}.btn,.enter{background:#ffffff0b;border:1px solid #d7c58c55;color:#eee5d9;border-radius:99px;padding:11px 20px}
+main{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}.top{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#a69aaa}
+.bottle{position:relative;width:min(440px,90vw);height:min(640px,72vh);filter:drop-shadow(0 35px 60px #000b)}#glass{position:absolute;width:100%;height:100%}#stars{position:absolute;left:16%;right:16%;top:25%;bottom:7%;overflow:hidden;border-radius:40% 40% 18% 18%}.star{position:absolute;width:20px;height:20px;clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);background:var(--c);box-shadow:0 0 12px var(--c),0 0 30px var(--c);cursor:pointer}.trail{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);opacity:.6;animation:tr .55s forwards}@keyframes tr{to{opacity:0;transform:scale(.1)}}
+.stats{display:flex;gap:28px;color:#aaa0b0;font-size:12px}.stats b{color:#e9d68d;font-size:18px;font-weight:400}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+.panel{position:fixed;inset:0;z-index:8;background:#05040bea;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:16px}.open{display:flex}.card{width:min(650px,95vw);max-height:92vh;overflow:auto;background:#f7eee2;color:#352b31;border-radius:28px;padding:24px}.x{float:right;border:0;background:none;font-size:25px;color:#777}.emotions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.emotion{border:1px solid #d2c4ba;background:#fff;border-radius:14px;padding:8px 2px;font-size:11px}.emotion.on{outline:2px solid var(--c)}.dot{width:22px;height:22px;border-radius:50%;margin:auto auto 5px;background:var(--c);box-shadow:0 0 12px var(--c)}textarea{width:100%;height:300px;margin-top:12px;border:0;outline:0;resize:none;background:repeating-linear-gradient(transparent 0 39px,#ded1c5 40px);font:17px/40px Georgia,"PingFang SC",serif;color:#352b31}.sign{text-align:center;margin:10px}.sign button{border:1px solid #c8bbb2;background:#fff;border-radius:99px;padding:8px 17px}.sign .on{background:#3b2c38;color:#fff}.row{text-align:center}.primary{border:0;border-radius:99px;background:#3b2c38;color:#fff;padding:11px 22px}.note{padding:15px 0;border-bottom:1px solid #ded2c8}.tag{padding:4px 9px;border-radius:99px;color:#fff;font-size:11px}.who{float:right;color:#88747e}.note p{white-space:pre-wrap;line-height:1.8}.status{position:fixed;bottom:15px;right:16px;font-size:10px;color:#a69aaa}
+@media(max-width:520px){.emotions{grid-template-columns:repeat(3,1fr)}.intro h1{font-size:31px}}
+</style></head><body>
+<div id="world"><div id="fx"></div></div><section id="gate"><div class="intro"><div class="big">✦</div><h1>Ink × Yyi</h1><p>我们的星星瓶<br>把想说的话，折成星星。</p><button class="enter" id="enter">打开我们的星星瓶 ✦</button></div></section>
+<main><div class="top"><span id="date"></span><span>OUR STAR BOTTLE</span></div><div class="bottle" id="bottle">
+<svg id="glass" viewBox="0 0 440 640"><defs><linearGradient id="g"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".45" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#9b7ad0" stop-opacity=".18"/></linearGradient><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#e7d19b"/><stop offset="1" stop-color="#725938"/></linearGradient></defs><path d="M158 55h124v78c0 18 48 32 64 65 9 19 13 43 13 73v278c0 48-27 72-75 72H156c-48 0-75-24-75-72V271c0-30 4-54 13-73 16-33 64-47 64-65V55z" fill="url(#g)" stroke="#eee6ff44" stroke-width="3"/><path d="M168 55h104v86c0 18 39 33 54 62 8 16 11 38 11 67v277c0 35-19 53-57 53H160c-38 0-57-18-57-53V270c0-29 3-51 11-67 15-29 54-44 54-62V55z" fill="none" stroke="#fff3" stroke-width="10"/><rect x="149" y="31" width="142" height="30" rx="9" fill="url(#gold)"/><rect x="161" y="21" width="118" height="14" rx="5" fill="#6d5436"/><path d="M112 243c16-44 46-59 66-80M329 279c8 52 8 116 7 181" fill="none" stroke="#fff5" stroke-width="7" stroke-linecap="round"/></svg><div id="stars"></div></div>
+<div class="stats"><span>Ink <b id="ic">0</b> ✦</span><span>Yyi <b id="yc">0</b> ✦</span><span>总计 <b id="tc">0</b></span></div><div class="actions"><button class="btn" id="write">写一封星星信 ✦</button><button class="btn" id="archive">星星档案</button><button class="btn" id="shake">摇一摇 ✦</button></div></main>
+<section class="panel" id="compose"><div class="card"><button class="x" id="close">×</button><h2>把一句话，留下来</h2><div class="emotions" id="emotions"></div><textarea id="text" maxlength="5000" placeholder="写下现在想留下的话……"></textarea><div class="sign"><button class="on" data-who="Ink">Ink 写的</button><button data-who="Yyi">Yyi 写的</button></div><div class="row"><button class="primary" id="fold">折成星星 ✦</button></div></div></section>
+<section class="panel" id="box"><div class="card"><button class="x" id="closeBox">×</button><h2>星星档案</h2><div id="notes"></div></div></section><div class="status" id="status">● 云端连接中</div>
 <script>
-const emotions=[
-{name:'开心',c:'#f4d24f',type:'dust'},
-{name:'难过',c:'#78a9df',type:'rain'},
-{name:'生气',c:'#ef5a4f',type:'ember'},
-{name:'平静',c:'#79c8b1',type:'wave'},
-{name:'焦虑',c:'#b58bd8',type:'wind'},
-{name:'想念',c:'#8c78e8',type:'dust'}
-];
-let selected=0, signature='Ink', effectTimer=null, audioCtx=null, rainGain=null, noiseGain=null;
-const $=id=>document.getElementById(id);
-function makeStars(){for(let i=0;i<100;i++){let s=document.createElement('i');s.className='bgstar';s.style.left=Math.random()*100+'%';s.style.top=Math.random()*100+'%';s.style.animationDelay=Math.random()*4+'s';s.style.animationDuration=2+Math.random()*4+'s';$('stars').appendChild(s)}}
-function setDate(){let d=new Date();$('date').textContent=d.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'})}
-function renderEmotions(){ $('emotions').innerHTML=emotions.map((e,i)=>`<button class="em ${i===selected?'active':''}" style="--c:${e.c}" data-i="${i}"><div class="swatch"></div>${e.name}</button>`).join('');document.querySelectorAll('.em').forEach(b=>b.onclick=()=>{selected=+b.dataset.i;renderEmotions();startEffect()})}
-function clearEffect(){clearInterval(effectTimer);effectTimer=null;$('effects').innerHTML='';$('effects').classList.remove('on');stopRainAudio()}
-function startEffect(){clearEffect();let e=emotions[selected], box=$('effects');box.classList.add('on');box.style.color=e.c;
-if(e.type==='rain'){for(let i=0;i<150;i++){let x=document.createElement('i');x.className='rain';x.style.left=Math.random()*100+'%';x.style.animationDuration=.35+Math.random()*.55+'s';x.style.animationDelay=-Math.random()*1.2+'s';x.style.height=35+Math.random()*70+'px';box.appendChild(x)}startRainAudio()}
-if(e.type==='ember'){for(let i=0;i<45;i++){let x=document.createElement('i');x.className='ember';x.style.left=Math.random()*100+'%';x.style.top=(70+Math.random()*35)+'%';x.style.animationDuration=1.5+Math.random()*2.5+'s';x.style.animationDelay=-Math.random()*3+'s';box.appendChild(x)}}
-if(e.type==='dust'){for(let i=0;i<55;i++){let x=document.createElement('i');x.className='dust';x.style.left=Math.random()*100+'%';x.style.top=(30+Math.random()*70)+'%';x.style.color=e.c;x.style.animationDuration=3+Math.random()*5+'s';x.style.animationDelay=-Math.random()*5+'s';box.appendChild(x)}}
-if(e.type==='wave'){for(let i=0;i<9;i++){let x=document.createElement('i');x.className='wave';x.style.left=(Math.random()*100)+'%';x.style.top=(30+Math.random()*70)+'%';x.style.color=e.c;x.style.animationDelay=-Math.random()*4+'s';box.appendChild(x)}}
-if(e.type==='wind'){for(let i=0;i<18;i++){let x=document.createElement('i');x.className='wind';x.style.left='-20vw';x.style.top=Math.random()*100+'%';x.style.color=e.c;x.style.animationDelay=-Math.random()*2+'s';box.appendChild(x)}}
-}
-function startRainAudio(){try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();let buffer=audioCtx.createBuffer(1,audioCtx.sampleRate*2,audioCtx.sampleRate),d=buffer.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.28;let src=audioCtx.createBufferSource();src.buffer=buffer;src.loop=true;rainGain=audioCtx.createGain();rainGain.gain.value=.075;src.connect(rainGain).connect(audioCtx.destination);src.start();
-let o=audioCtx.createOscillator();o.type='sine';o.frequency.value=110;noiseGain=audioCtx.createGain();noiseGain.gain.value=.018;o.connect(noiseGain).connect(audioCtx.destination);o.start()}catch(e){}}
-function stopRainAudio(){if(audioCtx){try{audioCtx.close()}catch(e){}audioCtx=null}}
-function stars(){return JSON.parse(localStorage.getItem('yyi_stars')||'[]')}
-function saveStars(a){localStorage.setItem('yyi_stars',JSON.stringify(a))}
-function renderBottle(){let box=$('phys'),a=stars();box.innerHTML='';a.forEach((s,i)=>{let el=document.createElement('i');el.className='pstar';el.style.color=s.color;el.style.background=s.color;el.style.left=s.x+'%';el.style.top=s.y+'%';el.style.transform=`translate(-50%,-50%) rotate(${s.r}deg)`;box.appendChild(el)});$('count').innerHTML=`瓶中有 <b>${a.length}</b> 颗星星`}
-function addStar(color){let a=stars();let n=a.length,cols=7, row=Math.floor(n/cols),col=n%cols;let x=12+col*12+(row%2)*5,y=88-row*7; a.push({color,x:Math.min(88,x),y:Math.max(12,y),r:Math.random()*360});saveStars(a);renderBottle()}
-function openCompose(){signature='Ink';document.querySelectorAll('.sign button').forEach(b=>b.classList.toggle('active',b.dataset.sig==='Ink'));$('letter').value='';$('compose').classList.add('open');renderEmotions();startEffect();$('letter').focus()}
-function closeCompose(){clearEffect();$('compose').classList.remove('open')}
-function saveLetter(){let text=$('letter').value.trim();if(!text)return;let a=JSON.parse(localStorage.getItem('yyi_letters')||'[]');a.unshift({text,emotion:emotions[selected].name,color:emotions[selected].c,signature,date:new Date().toLocaleString('zh-CN')});localStorage.setItem('yyi_letters',JSON.stringify(a));addStar(emotions[selected].c);closeCompose()}
-function renderNotes(){let a=JSON.parse(localStorage.getItem('yyi_letters')||'[]');$('notes').innerHTML=a.length?a.map(n=>`<article class="note"><span class="tag" style="--c:${n.color}">${n.emotion}</span><span class="sig">${n.signature} 写的</span><div style="margin-top:10px;line-height:1.9;white-space:pre-wrap">${escapeHtml(n.text)}</div><small style="color:#a18f99">${n.date}</small></article>`).join(''):'还没有星星信。'}
-function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-$('enter').onclick=()=>{$('gift').classList.add('hide');document.body.addEventListener('click',()=>{}, {once:true})};
-$('write').onclick=openCompose;$('x').onclick=closeCompose;$('cancel').onclick=closeCompose;$('fold').onclick=saveLetter;
-document.querySelectorAll('.sign button').forEach(b=>b.onclick=()=>{signature=b.dataset.sig;document.querySelectorAll('.sign button').forEach(x=>x.classList.toggle('active',x===b))});
-$('letters').onclick=()=>{$('saved').classList.add('open');renderNotes()};$('closeSaved').onclick=()=>$('saved').classList.remove('open');
-$('shake').onclick=()=>{let a=stars();a.forEach(s=>{s.x=Math.max(8,Math.min(92,s.x+(Math.random()-.5)*22));s.y=Math.max(15,Math.min(90,s.y+(Math.random()-.5)*18));s.r+=Math.random()*90});saveStars(a);renderBottle();$('bottleWrap').animate([{transform:'rotate(0)'},{transform:'rotate(-3deg)'},{transform:'rotate(3deg)'},{transform:'rotate(0)'}],{duration:650})};
-makeStars();setDate();renderBottle();setInterval(setDate,30000);
-</script>
-</body></html>
+const URL="https://fgerhmqwqflgggnqpuas.supabase.co",KEY="sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi",ROOM="ink-yyi",db=supabase.createClient(URL,KEY);
+const E=[["开心","#f4d24f","happy"],["难过","#78a9df","sad"],["生气","#ef5a4f","angry"],["平静","#79c8b1","calm"],["焦虑","#b58bd8","anxious"],["想念","#8c78e8","miss"]];let ei=0,who="Ink",letters=[],stars=[],last=0,ac=null,lock=0,$=x=>document.getElementById(x);
+const esc=s=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+function status(s){$("status").textContent=s}
+async function cloud(){let r=await db.from("star_letters").select("*").eq("room",ROOM).order("created_at");if(r.error){status("● 云端连接失败");return}letters=r.data||[];render();db.channel("star-bottle").on("postgres_changes",{event:"INSERT",schema:"public",table:"star_letters",filter:"room=eq."+ROOM},p=>{if(!letters.some(x=>x.id===p.new.id)){letters.push(p.new);render()}}).subscribe(s=>status(s==="SUBSCRIBED"?"● 已连接 · 两个人共享同一瓶":"● 云端连接中"))}
+function render(){stars=letters.map((n,i)=>stars.find(s=>String(s.id)===String(n.id))||{id:n.id,color:n.color,x:40+Math.random()*25,y:72+Math.random()*18,vx:(Math.random()-.5)*.12,vy:-.03,r:Math.random()*6.28});$("stars").innerHTML="";letters.forEach(n=>{let e=document.createElement("i");e.className="star";e.style.setProperty("--c",n.color);e.onclick=()=>show(n);$("stars").appendChild(e)});$("ic").textContent=letters.filter(x=>x.who==="Ink").length;$("yc").textContent=letters.filter(x=>x.who==="Yyi").length;$("tc").textContent=letters.length}
+function show(n){$("box").classList.add("open");$("notes").innerHTML=`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`}
+function archive(){$("box").classList.add("open");$("notes").innerHTML=letters.length?letters.slice().reverse().map(n=>`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`).join(""):"还没有星星信。"}
+function emo(){ $("emotions").innerHTML=E.map((e,i)=>`<button class="emotion ${i===ei?"on":""}" style="--c:${e[1]}" data-i="${i}"><div class="dot"></div>${e[0]}</button>`).join("");document.querySelectorAll(".emotion").forEach(b=>b.onclick=()=>{ei=+b.dataset.i;emo();fx()})}
+function stop(){ $("fx").innerHTML="";$("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";if(ac)try{ac.close()}catch(e){}ac=null}
+function fx(){stop();let [n,c,k]=E[ei];$("world").style.background={happy:"radial-gradient(circle,#66521d,#0d0a08 68%)",sad:"radial-gradient(circle,#315b82,#07131d 68%)",angry:"radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",calm:"radial-gradient(circle,#27736b,#06181b 68%)",anxious:"radial-gradient(circle,#5d377e,#10091b 68%)",miss:"radial-gradient(circle,#514791,#100c24 68%)"}[k];let cl=k==="sad"?"rain":k==="angry"?"ember":k==="calm"?"wave":k==="anxious"?"wind":"spark";for(let i=0;i<(cl==="rain"?200:cl==="wave"?10:90);i++){let p=document.createElement("i");p.className="p "+cl;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.color=c;p.style.animationDuration=(cl==="rain"?(.35+Math.random()*.55):(2+Math.random()*4))+"s";p.style.animationDelay=-Math.random()*5+"s";$("fx").appendChild(p)}sound(k)}
+function sound(k){try{let C=AudioContext||webkitAudioContext;ac=new C;if(k==="sad"){let b=ac.createBuffer(1,ac.sampleRate*2,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.2;let s=ac.createBufferSource(),g=ac.createGain();s.buffer=b;s.loop=true;g.gain.value=.06;s.connect(g).connect(ac.destination);s.start()}( {happy:[660,880,1047],angry:[70,92],calm:[196,247,294],anxious:[180,320,150],miss:[262,392,523]}[k]||[110]).forEach((f,i)=>{let o=ac.createOscillator(),g=ac.createGain();o.type=k==="angry"?"sawtooth":k==="anxious"?"triangle":"sine";o.frequency.value=f;g.gain.value=.008;o.connect(g).connect(ac.destination);o.start(ac.currentTime+i*.2);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+3+i*.2);o.stop(ac.currentTime+3.1+i*.2)})}catch(e){}}
+async function fold(){let t=$("text").value.trim();if(!t)return;let e=E[ei],r=await db.from("star_letters").insert({room:ROOM,text:t,emotion:e[0],color:e[1],who}).select().single();if(r.error){status("● 保存失败");return}if(r.data&&!letters.some(x=>x.id===r.data.id))letters.push(r.data);$("text").value="";closeWrite();render()}
+function openWrite(){$("compose").classList.add("open");emo();fx();$("text").focus()}function closeWrite(){$("compose").classList.remove("open");stop()}
+function shake(p=1){if(performance.now()<lock)return;lock=performance.now()+250;stars.forEach(s=>{s.vx+=(Math.random()-.5)*1.8*p;s.vy-=Math.random()*.9*p});$("bottle").animate([{transform:"rotate(0)"},{transform:"rotate(-3deg)"},{transform:"rotate(3deg)"},{transform:"rotate(0)"}],{duration:850});if(navigator.vibrate)navigator.vibrate([40,30,70])}
+function loop(t){let dt=Math.min(.03,(t-last||.016));last=t;let es=[...$("stars").children];stars.forEach((s,i)=>{s.vy+=.018*dt*60;s.x+=s.vx*dt*60;s.y+=s.vy*dt*60;if(s.x<3||s.x>97)s.vx*=-.82;if(s.y<4){s.y=4;s.vy=Math.abs(s.vy)*.7}if(s.y>95){s.y=95;s.vy=-Math.abs(s.vy)*.48}s.x=Math.max(3,Math.min(97,s.x));if(es[i]){es[i].style.left=s.x+"%";es[i].style.top=s.y+"%";es[i].style.transform=`translate(-50%,-50%) rotate(${s.r+t/900}rad)`}});for(let i=0;i<stars.length;i++)for(let j=i+1;j<stars.length;j++){let a=stars[i],b=stars[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);if(d<5){let nx=dx/(d||1),ny=dy/(d||1);a.x-=nx*.09;b.x+=nx*.09;a.y-=ny*.09;b.y+=ny*.09;[a.vx,b.vx]=[b.vx*.86,a.vx*.86];[a.vy,b.vy]=[b.vy*.86,a.vy*.86]}}if(stars.length&&Math.random()<.25){let s=stars[Math.floor(Math.random()*stars.length)],q=document.createElement("i");q.className="trail";q.style.setProperty("--c",s.color);q.style.left=s.x+"%";q.style.top=s.y+"%";$("stars").appendChild(q);setTimeout(()=>q.remove(),600)}requestAnimationFrame(loop)}
+$("enter").onclick=()=>{$("gate").classList.add("hide");cloud();requestAnimationFrame(loop)};$("write").onclick=openWrite;$("close").onclick=closeWrite;$("fold").onclick=fold;$("archive").onclick=archive;$("closeBox").onclick=()=>$("box").classList.remove("open");$("shake").onclick=()=>shake();document.querySelectorAll(".sign button").forEach(b=>b.onclick=()=>{who=b.dataset.who;document.querySelectorAll(".sign button").forEach(x=>x.classList.toggle("on",x===b))});window.addEventListener("devicemotion",e=>{let a=e.accelerationIncludingGravity;if(a&&Math.hypot(a.x||0,a.y||0,a.z||0)>23)shake(.7)});$("date").textContent=new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"});
+</script></body></html>
