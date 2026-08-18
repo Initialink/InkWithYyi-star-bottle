@@ -1,166 +1,2999 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ink × Yyi · Our Star Bottle</title>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07060d">
+<title>Ink × Yyi · Our Star Bottle</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
-<style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:"Noto Serif SC","PingFang SC",serif;color:#fff;background:#080711}button,textarea{font:inherit}button{cursor:pointer}
-#world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle,#2b2340,#09070e 70%);transition:1s}#fx{position:absolute;inset:0;pointer-events:none}
-.p{position:absolute;border-radius:50%}.rain{width:1px;height:70px;background:linear-gradient(transparent,#d8edff);opacity:.5;animation:rain linear infinite}@keyframes rain{to{transform:translate(-12vw,125vh)}}.ember{width:4px;height:18px;background:#ff6048;box-shadow:0 0 18px #ff3b2b;animation:up linear infinite}@keyframes up{to{transform:translate(-20px,-120vh);opacity:0}}.spark{width:4px;height:4px;background:currentColor;box-shadow:0 0 15px currentColor;animation:sp linear infinite}@keyframes sp{50%{transform:translate(30px,-20px) scale(1.7)}to{transform:translate(-15px,-110vh);opacity:0}}.wave{border:1px solid currentColor;width:18px;height:18px;animation:wa 4s ease-out infinite}@keyframes wa{to{width:70vw;height:70vw;opacity:0;transform:translate(-50%,-50%)}}.wind{width:35vw;height:1px;background:currentColor;animation:wi 1.2s linear infinite}@keyframes wi{from{transform:translateX(-100vw)}to{transform:translateX(180vw)}}
-#gate{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#09070e;transition:.8s}.hide{opacity:0;pointer-events:none}.intro{text-align:center}.big{font-size:90px;text-shadow:0 0 35px #e8d17d}.intro h1{font-size:38px;font-weight:400;letter-spacing:8px}.intro p{color:#aaa0b1;line-height:2}.btn,.enter{background:#ffffff0b;border:1px solid #d7c58c55;color:#eee5d9;border-radius:99px;padding:11px 20px}
-main{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}.top{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#a69aaa}
-.bottle{position:relative;width:min(440px,90vw);height:min(640px,72vh);filter:drop-shadow(0 35px 60px #000b)}#glass{position:absolute;width:100%;height:100%}#stars{position:absolute;left:16%;right:16%;top:25%;bottom:7%;overflow:hidden;border-radius:40% 40% 18% 18%}.star{position:absolute;width:20px;height:20px;clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);background:var(--c);box-shadow:0 0 12px var(--c),0 0 30px var(--c);cursor:pointer}.trail{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);opacity:.6;animation:tr .55s forwards}@keyframes tr{to{opacity:0;transform:scale(.1)}}
-.stats{display:flex;gap:28px;color:#aaa0b0;font-size:12px}.stats b{color:#e9d68d;font-size:18px;font-weight:400}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
-.panel{position:fixed;inset:0;z-index:8;background:#05040bea;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:16px}.open{display:flex}.card{width:min(650px,95vw);max-height:92vh;overflow:auto;background:#f7eee2;color:#352b31;border-radius:28px;padding:24px}.x{float:right;border:0;background:none;font-size:25px;color:#777}.emotions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.emotion{border:1px solid #d2c4ba;background:#fff;border-radius:14px;padding:8px 2px;font-size:11px}.emotion.on{outline:2px solid var(--c)}.dot{width:22px;height:22px;border-radius:50%;margin:auto auto 5px;background:var(--c);box-shadow:0 0 12px var(--c)}textarea{width:100%;height:300px;margin-top:12px;border:0;outline:0;resize:none;background:repeating-linear-gradient(transparent 0 39px,#ded1c5 40px);font:17px/40px Georgia,"PingFang SC",serif;color:#352b31}.sign{text-align:center;margin:10px}.sign button{border:1px solid #c8bbb2;background:#fff;border-radius:99px;padding:8px 17px}.sign .on{background:#3b2c38;color:#fff}.row{text-align:center}.primary{border:0;border-radius:99px;background:#3b2c38;color:#fff;padding:11px 22px}.note{padding:15px 0;border-bottom:1px solid #ded2c8}.tag{padding:4px 9px;border-radius:99px;color:#fff;font-size:11px}.who{float:right;color:#88747e}.note p{white-space:pre-wrap;line-height:1.8}.status{position:fixed;bottom:15px;right:16px;font-size:10px;color:#a69aaa}
-@media(max-width:520px){.emotions{grid-template-columns:repeat(3,1fr)}.intro h1{font-size:31px}}
-</style></head><body>
-<div id="world"><div id="fx"></div></div><section id="gate"><div class="intro"><div class="big">✦</div><h1>Ink × Yyi</h1><p>我们的星星瓶<br>把想说的话，折成星星。</p><button class="enter" id="enter">打开我们的星星瓶 ✦</button></div></section>
-<main><div class="top"><span id="date"></span><span>OUR STAR BOTTLE</span></div><div class="bottle" id="bottle">
-<svg id="glass" viewBox="0 0 440 640"><defs><linearGradient id="g"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".45" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#9b7ad0" stop-opacity=".18"/></linearGradient><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#e7d19b"/><stop offset="1" stop-color="#725938"/></linearGradient></defs><path d="M158 55h124v78c0 18 48 32 64 65 9 19 13 43 13 73v278c0 48-27 72-75 72H156c-48 0-75-24-75-72V271c0-30 4-54 13-73 16-33 64-47 64-65V55z" fill="url(#g)" stroke="#eee6ff44" stroke-width="3"/><path d="M168 55h104v86c0 18 39 33 54 62 8 16 11 38 11 67v277c0 35-19 53-57 53H160c-38 0-57-18-57-53V270c0-29 3-51 11-67 15-29 54-44 54-62V55z" fill="none" stroke="#fff3" stroke-width="10"/><rect x="149" y="31" width="142" height="30" rx="9" fill="url(#gold)"/><rect x="161" y="21" width="118" height="14" rx="5" fill="#6d5436"/><path d="M112 243c16-44 46-59 66-80M329 279c8 52 8 116 7 181" fill="none" stroke="#fff5" stroke-width="7" stroke-linecap="round"/></svg><div id="stars"></div></div>
-<div class="stats"><span>Ink <b id="ic">0</b> ✦</span><span>Yyi <b id="yc">0</b> ✦</span><span>总计 <b id="tc">0</b></span></div><div class="actions"><button class="btn" id="write">写一封星星信 ✦</button><button class="btn" id="archive">星星档案</button><button class="btn" id="shake">摇一摇 ✦</button></div></main>
-<section class="panel" id="compose"><div class="card"><button class="x" id="close">×</button><h2>把一句话，留下来</h2><div class="emotions" id="emotions"></div><textarea id="text" maxlength="5000" placeholder="写下现在想留下的话……"></textarea><div class="sign"><button class="on" data-who="Ink">Ink 写的</button><button data-who="Yyi">Yyi 写的</button></div><div class="row"><button class="primary" id="fold">折成星星 ✦</button></div></div></section>
-<section class="panel" id="box"><div class="card"><button class="x" id="closeBox">×</button><h2>星星档案</h2><div id="notes"></div></div></section><div class="status" id="status">● 云端连接中</div>
-<script>
-const URL="https://fgerhmqwqflgggnqpuas.supabase.co",KEY="sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi",ROOM="ink-yyi",db=supabase.createClient(URL,KEY);
-const E=[["开心","#f4d24f","happy"],["难过","#78a9df","sad"],["生气","#ef5a4f","angry"],["平静","#79c8b1","calm"],["焦虑","#b58bd8","anxious"],["想念","#8c78e8","miss"]];let ei=0,who="Ink",letters=[],stars=[],last=0,ac=null,lock=0,$=x=>document.getElementById(x);
-const esc=s=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
-function status(s){$("status").textContent=s}
-async function cloud(){let r=await db.from("star_letters").select("*").eq("room",ROOM).order("created_at");if(r.error){status("● 云端连接失败");return}letters=r.data||[];render();db.channel("star-bottle").on("postgres_changes",{event:"INSERT",schema:"public",table:"star_letters",filter:"room=eq."+ROOM},p=>{if(!letters.some(x=>x.id===p.new.id)){letters.push(p.new);render()}}).subscribe(s=>status(s==="SUBSCRIBED"?"● 已连接 · 两个人共享同一瓶":"● 云端连接中"))}
-function render(){
-  rebuildStars();
-  $("ic").textContent=letters.filter(x=>x.who==="Ink").length;
-  $("yc").textContent=letters.filter(x=>x.who==="Yyi").length;
-  $("tc").textContent=letters.length;
-}
-function show(n){$("box").classList.add("open");$("notes").innerHTML=`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`}
-function archive(){$("box").classList.add("open");$("notes").innerHTML=letters.length?letters.slice().reverse().map(n=>`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`).join(""):"还没有星星信。"}
-function emo(){ $("emotions").innerHTML=E.map((e,i)=>`<button class="emotion ${i===ei?"on":""}" style="--c:${e[1]}" data-i="${i}"><div class="dot"></div>${e[0]}</button>`).join("");document.querySelectorAll(".emotion").forEach(b=>b.onclick=()=>{ei=+b.dataset.i;emo();fx()})}
-function stop(){ $("fx").innerHTML="";$("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";if(ac)try{ac.close()}catch(e){}ac=null}
-function fx(){stop();let [n,c,k]=E[ei];$("world").style.background={happy:"radial-gradient(circle,#66521d,#0d0a08 68%)",sad:"radial-gradient(circle,#315b82,#07131d 68%)",angry:"radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",calm:"radial-gradient(circle,#27736b,#06181b 68%)",anxious:"radial-gradient(circle,#5d377e,#10091b 68%)",miss:"radial-gradient(circle,#514791,#100c24 68%)"}[k];let cl=k==="sad"?"rain":k==="angry"?"ember":k==="calm"?"wave":k==="anxious"?"wind":"spark";for(let i=0;i<(cl==="rain"?200:cl==="wave"?10:90);i++){let p=document.createElement("i");p.className="p "+cl;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.color=c;p.style.animationDuration=(cl==="rain"?(.35+Math.random()*.55):(2+Math.random()*4))+"s";p.style.animationDelay=-Math.random()*5+"s";$("fx").appendChild(p)}sound(k)}
-let audioMaster=null, audioNodes=[];
-function sound(k){
-  try{
-    const C=window.AudioContext||window.webkitAudioContext;
-    if(!C)return;
-    if(audioMaster){try{audioMaster.close()}catch(e){}}
-    audioMaster=new C();
-    const ctx=audioMaster, master=ctx.createGain();
-    master.gain.value=.12; master.connect(ctx.destination); audioNodes=[master];
 
-    // Every emotion gets an audible soundscape. Sadness additionally gets rain/white noise.
-    const profiles={
-      happy:{tones:[523.25,659.25,783.99],type:"sine",speed:1.6},
-      sad:{tones:[196,246.94,293.66],type:"sine",speed:3.2},
-      angry:{tones:[73.42,92.5,110],type:"sawtooth",speed:.55},
-      calm:{tones:[174.61,220,261.63],type:"sine",speed:5.5},
-      anxious:{tones:[146.83,220,329.63],type:"triangle",speed:1.05},
-      miss:{tones:[261.63,329.63,392],type:"sine",speed:2.6}
+<style>
+*{box-sizing:border-box}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    font-family:"Noto Serif SC","Songti SC","PingFang SC",serif;
+    color:#fff;
+    background:#07060d;
+}
+
+button,textarea{font:inherit}
+button{cursor:pointer}
+
+#world{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    transition:background 1s ease;
+    background:
+        radial-gradient(circle at 50% 38%,#302640 0%,#0a080f 68%,#030207 100%);
+}
+
+#vignette{
+    position:absolute;
+    inset:-10%;
+    pointer-events:none;
+    background:radial-gradient(circle,transparent 40%,rgba(0,0,0,.75) 100%);
+    z-index:5;
+}
+
+#fx{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+
+/* =========================
+   情绪特效
+========================= */
+
+.p{
+    position:absolute;
+    pointer-events:none;
+}
+
+.rain{
+    width:1px;
+    height:85px;
+    background:linear-gradient(
+        to bottom,
+        transparent,
+        rgba(220,240,255,.9)
+    );
+    opacity:.5;
+    animation:rainFall linear infinite;
+}
+
+@keyframes rainFall{
+    from{
+        transform:translate3d(0,-120px,0) rotate(10deg);
+    }
+    to{
+        transform:translate3d(-120px,120vh,0) rotate(10deg);
+    }
+}
+
+.ember{
+    width:4px;
+    height:18px;
+    border-radius:50%;
+    background:#ff634f;
+    box-shadow:
+        0 0 8px #ff4a38,
+        0 0 24px #ff321f;
+    animation:emberUp linear infinite;
+}
+
+@keyframes emberUp{
+    from{
+        transform:translate3d(0,110vh,0) rotate(0);
+        opacity:0;
+    }
+    15%{opacity:1}
+    to{
+        transform:translate3d(-60px,-20vh,0) rotate(180deg);
+        opacity:0;
+    }
+}
+
+.spark{
+    width:4px;
+    height:4px;
+    border-radius:50%;
+    background:currentColor;
+    box-shadow:0 0 15px currentColor;
+    animation:sparkMove linear infinite;
+}
+
+@keyframes sparkMove{
+    0%{
+        transform:translate3d(0,20px,0) scale(.5);
+        opacity:0;
+    }
+    30%{opacity:1}
+    60%{
+        transform:translate3d(30px,-40px,0) scale(1.7);
+    }
+    100%{
+        transform:translate3d(-25px,-120vh,0) scale(.2);
+        opacity:0;
+    }
+}
+
+.wave{
+    width:20px;
+    height:20px;
+    border:1px solid currentColor;
+    border-radius:50%;
+    animation:waveExpand ease-out infinite;
+}
+
+@keyframes waveExpand{
+    0%{
+        opacity:.65;
+        transform:translate(-50%,-50%) scale(.1);
+    }
+    100%{
+        opacity:0;
+        transform:translate(-50%,-50%) scale(35);
+    }
+}
+
+.wind{
+    width:35vw;
+    height:1px;
+    background:linear-gradient(
+        90deg,
+        transparent,
+        currentColor,
+        transparent
+    );
+    box-shadow:0 0 8px currentColor;
+    animation:windMove linear infinite;
+}
+
+@keyframes windMove{
+    from{
+        transform:translateX(-100vw);
+    }
+    to{
+        transform:translateX(180vw);
+    }
+}
+
+/* =========================
+   开场
+========================= */
+
+#gate{
+    position:fixed;
+    inset:0;
+    z-index:100;
+    display:grid;
+    place-items:center;
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            #30253f,
+            #08070d 70%
+        );
+    transition:opacity .8s ease,visibility .8s ease;
+}
+
+#gate.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+}
+
+.intro{
+    width:min(90vw,520px);
+    text-align:center;
+}
+
+.big{
+    font-size:92px;
+    line-height:1;
+    color:#e9d98f;
+    text-shadow:
+        0 0 20px #e9d98f,
+        0 0 60px #cdbb70;
+    animation:breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe{
+    50%{
+        transform:translateY(-8px) scale(1.05);
+        opacity:.7;
+    }
+}
+
+.intro h1{
+    margin:18px 0 10px;
+    font-size:38px;
+    font-weight:400;
+    letter-spacing:8px;
+}
+
+.intro p{
+    color:#aaa0b1;
+    line-height:2;
+    margin-bottom:25px;
+}
+
+.enter,
+.btn{
+    border:1px solid rgba(215,197,140,.35);
+    background:rgba(255,255,255,.06);
+    color:#eee5d9;
+    border-radius:999px;
+    padding:11px 20px;
+    transition:.25s;
+}
+
+.enter:hover,
+.btn:hover{
+    background:rgba(255,255,255,.13);
+    transform:translateY(-2px);
+}
+
+/* =========================
+   主界面
+========================= */
+
+main{
+    position:relative;
+    z-index:2;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.top{
+    position:fixed;
+    top:18px;
+    left:22px;
+    right:22px;
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    letter-spacing:3px;
+    color:#a69aaa;
+}
+
+/* =========================
+   星星瓶
+========================= */
+
+.bottle{
+    position:relative;
+    width:min(440px,90vw);
+    height:min(640px,72vh);
+    filter:
+        drop-shadow(0 30px 55px rgba(0,0,0,.75))
+        drop-shadow(0 0 35px rgba(153,120,220,.1));
+    transform-origin:center center;
+    will-change:transform;
+}
+
+#glass{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:1;
+    pointer-events:none;
+}
+
+#stars{
+    position:absolute;
+    left:16%;
+    right:16%;
+    top:25%;
+    bottom:7%;
+    overflow:hidden;
+    border-radius:40% 40% 18% 18%;
+    z-index:2;
+}
+
+/* 星星 */
+
+.star{
+    position:absolute;
+    width:20px;
+    height:20px;
+
+    clip-path:polygon(
+        50% 0,
+        61% 35%,
+        100% 35%,
+        69% 57%,
+        81% 100%,
+        50% 73%,
+        19% 100%,
+        31% 57%,
+        0 35%,
+        39% 35%
+    );
+
+    background:var(--c);
+
+    box-shadow:
+        0 0 10px var(--c),
+        0 0 24px var(--c),
+        0 0 42px color-mix(in srgb,var(--c),transparent 50%);
+
+    cursor:pointer;
+
+    will-change:
+        left,
+        top,
+        transform;
+
+    transition:
+        filter .2s ease;
+}
+
+.star:hover{
+    filter:brightness(1.5);
+}
+
+/* 拖尾 */
+
+.trail{
+    position:absolute;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:var(--c);
+    box-shadow:0 0 12px var(--c);
+    pointer-events:none;
+    animation:trailFade .6s forwards;
+}
+
+@keyframes trailFade{
+    to{
+        opacity:0;
+        transform:scale(.1);
+    }
+}
+
+/* =========================
+   数据
+========================= */
+
+.stats{
+    display:flex;
+    gap:28px;
+    color:#aaa0b0;
+    font-size:12px;
+}
+
+.stats b{
+    color:#e9d68d;
+    font-size:18px;
+    font-weight:400;
+}
+
+.actions{
+    display:flex;
+    gap:8px;
+    margin-top:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+/* =========================
+   弹窗
+========================= */
+
+.panel{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    background:rgba(5,4,11,.9);
+    backdrop-filter:blur(18px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+}
+
+.panel.open{
+    display:flex;
+}
+
+.card{
+    width:min(650px,95vw);
+    max-height:92vh;
+    overflow:auto;
+    background:#f7eee2;
+    color:#352b31;
+    border-radius:28px;
+    padding:24px;
+    box-shadow:0 30px 100px rgba(0,0,0,.7);
+}
+
+.card h2{
+    font-weight:400;
+    letter-spacing:2px;
+}
+
+.x{
+    float:right;
+    border:0;
+    background:none;
+    font-size:25px;
+    color:#777;
+}
+
+/* =========================
+   六种情绪
+========================= */
+
+.emotions{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:7px;
+}
+
+.emotion{
+    border:1px solid #d2c4ba;
+    background:#fff;
+    border-radius:14px;
+    padding:8px 2px;
+    font-size:11px;
+    color:#463940;
+    transition:.2s;
+}
+
+.emotion:hover{
+    transform:translateY(-2px);
+}
+
+.emotion.on{
+    outline:2px solid var(--c);
+    box-shadow:0 0 14px var(--c);
+}
+
+.dot{
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    margin:auto auto 5px;
+    background:var(--c);
+    box-shadow:
+        0 0 8px var(--c),
+        0 0 18px var(--c);
+}
+
+/* =========================
+   写信
+========================= */
+
+textarea{
+    width:100%;
+    height:300px;
+    margin-top:12px;
+    border:0;
+    outline:0;
+    resize:none;
+
+    background:
+        repeating-linear-gradient(
+            transparent 0 39px,
+            #ded1c5 40px
+        );
+
+    font:
+        17px/40px Georgia,
+        "PingFang SC",
+        serif;
+
+    color:#352b31;
+}
+
+textarea::placeholder{
+    color:#aa9c9d;
+}
+
+.sign{
+    text-align:center;
+    margin:10px;
+}
+
+.sign button{
+    border:1px solid #c8bbb2;
+    background:#fff;
+    border-radius:99px;
+    padding:8px 17px;
+    margin:0 3px;
+}
+
+.sign .on{
+    background:#3b2c38;
+    color:#fff;
+}
+
+.row{
+    text-align:center;
+}
+
+.primary{
+    border:0;
+    border-radius:99px;
+    background:#3b2c38;
+    color:#fff;
+    padding:11px 22px;
+}
+
+/* =========================
+   信件
+========================= */
+
+.note{
+    padding:15px 0;
+    border-bottom:1px solid #ded2c8;
+}
+
+.tag{
+    display:inline-block;
+    padding:4px 9px;
+    border-radius:99px;
+    color:#fff;
+    font-size:11px;
+}
+
+.who{
+    float:right;
+    color:#88747e;
+}
+
+.note p{
+    white-space:pre-wrap;
+    line-height:1.8;
+}
+
+.note small{
+    color:#9b8c92;
+}
+
+.status{
+    position:fixed;
+    bottom:15px;
+    right:16px;
+    font-size:10px;
+    color:#a69aaa;
+    letter-spacing:1px;
+    z-index:20;
+}
+
+@media(max-width:520px){
+
+    .emotions{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .intro h1{
+        font-size:31px;
+    }
+
+    .bottle{
+        width:94vw;
+        height:68vh;
+    }
+
+    .top{
+        font-size:8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="world">
+    <div id="fx"></div>
+    <div id="vignette"></div>
+</div>
+
+<!-- =========================
+     开场
+========================= -->
+
+<section id="gate">
+
+    <div class="intro">
+
+        <div class="big">✦</div>
+
+        <h1>Ink × Yyi</h1>
+
+        <p>
+            我们的星星瓶<br>
+            把想说的话，折成星星。
+        </p>
+
+        <button class="enter" id="enter">
+            打开我们的星星瓶 ✦
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     主界面
+========================= -->
+
+<main>
+
+    <div class="top">
+        <span id="date"></span>
+        <span>OUR STAR BOTTLE</span>
+    </div>
+
+    <div class="bottle" id="bottle">
+
+        <svg id="glass" viewBox="0 0 440 640">
+
+            <defs>
+
+                <linearGradient id="glassFill">
+
+                    <stop
+                        stop-color="#fff"
+                        stop-opacity=".24"
+                    />
+
+                    <stop
+                        offset=".45"
+                        stop-color="#fff"
+                        stop-opacity=".025"
+                    />
+
+                    <stop
+                        offset="1"
+                        stop-color="#9b7ad0"
+                        stop-opacity=".18"
+                    />
+
+                </linearGradient>
+
+                <linearGradient id="gold" x2="0" y2="1">
+
+                    <stop
+                        stop-color="#e7d19b"
+                    />
+
+                    <stop
+                        offset="1"
+                        stop-color="#725938"
+                    />
+
+                </linearGradient>
+
+            </defs>
+
+            <!-- 瓶身 -->
+
+            <path
+                d="
+                M158 55
+                h124
+                v78
+                c0 18 48 32 64 65
+                c9 19 13 43 13 73
+                v278
+                c0 48-27 72-75 72
+                H156
+                c-48 0-75-24-75-72
+                V271
+                c0-30 4-54 13-73
+                c16-33 64-47 64-65
+                V55z
+                "
+                fill="url(#glassFill)"
+                stroke="#eee6ff44"
+                stroke-width="3"
+            />
+
+            <!-- 内层玻璃 -->
+
+            <path
+                d="
+                M168 55
+                h104
+                v86
+                c0 18 39 33 54 62
+                c8 16 11 38 11 67
+                v277
+                c0 35-19 53-57 53
+                H160
+                c-38 0-57-18-57-53
+                V270
+                c0-29 3-51 11-67
+                c15-29 54-44 54-62
+                V55z
+                "
+                fill="none"
+                stroke="#fff3"
+                stroke-width="10"
+            />
+
+            <!-- 瓶口 -->
+
+            <rect
+                x="149"
+                y="31"
+                width="142"
+                height="30"
+                rx="9"
+                fill="url(#gold)"
+            />
+
+            <rect
+                x="161"
+                y="21"
+                width="118"
+                height="14"
+                rx="5"
+                fill="#6d5436"
+            />
+
+            <!-- 玻璃高光 -->
+
+            <path
+                d="
+                M112 243
+                c16-44 46-59 66-80
+                M329 279
+                c8 52 8 116 7 181
+                "
+                fill="none"
+                stroke="#fff5"
+                stroke-width="7"
+                stroke-linecap="round"
+            />
+
+        </svg>
+
+        <div id="stars"></div>
+
+    </div>
+
+    <div class="stats">
+
+        <span>
+            Ink
+            <b id="ic">0</b>
+            ✦
+        </span>
+
+        <span>
+            Yyi
+            <b id="yc">0</b>
+            ✦
+        </span>
+
+        <span>
+            总计
+            <b id="tc">0</b>
+        </span>
+
+    </div>
+
+    <div class="actions">
+
+        <button class="btn" id="write">
+            写一封星星信 ✦
+        </button>
+
+        <button class="btn" id="archive">
+            星星档案
+        </button>
+
+        <button class="btn" id="shake">
+            摇一摇 ✦
+        </button>
+
+    </div>
+
+</main>
+
+<!-- =========================
+     写信
+========================= -->
+
+<section class="panel" id="compose">
+
+    <div class="card">
+
+        <button class="x" id="close">
+            ×
+        </button>
+
+        <h2>
+            把一句话，留下来
+        </h2>
+
+        <div
+            class="emotions"
+            id="emotions"
+        ></div>
+
+        <textarea
+            id="text"
+            maxlength="5000"
+            placeholder="写下现在想留下的话……"
+        ></textarea>
+
+        <div class="sign">
+
+            <button
+                class="on"
+                data-who="Ink"
+            >
+                Ink 写的
+            </button>
+
+            <button
+                data-who="Yyi"
+            >
+                Yyi 写的
+            </button>
+
+        </div>
+
+        <div class="row">
+
+            <button
+                class="primary"
+                id="fold"
+            >
+                折成星星 ✦
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     档案
+========================= -->
+
+<section class="panel" id="box">
+
+    <div class="card">
+
+        <button
+            class="x"
+            id="closeBox"
+        >
+            ×
+        </button>
+
+        <h2>
+            星星档案
+        </h2>
+
+        <div id="notes"></div>
+
+    </div>
+
+</section>
+
+<div
+    class="status"
+    id="status"
+>
+    ● 云端连接中
+</div>
+
+<script>
+
+/* ============================================================
+   SUPABASE
+============================================================ */
+
+const SUPABASE_URL =
+    "https://fgerhmqwqflgggnqpuas.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
+
+const ROOM =
+    "ink-yyi";
+
+const db =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* ============================================================
+   基础变量
+============================================================ */
+
+const $ =
+    id => document.getElementById(id);
+
+const EMOTIONS = [
+
+    {
+        name:"开心",
+        color:"#f4d24f",
+        key:"happy"
+    },
+
+    {
+        name:"难过",
+        color:"#78a9df",
+        key:"sad"
+    },
+
+    {
+        name:"生气",
+        color:"#ef5a4f",
+        key:"angry"
+    },
+
+    {
+        name:"平静",
+        color:"#79c8b1",
+        key:"calm"
+    },
+
+    {
+        name:"焦虑",
+        color:"#b58bd8",
+        key:"anxious"
+    },
+
+    {
+        name:"想念",
+        color:"#8c78e8",
+        key:"miss"
+    }
+
+];
+
+let emotionIndex = 0;
+
+let currentWho = "Ink";
+
+let letters = [];
+
+let stars = [];
+
+let physicsReady = false;
+
+let engine = null;
+
+let physicsBodies = [];
+
+let animationStarted = false;
+
+let audioContext = null;
+
+let audioMaster = null;
+
+let audioSources = [];
+
+let lastShake = 0;
+
+
+/* ============================================================
+   工具
+============================================================ */
+
+function escapeHTML(value){
+
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+function setStatus(text){
+
+    $("status").textContent =
+        text;
+
+}
+
+
+/* ============================================================
+   AUDIO
+============================================================ */
+
+function stopAudio(){
+
+    if(audioContext){
+
+        try{
+            audioContext.close();
+        }catch(e){}
+
+    }
+
+    audioContext = null;
+
+    audioMaster = null;
+
+    audioSources = [];
+
+}
+
+
+function resumeAudio(){
+
+    try{
+
+        if(
+            audioContext &&
+            audioContext.state === "suspended"
+        ){
+
+            audioContext.resume();
+
+        }
+
+    }catch(e){}
+
+}
+
+
+function createNoiseBuffer(){
+
+    const buffer =
+        audioContext.createBuffer(
+            1,
+            audioContext.sampleRate * 2,
+            audioContext.sampleRate
+        );
+
+    const data =
+        buffer.getChannelData(0);
+
+    for(
+        let i = 0;
+        i < data.length;
+        i++
+    ){
+
+        data[i] =
+            Math.random() * 2 - 1;
+
+    }
+
+    return buffer;
+
+}
+
+
+function startEmotionAudio(key){
+
+    stopAudio();
+
+    try{
+
+        const AudioCtx =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        if(!AudioCtx){
+
+            return;
+
+        }
+
+        audioContext =
+            new AudioCtx();
+
+        audioMaster =
+            audioContext.createGain();
+
+        audioMaster.gain.value =
+            0.16;
+
+        audioMaster.connect(
+            audioContext.destination
+        );
+
+        /*
+         * 六种情绪完全不同的声音结构
+         */
+
+        const profiles = {
+
+            happy:{
+                tones:[523.25,659.25,783.99],
+                type:"sine",
+                volume:.045
+            },
+
+            sad:{
+                tones:[196,246.94,293.66],
+                type:"sine",
+                volume:.032
+            },
+
+            angry:{
+                tones:[73.42,92.5,110],
+                type:"sawtooth",
+                volume:.035
+            },
+
+            calm:{
+                tones:[174.61,220,261.63],
+                type:"sine",
+                volume:.032
+            },
+
+            anxious:{
+                tones:[146.83,220,329.63],
+                type:"triangle",
+                volume:.035
+            },
+
+            miss:{
+                tones:[261.63,329.63,392],
+                type:"sine",
+                volume:.035
+            }
+
+        };
+
+        const profile =
+            profiles[key] ||
+            profiles.calm;
+
+
+        /*
+         * 主旋律层
+         */
+
+        profile.tones.forEach(
+            (frequency,index)=>{
+
+                const oscillator =
+                    audioContext.createOscillator();
+
+                const gain =
+                    audioContext.createGain();
+
+                oscillator.type =
+                    profile.type;
+
+                oscillator.frequency.value =
+                    frequency;
+
+                gain.gain.value =
+                    profile.volume;
+
+                oscillator.connect(gain);
+
+                gain.connect(
+                    audioMaster
+                );
+
+                oscillator.start();
+
+                audioSources.push(
+                    oscillator,
+                    gain
+                );
+
+                /*
+                 * 缓慢 LFO
+                 */
+
+                const lfo =
+                    audioContext.createOscillator();
+
+                const lfoGain =
+                    audioContext.createGain();
+
+                lfo.frequency.value =
+                    0.08 +
+                    index * 0.04;
+
+                lfoGain.gain.value =
+                    8;
+
+                lfo.connect(
+                    lfoGain
+                );
+
+                lfoGain.connect(
+                    oscillator.frequency
+                );
+
+                lfo.start();
+
+                audioSources.push(
+                    lfo,
+                    lfoGain
+                );
+
+            }
+        );
+
+
+        /*
+         * 难过：
+         * 雨声 + 白噪音
+         */
+
+        if(key === "sad"){
+
+            const rain =
+                audioContext.createBufferSource();
+
+            const rainGain =
+                audioContext.createGain();
+
+            const filter =
+                audioContext.createBiquadFilter();
+
+            rain.buffer =
+                createNoiseBuffer();
+
+            rain.loop =
+                true;
+
+            filter.type =
+                "lowpass";
+
+            filter.frequency.value =
+                2800;
+
+            rainGain.gain.value =
+                .11;
+
+            rain.connect(filter);
+
+            filter.connect(rainGain);
+
+            rainGain.connect(
+                audioMaster
+            );
+
+            rain.start();
+
+            audioSources.push(
+                rain,
+                rainGain,
+                filter
+            );
+
+        }
+
+
+        /*
+         * 开心：
+         * 轻微空气感
+         */
+
+        if(key === "happy"){
+
+            const noise =
+                audioContext.createBufferSource();
+
+            const gain =
+                audioContext.createGain();
+
+            const filter =
+                audioContext.createBiquadFilter();
+
+            noise.buffer =
+                createNoiseBuffer();
+
+            noise.loop =
+                true;
+
+            filter.type =
+                "highpass";
+
+            filter.frequency.value =
+                1800;
+
+            gain.gain.value =
+                .025;
+
+            noise
+                .connect(filter)
+                .connect(gain)
+                .connect(audioMaster);
+
+            noise.start();
+
+            audioSources.push(
+                noise,
+                gain,
+                filter
+            );
+
+        }
+
+
+        /*
+         * 焦虑：
+         * 快速脉冲
+         */
+
+        if(key === "anxious"){
+
+            const pulse =
+                audioContext.createOscillator();
+
+            const pulseGain =
+                audioContext.createGain();
+
+            pulse.type =
+                "triangle";
+
+            pulse.frequency.value =
+                7;
+
+            pulseGain.gain.value =
+                .025;
+
+            pulse.connect(
+                pulseGain
+            );
+
+            pulseGain.connect(
+                audioMaster.gain
+            );
+
+            pulse.start();
+
+            audioSources.push(
+                pulse,
+                pulseGain
+            );
+
+        }
+
+
+        audioContext.resume();
+
+    }catch(error){
+
+        console.warn(
+            "Audio error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   情绪特效
+============================================================ */
+
+function clearEffects(){
+
+    $("fx").innerHTML = "";
+
+    $("world").style.background =
+        "radial-gradient(circle at 50% 38%,#302640 0%,#0a080f 68%,#030207 100%)";
+
+    stopAudio();
+
+}
+
+
+function createParticles(
+    className,
+    color,
+    count
+){
+
+    for(
+        let i = 0;
+        i < count;
+        i++
+    ){
+
+        const element =
+            document.createElement("i");
+
+        element.className =
+            "p " + className;
+
+        element.style.left =
+            Math.random() * 100 + "%";
+
+        element.style.top =
+            Math.random() * 100 + "%";
+
+        element.style.color =
+            color;
+
+        if(
+            className === "rain"
+        ){
+
+            element.style.animationDuration =
+                (.3 + Math.random() * .7) +
+                "s";
+
+        }else if(
+            className === "wave"
+        ){
+
+            element.style.animationDuration =
+                (3 + Math.random() * 3) +
+                "s";
+
+        }else{
+
+            element.style.animationDuration =
+                (1.8 + Math.random() * 4) +
+                "s";
+
+        }
+
+        element.style.animationDelay =
+            (-Math.random() * 5) +
+            "s";
+
+        $("fx").appendChild(
+            element
+        );
+
+    }
+
+}
+
+
+function startEmotionEffect(){
+
+    clearEffects();
+
+    const emotion =
+        EMOTIONS[
+            emotionIndex
+        ];
+
+    const key =
+        emotion.key;
+
+    const color =
+        emotion.color;
+
+
+    const backgrounds = {
+
+        happy:
+            "radial-gradient(circle at 50% 40%,#6b561b,#120e07 72%)",
+
+        sad:
+            "radial-gradient(circle at 50% 30%,#315b82,#07131d 72%)",
+
+        angry:
+            "radial-gradient(circle at 50% 85%,#7d281d,#120507 72%)",
+
+        calm:
+            "radial-gradient(circle at 50% 40%,#27736b,#06181b 72%)",
+
+        anxious:
+            "radial-gradient(circle at 50% 40%,#5d377e,#10091b 72%)",
+
+        miss:
+            "radial-gradient(circle at 50% 40%,#514791,#100c24 72%)"
+
     };
-    const p=profiles[k]||profiles.calm;
-    p.tones.forEach((f,i)=>{
-      const o=ctx.createOscillator(), g=ctx.createGain(), l=ctx.createOscillator(), lg=ctx.createGain();
-      o.type=p.type;o.frequency.value=f;
-      l.frequency.value=p.speed*(.15+i*.07); lg.gain.value=.018;
-      l.connect(lg).connect(g.gain); g.gain.value=.035;
-      o.connect(g).connect(master); o.start(); l.start();
-      audioNodes.push(o,g,l,lg);
-    });
-    if(k==="sad"){
-      const buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate), d=buffer.getChannelData(0);
-      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
-      const n=ctx.createBufferSource(), ng=ctx.createGain(), lp=ctx.createBiquadFilter();
-      n.buffer=buffer;n.loop=true;lp.type="lowpass";lp.frequency.value=2400;ng.gain.value=.085;
-      n.connect(lp).connect(ng).connect(master);n.start();audioNodes.push(n,ng,lp);
+
+
+    $("world").style.background =
+        backgrounds[key];
+
+
+    /*
+     * 每种情绪专属粒子
+     */
+
+    if(key === "sad"){
+
+        createParticles(
+            "rain",
+            color,
+            260
+        );
+
     }
-    if(k==="happy"||k==="miss"){
-      const noise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate),d=noise.getChannelData(0);
-      for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.08;
-      const n=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();
-      n.buffer=noise;n.loop=true;f.type="highpass";f.frequency.value=k==="happy"?1800:900;g.gain.value=.035;
-      n.connect(f).connect(g).connect(master);n.start();audioNodes.push(n,g,f);
+
+    else if(key === "angry"){
+
+        createParticles(
+            "ember",
+            color,
+            130
+        );
+
     }
-  }catch(e){console.warn("audio",e)}
+
+    else if(key === "calm"){
+
+        createParticles(
+            "wave",
+            color,
+            16
+        );
+
+    }
+
+    else if(key === "anxious"){
+
+        createParticles(
+            "wind",
+            color,
+            40
+        );
+
+    }
+
+    else{
+
+        createParticles(
+            "spark",
+            color,
+            120
+        );
+
+    }
+
+
+    startEmotionAudio(key);
+
 }
-function stop(){
-  $("fx").innerHTML="";
-  $("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";
-  if(audioMaster){try{audioMaster.close()}catch(e){}audioMaster=null}
+
+
+/* ============================================================
+   情绪按钮
+============================================================ */
+
+function renderEmotionButtons(){
+
+    $("emotions").innerHTML =
+        EMOTIONS.map(
+            (emotion,index)=>`
+
+                <button
+                    class="emotion ${index === emotionIndex ? "on" : ""}"
+                    style="--c:${emotion.color}"
+                    data-index="${index}"
+                >
+
+                    <div
+                        class="dot"
+                        style="--c:${emotion.color}"
+                    ></div>
+
+                    ${emotion.name}
+
+                </button>
+
+            `
+        ).join("");
+
+
+    document
+        .querySelectorAll(".emotion")
+        .forEach(button=>{
+
+            button.onclick =
+                ()=>{
+
+                    emotionIndex =
+                        Number(
+                            button.dataset.index
+                        );
+
+                    renderEmotionButtons();
+
+                    startEmotionEffect();
+
+                };
+
+        });
+
 }
-async function fold(){let t=$("text").value.trim();if(!t)return;let e=E[ei],r=await db.from("star_letters").insert({room:ROOM,text:t,emotion:e[0],color:e[1],who}).select().single();if(r.error){status("● 保存失败");return}if(r.data&&!letters.some(x=>x.id===r.data.id))letters.push(r.data);$("text").value="";closeWrite();render()}
-function openWrite(){$("compose").classList.add("open");emo();fx();$("text").focus()}function closeWrite(){$("compose").classList.remove("open");stop()}
-let engine=null, bodies=[], runnerStarted=false;
+
+
+/* ============================================================
+   MATTER PHYSICS
+============================================================ */
+
 function initPhysics(){
-  const {Engine,World,Bodies,Body}=Matter;
-  engine=Engine.create({enableSleeping:false});
-  engine.gravity.y=.38;
-  const container=$("stars"), w=container.clientWidth, h=container.clientHeight;
-  const wall=14, common={isStatic:true,restitution:.9,friction:.05};
-  bodies=[
-    Bodies.rectangle(w/2,-wall/2,w,wall,common),
-    Bodies.rectangle(w/2,h+wall/2,w,wall,common),
-    Bodies.rectangle(-wall/2,h/2,wall,h,common),
-    Bodies.rectangle(w+wall/2,h/2,wall,h,common)
-  ];
-  World.add(engine,bodies);
-  if(!runnerStarted){Matter.Runner.run(Matter.Runner.create(),engine);runnerStarted=true}
-}
-function rebuildMatter(){
-  if(!engine)return;
-  const {World,Bodies,Body}=Matter, container=$("stars"), w=container.clientWidth,h=container.clientHeight;
-  bodies.filter(b=>!b.isStatic).forEach(b=>World.remove(engine.world,b));
-  bodies=bodies.filter(b=>b.isStatic);
-  stars.forEach((s,i)=>{
-    const x=(s.x/100)*w,y=(s.y/100)*h;
-    const b=Bodies.circle(x,y,10,{restitution:.88,friction:.015,frictionAir:.003,density:.006});
-    b.starId=s.id; b.color=s.color; Body.setVelocity(b,{x:(Math.random()-.5)*1.2,y:(Math.random()-.5)*.8});
-    bodies.push(b);World.add(engine.world,b);
-  });
-}
-function syncMatterStars(){
-  if(!engine)return;
-  const dynamic=bodies.filter(b=>!b.isStatic);
-  const es=[...$("stars").children];
-  dynamic.forEach((b,i)=>{
-    const el=es[i];if(!el)return;
-    const c=$("stars"), x=b.position.x/c.clientWidth*100,y=b.position.y/c.clientHeight*100;
-    el.style.left=x+"%";el.style.top=y+"%";
-    el.style.transform=`translate(-50%,-50%) rotate(${b.angle}rad)`;
-    if(Math.random()<.22){
-      const q=document.createElement("i");q.className="trail";q.style.setProperty("--c",b.color);
-      q.style.left=x+"%";q.style.top=y+"%";c.appendChild(q);setTimeout(()=>q.remove(),550);
+
+    if(
+        typeof Matter === "undefined"
+    ){
+
+        physicsReady =
+            false;
+
+        console.warn(
+            "Matter.js failed to load."
+        );
+
+        return;
+
     }
-  });
-  requestAnimationFrame(syncMatterStars);
+
+
+    const {
+        Engine,
+        Runner,
+        World,
+        Bodies
+    } = Matter;
+
+
+    engine =
+        Engine.create({
+
+            enableSleeping:false
+
+        });
+
+
+    engine.gravity.x =
+        0;
+
+    engine.gravity.y =
+        .45;
+
+
+    const container =
+        $("stars");
+
+
+    const width =
+        container.clientWidth ||
+        300;
+
+    const height =
+        container.clientHeight ||
+        400;
+
+
+    const wall =
+        20;
+
+
+    const wallOptions = {
+
+        isStatic:true,
+
+        restitution:.9,
+
+        friction:.02
+
+    };
+
+
+    physicsBodies = [
+
+        Bodies.rectangle(
+            width / 2,
+            -wall / 2,
+            width,
+            wall,
+            wallOptions
+        ),
+
+        Bodies.rectangle(
+            width / 2,
+            height + wall / 2,
+            width,
+            wall,
+            wallOptions
+        ),
+
+        Bodies.rectangle(
+            -wall / 2,
+            height / 2,
+            wall,
+            height,
+            wallOptions
+        ),
+
+        Bodies.rectangle(
+            width + wall / 2,
+            height / 2,
+            wall,
+            height,
+            wallOptions
+        )
+
+    ];
+
+
+    World.add(
+        engine.world,
+        physicsBodies
+    );
+
+
+    Runner.run(
+        Runner.create(),
+        engine
+    );
+
+
+    physicsReady =
+        true;
+
 }
-function shake(p=1){
-  if(!engine)return;
-  const {Body}=Matter;
-  const dynamic=bodies.filter(b=>!b.isStatic);
-  dynamic.forEach(b=>{
-    Body.applyForce(b,b.position,{x:(Math.random()-.5)*.035*p,y:-(.025+Math.random()*.035)*p});
-    Body.setAngularVelocity(b,(Math.random()-.5)*.18*p);
-  });
-  $("bottle").animate([
-    {transform:"translateX(0) rotate(0deg)"},
-    {transform:"translateX(-12px) rotate(-4deg)"},
-    {transform:"translateX(14px) rotate(4deg)"},
-    {transform:"translateX(-7px) rotate(-2deg)"},
-    {transform:"translateX(0) rotate(0deg)"}
-  ],{duration:900,easing:"cubic-bezier(.2,.8,.2,1)"});
-  if(navigator.vibrate)navigator.vibrate([45,30,70]);
+
+
+/* ============================================================
+   建立星星
+============================================================ */
+
+function createPhysicsStars(){
+
+    if(
+        !physicsReady ||
+        typeof Matter === "undefined"
+    ){
+
+        return;
+
+    }
+
+
+    const {
+        World,
+        Bodies,
+        Body
+    } = Matter;
+
+
+    const container =
+        $("stars");
+
+
+    const width =
+        container.clientWidth;
+
+    const height =
+        container.clientHeight;
+
+
+    /*
+     * 删除旧动态星星
+     */
+
+    physicsBodies
+        .filter(body=>!body.isStatic)
+        .forEach(body=>{
+
+            World.remove(
+                engine.world,
+                body
+            );
+
+        });
+
+
+    physicsBodies =
+        physicsBodies.filter(
+            body=>body.isStatic
+        );
+
+
+    /*
+     * 每封信对应一颗星
+     */
+
+    stars.forEach(
+        (star,index)=>{
+
+            const x =
+                width *
+                (star.x / 100);
+
+            const y =
+                height *
+                (star.y / 100);
+
+
+            const body =
+                Bodies.circle(
+                    x,
+                    y,
+                    10,
+                    {
+
+                        restitution:.92,
+
+                        friction:.01,
+
+                        frictionAir:.004,
+
+                        density:.006,
+
+                        inertia:Infinity
+
+                    }
+                );
+
+
+            body.starId =
+                star.id;
+
+            body.starColor =
+                star.color;
+
+
+            Body.setVelocity(
+                body,
+                {
+
+                    x:
+                        (Math.random() - .5) *
+                        .5,
+
+                    y:
+                        (Math.random() - .5) *
+                        .3
+
+                }
+            );
+
+
+            Body.setAngularVelocity(
+                body,
+                (Math.random() - .5) *
+                .04
+            );
+
+
+            physicsBodies.push(
+                body
+            );
+
+
+            World.add(
+                engine.world,
+                body
+            );
+
+        }
+    );
+
 }
-function rebuildStars(){
-  const old=new Map(stars.map(s=>[String(s.id),s]));
-  stars=letters.map(n=>old.get(String(n.id))||{
-    id:n.id,color:n.color,x:40+Math.random()*25,y:68+Math.random()*20
-  });
-  const layer=$("stars");layer.innerHTML="";
-  letters.forEach(n=>{
-    const el=document.createElement("i");el.className="star";el.style.setProperty("--c",n.color);
-    el.dataset.id=n.id;el.title=n.emotion+" · "+n.who;el.onclick=()=>show(n);layer.appendChild(el);
-  });
-  if(engine)rebuildMatter();
+
+
+/* ============================================================
+   星星 DOM
+============================================================ */
+
+function renderStars(){
+
+    const layer =
+        $("stars");
+
+
+    layer.innerHTML =
+        "";
+
+
+    letters.forEach(
+        letter=>{
+
+            const star =
+                document.createElement("i");
+
+
+            star.className =
+                "star";
+
+
+            star.style.setProperty(
+                "--c",
+                letter.color
+            );
+
+
+            star.dataset.id =
+                letter.id;
+
+
+            star.title =
+                letter.emotion +
+                " · " +
+                letter.who;
+
+
+            star.onclick =
+                ()=>{
+                    showLetter(
+                        letter
+                    );
+                };
+
+
+            layer.appendChild(
+                star
+            );
+
+        }
+    );
+
+
+    /*
+     * 如果物理引擎已经启动，
+     * 重新建立物理星星
+     */
+
+    if(physicsReady){
+
+        createPhysicsStars();
+
+    }
+
 }
-function physicsFrame(){
-  syncMatterStars();
+
+
+/* ============================================================
+   物理动画同步 DOM
+============================================================ */
+
+function physicsLoop(){
+
+    if(
+        physicsReady &&
+        typeof Matter !== "undefined"
+    ){
+
+        const dynamicBodies =
+            physicsBodies.filter(
+                body=>!body.isStatic
+            );
+
+
+        const elements =
+            [
+                ...$("stars").children
+            ];
+
+
+        dynamicBodies.forEach(
+            (body,index)=>{
+
+                const element =
+                    elements[index];
+
+
+                if(!element){
+                    return;
+                }
+
+
+                const container =
+                    $("stars");
+
+
+                const x =
+                    body.position.x /
+                    container.clientWidth *
+                    100;
+
+
+                const y =
+                    body.position.y /
+                    container.clientHeight *
+                    100;
+
+
+                element.style.left =
+                    x + "%";
+
+
+                element.style.top =
+                    y + "%";
+
+
+                element.style.transform =
+                    `
+                    translate(-50%,-50%)
+                    rotate(${body.angle}rad)
+                    `;
+
+
+                /*
+                 * 拖尾
+                 */
+
+                if(
+                    Math.random() < .22
+                ){
+
+                    const trail =
+                        document.createElement("i");
+
+
+                    trail.className =
+                        "trail";
+
+
+                    trail.style.setProperty(
+                        "--c",
+                        body.starColor
+                    );
+
+
+                    trail.style.left =
+                        x + "%";
+
+
+                    trail.style.top =
+                        y + "%";
+
+
+                    container.appendChild(
+                        trail
+                    );
+
+
+                    setTimeout(
+                        ()=>{
+                            trail.remove();
+                        },
+                        600
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    requestAnimationFrame(
+        physicsLoop
+    );
+
 }
-$("enter").onclick=()=>{$("gate").classList.add("hide");initPhysics();cloud();requestAnimationFrame(syncMatterStars)};$("write").onclick=openWrite;$("close").onclick=closeWrite;$("fold").onclick=fold;$("archive").onclick=archive;$("closeBox").onclick=()=>$("box").classList.remove("open");$("shake").onclick=()=>shake();document.querySelectorAll(".sign button").forEach(b=>b.onclick=()=>{who=b.dataset.who;document.querySelectorAll(".sign button").forEach(x=>x.classList.toggle("on",x===b))});window.addEventListener("resize",()=>{if(engine){initPhysics();rebuildMatter()}});window.addEventListener("devicemotion",e=>{let a=e.accelerationIncludingGravity;if(a&&Math.hypot(a.x||0,a.y||0,a.z||0)>23)shake(.7)});$("date").textContent=new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"});
-</script></body></html>
+
+
+/* ============================================================
+   摇一摇
+============================================================ */
+
+function shakeBottle(power=1){
+
+    const now =
+        performance.now();
+
+
+    if(
+        now - lastShake < 250
+    ){
+
+        return;
+
+    }
+
+
+    lastShake =
+        now;
+
+
+    /*
+     * 真正给每颗星施加物理力
+     */
+
+    if(
+        physicsReady &&
+        typeof Matter !== "undefined"
+    ){
+
+        const {
+            Body
+        } = Matter;
+
+
+        physicsBodies
+            .filter(body=>!body.isStatic)
+            .forEach(body=>{
+
+                Body.applyForce(
+                    body,
+                    body.position,
+                    {
+
+                        x:
+                            (Math.random() - .5) *
+                            .055 *
+                            power,
+
+                        y:
+                            -(
+                                .035 +
+                                Math.random() * .045
+                            ) *
+                            power
+
+                    }
+                );
+
+
+                Body.setAngularVelocity(
+                    body,
+                    (Math.random() - .5) *
+                    .35 *
+                    power
+                );
+
+            });
+
+    }
+
+
+    /*
+     * 瓶子本身晃动
+     */
+
+    $("bottle").animate(
+
+        [
+
+            {
+                transform:
+                    "translateX(0) rotate(0deg)"
+            },
+
+            {
+                transform:
+                    "translateX(-14px) rotate(-4deg)"
+            },
+
+            {
+                transform:
+                    "translateX(16px) rotate(4deg)"
+            },
+
+            {
+                transform:
+                    "translateX(-9px) rotate(-3deg)"
+            },
+
+            {
+                transform:
+                    "translateX(6px) rotate(2deg)"
+            },
+
+            {
+                transform:
+                    "translateX(0) rotate(0deg)"
+            }
+
+        ],
+
+        {
+
+            duration:950,
+
+            easing:
+                "cubic-bezier(.2,.8,.2,1)"
+
+        }
+
+    );
+
+
+    resumeAudio();
+
+
+    /*
+     * 手机震动
+     */
+
+    if(
+        navigator.vibrate
+    ){
+
+        navigator.vibrate(
+            [40,30,70]
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   手机真实摇动
+============================================================ */
+
+let lastAcceleration = 0;
+
+window.addEventListener(
+    "devicemotion",
+    event=>{
+
+        const acceleration =
+            event.accelerationIncludingGravity;
+
+
+        if(!acceleration){
+            return;
+        }
+
+
+        const x =
+            acceleration.x || 0;
+
+        const y =
+            acceleration.y || 0;
+
+        const z =
+            acceleration.z || 0;
+
+
+        const magnitude =
+            Math.sqrt(
+                x*x +
+                y*y +
+                z*z
+            );
+
+
+        if(
+            magnitude > 20 &&
+            magnitude - lastAcceleration > 7
+        ){
+
+            shakeBottle(.8);
+
+        }
+
+
+        lastAcceleration =
+            magnitude;
+
+    }
+);
+
+
+/* ============================================================
+   云端
+============================================================ */
+
+async function loadLetters(){
+
+    try{
+
+        const result =
+            await db
+                .from("star_letters")
+                .select("*")
+                .eq("room",ROOM)
+                .order(
+                    "created_at",
+                    {
+                        ascending:true
+                    }
+                );
+
+
+        if(result.error){
+
+            console.error(
+                result.error
+            );
+
+            setStatus(
+                "● 云端连接失败"
+            );
+
+            return;
+
+        }
+
+
+        letters =
+            result.data || [];
+
+
+        renderAll();
+
+
+        /*
+         * Realtime
+         */
+
+        db
+            .channel(
+                "star-bottle-room"
+            )
+            .on(
+                "postgres_changes",
+                {
+
+                    event:"INSERT",
+
+                    schema:"public",
+
+                    table:"star_letters",
+
+                    filter:
+                        "room=eq." + ROOM
+
+                },
+
+                payload=>{
+
+                    const newLetter =
+                        payload.new;
+
+
+                    if(
+                        letters.some(
+                            item =>
+                                item.id ===
+                                newLetter.id
+                        )
+                    ){
+
+                        return;
+
+                    }
+
+
+                    letters.push(
+                        newLetter
+                    );
+
+
+                    renderAll();
+
+
+                    /*
+                     * 新星星出现时轻微闪光
+                     */
+
+                    const previous =
+                        emotionIndex;
+
+
+                    const found =
+                        EMOTIONS.findIndex(
+                            e =>
+                                e.name ===
+                                newLetter.emotion
+                        );
+
+
+                    if(found >= 0){
+
+                        emotionIndex =
+                            found;
+
+                        startEmotionEffect();
+
+
+                        setTimeout(
+                            ()=>{
+                                emotionIndex =
+                                    previous;
+
+                                clearEffects();
+                            },
+                            900
+                        );
+
+                    }
+
+                }
+            )
+            .subscribe(
+                state=>{
+
+                    if(
+                        state ===
+                        "SUBSCRIBED"
+                    ){
+
+                        setStatus(
+                            "● 已连接 · 两个人共享同一瓶星星"
+                        );
+
+                    }
+
+                }
+            );
+
+    }catch(error){
+
+        console.error(
+            error
+        );
+
+        setStatus(
+            "● 云端连接失败"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   保存信件
+============================================================ */
+
+async function saveLetter(){
+
+    const text =
+        $("text").value.trim();
+
+
+    if(!text){
+
+        return;
+
+    }
+
+
+    const emotion =
+        EMOTIONS[
+            emotionIndex
+        ];
+
+
+    const row = {
+
+        room:ROOM,
+
+        text:text,
+
+        emotion:
+            emotion.name,
+
+        color:
+            emotion.color,
+
+        who:
+            currentWho
+
+    };
+
+
+    setStatus(
+        "● 正在保存星星……"
+    );
+
+
+    const result =
+        await db
+            .from("star_letters")
+            .insert(row)
+            .select()
+            .single();
+
+
+    if(result.error){
+
+        console.error(
+            result.error
+        );
+
+        setStatus(
+            "● 保存失败，请检查网络"
+        );
+
+        return;
+
+    }
+
+
+    /*
+     * Realtime 通常会收到，
+     * 但如果当前客户端没有收到，
+     * 自己先补进去。
+     */
+
+    if(
+        result.data &&
+        !letters.some(
+            x =>
+                x.id ===
+                result.data.id
+        )
+    ){
+
+        letters.push(
+            result.data
+        );
+
+    }
+
+
+    $("text").value =
+        "";
+
+
+    closeComposer();
+
+
+    clearEffects();
+
+
+    renderAll();
+
+
+    setStatus(
+        "● 星星已经留下"
+    );
+
+}
+
+
+/* ============================================================
+   UI
+============================================================ */
+
+function renderAll(){
+
+    renderStars();
+
+
+    $("ic").textContent =
+        letters.filter(
+            x => x.who === "Ink"
+        ).length;
+
+
+    $("yc").textContent =
+        letters.filter(
+            x => x.who === "Yyi"
+        ).length;
+
+
+    $("tc").textContent =
+        letters.length;
+
+}
+
+
+/* ============================================================
+   查看信
+============================================================ */
+
+function showLetter(letter){
+
+    $("box").classList.add(
+        "open"
+    );
+
+
+    $("notes").innerHTML = `
+
+        <article class="note">
+
+            <span
+                class="tag"
+                style="background:${letter.color}"
+            >
+                ${escapeHTML(letter.emotion)}
+            </span>
+
+            <span class="who">
+                ${escapeHTML(letter.who)} 写的
+            </span>
+
+            <p>
+                ${escapeHTML(letter.text)}
+            </p>
+
+            <small>
+                ${new Date(
+                    letter.created_at
+                ).toLocaleString("zh-CN")}
+            </small>
+
+        </article>
+
+    `;
+
+}
+
+
+/* ============================================================
+   档案
+============================================================ */
+
+function openArchive(){
+
+    $("box").classList.add(
+        "open"
+    );
+
+
+    if(!letters.length){
+
+        $("notes").innerHTML =
+            "<p>还没有星星信。</p>";
+
+        return;
+
+    }
+
+
+    $("notes").innerHTML =
+        letters
+            .slice()
+            .reverse()
+            .map(
+                letter=>`
+
+                    <article class="note">
+
+                        <span
+                            class="tag"
+                            style="background:${letter.color}"
+                        >
+                            ${escapeHTML(letter.emotion)}
+                        </span>
+
+                        <span class="who">
+                            ${escapeHTML(letter.who)} 写的
+                        </span>
+
+                        <p>
+                            ${escapeHTML(letter.text)}
+                        </p>
+
+                        <small>
+                            ${new Date(
+                                letter.created_at
+                            ).toLocaleString("zh-CN")}
+                        </small>
+
+                    </article>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   写信
+============================================================ */
+
+function openComposer(){
+
+    $("compose").classList.add(
+        "open"
+    );
+
+
+    renderEmotionButtons();
+
+
+    startEmotionEffect();
+
+
+    setTimeout(
+        ()=>{
+            $("text").focus();
+        },
+        100
+    );
+
+}
+
+
+function closeComposer(){
+
+    $("compose").classList.remove(
+        "open"
+    );
+
+
+    clearEffects();
+
+}
+
+
+/* ============================================================
+   署名
+============================================================ */
+
+function setupSignatureButtons(){
+
+    document
+        .querySelectorAll(
+            ".sign button"
+        )
+        .forEach(button=>{
+
+            button.onclick =
+                ()=>{
+
+                    currentWho =
+                        button.dataset.who;
+
+
+                    document
+                        .querySelectorAll(
+                            ".sign button"
+                        )
+                        .forEach(
+                            other=>{
+                                other.classList.toggle(
+                                    "on",
+                                    other === button
+                                );
+                            }
+                        );
+
+                };
+
+        });
+
+}
+
+
+/* ============================================================
+   事件
+============================================================ */
+
+$("enter").onclick =
+    async ()=>{
+
+        /*
+         * 用户第一次点击页面，
+         * 此时允许浏览器启动声音。
+         */
+
+        try{
+
+            const AudioCtx =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            if(AudioCtx){
+
+                audioContext =
+                    new AudioCtx();
+
+                await audioContext.resume();
+
+                audioContext.close();
+
+                audioContext =
+                    null;
+
+            }
+
+        }catch(e){}
+
+
+        $("gate").classList.add(
+            "hide"
+        );
+
+
+        /*
+         * 物理引擎失败也不能阻止页面打开
+         */
+
+        try{
+
+            initPhysics();
+
+        }catch(error){
+
+            console.warn(
+                error
+            );
+
+            physicsReady =
+                false;
+
+        }
+
+
+        /*
+         * 加载云端
+         */
+
+        loadLetters();
+
+
+        /*
+         * 启动星星动画
+         */
+
+        if(!animationStarted){
+
+            animationStarted =
+                true;
+
+            requestAnimationFrame(
+                physicsLoop
+            );
+
+        }
+
+    };
+
+
+$("write").onclick =
+    openComposer;
+
+
+$("close").onclick =
+    closeComposer;
+
+
+$("fold").onclick =
+    saveLetter;
+
+
+$("archive").onclick =
+    openArchive;
+
+
+$("closeBox").onclick =
+    ()=>{
+        $("box").classList.remove(
+            "open"
+        );
+    };
+
+
+$("shake").onclick =
+    ()=>{
+        shakeBottle(1);
+    };
+
+
+setupSignatureButtons();
+
+
+/* ============================================================
+   日期
+============================================================ */
+
+$("date").textContent =
+    new Date().toLocaleDateString(
+        "zh-CN",
+        {
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    );
+
+
+/* ============================================================
+   窗口变化
+============================================================ */
+
+window.addEventListener(
+    "resize",
+    ()=>{
+        /*
+         * 不重新创建整个 Matter 引擎，
+         * 避免移动端旋转导致多个物理世界叠加。
+         */
+
+        if(
+            physicsReady &&
+            typeof Matter !== "undefined"
+        ){
+
+            const container =
+                $("stars");
+
+            const width =
+                container.clientWidth;
+
+            const height =
+                container.clientHeight;
+
+
+            const staticBodies =
+                physicsBodies.filter(
+                    body=>body.isStatic
+                );
+
+
+            if(
+                staticBodies.length === 4
+            ){
+
+                Matter.Body.setPosition(
+                    staticBodies[0],
+                    {
+                        x:width/2,
+                        y:-10
+                    }
+                );
+
+
+                Matter.Body.setPosition(
+                    staticBodies[1],
+                    {
+                        x:width/2,
+                        y:height+10
+                    }
+                );
+
+
+                Matter.Body.setPosition(
+                    staticBodies[2],
+                    {
+                        x:-10,
+                        y:height/2
+                    }
+                );
+
+
+                Matter.Body.setPosition(
+                    staticBodies[3],
+                    {
+                        x:width+10,
+                        y:height/2
+                    }
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   页面关闭时停止音频
+============================================================ */
+
+window.addEventListener(
+    "pagehide",
+    ()=>{
+        stopAudio();
+    }
+);
+
+</script>
+
+</body>
+</html>
