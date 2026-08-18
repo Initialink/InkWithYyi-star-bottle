@@ -1,53 +1,3817 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ink × Yyi · Our Star Bottle</title>
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="utf-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+>
+
+<title>Ink × Yyi · Our Star Bottle</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:"Noto Serif SC","PingFang SC",serif;color:#fff;background:#080711}button,textarea{font:inherit}button{cursor:pointer}
-#world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle,#2b2340,#09070e 70%);transition:1s}#fx{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
-.p{position:absolute;border-radius:50%}.rain{width:1px;height:70px;background:linear-gradient(transparent,#d8edff);opacity:.5;animation:rain linear infinite}@keyframes rain{to{transform:translate(-12vw,125vh)}}.ember{width:4px;height:18px;background:#ff6048;box-shadow:0 0 18px #ff3b2b;animation:up linear infinite}@keyframes up{to{transform:translate(-20px,-120vh);opacity:0}}.spark{width:4px;height:4px;background:currentColor;box-shadow:0 0 15px currentColor;animation:sp linear infinite}@keyframes sp{50%{transform:translate(30px,-20px) scale(1.7)}to{transform:translate(-15px,-110vh);opacity:0}}.wave{border:1px solid currentColor;width:18px;height:18px;animation:wa 4s ease-out infinite}@keyframes wa{to{width:70vw;height:70vw;opacity:0;transform:translate(-50%,-50%)}}.wind{width:35vw;height:1px;background:currentColor;animation:wi 1.2s linear infinite}@keyframes wi{from{transform:translateX(-100vw)}to{transform:translateX(180vw)}}
-#gate{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#09070e;transition:.8s}.hide{opacity:0;pointer-events:none}.intro{text-align:center}.big{font-size:90px;text-shadow:0 0 35px #e8d17d}.intro h1{font-size:38px;font-weight:400;letter-spacing:8px}.intro p{color:#aaa0b1;line-height:2}.btn,.enter{background:#ffffff0b;border:1px solid #d7c58c55;color:#eee5d9;border-radius:99px;padding:11px 20px}
-main{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}.top{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#a69aaa}
-.bottle{position:relative;width:min(440px,90vw);height:min(640px,72vh);filter:drop-shadow(0 35px 60px #000b)}#glass{position:absolute;width:100%;height:100%}#stars{position:absolute;left:16%;right:16%;top:25%;bottom:7%;overflow:hidden;border-radius:40% 40% 22% 22%;z-index:4;pointer-events:auto;clip-path:inset(0 round 22% 22% 12% 12%);background:radial-gradient(circle at 50% 70%,rgba(255,255,255,.035),transparent 70%)}.star{position:absolute;width:20px;height:20px;will-change:left,top,transform;clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);background:var(--c);box-shadow:0 0 12px var(--c),0 0 30px var(--c);cursor:pointer}.trail{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);opacity:.6;animation:tr .55s forwards}@keyframes tr{to{opacity:0;transform:scale(.1)}}
-.stats{display:flex;gap:28px;color:#aaa0b0;font-size:12px}.stats b{color:#e9d68d;font-size:18px;font-weight:400}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
-.panel{position:fixed;inset:0;z-index:8;background:#05040bea;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:16px}.open{display:flex}.card{width:min(650px,95vw);max-height:92vh;overflow:auto;background:#f7eee2;color:#352b31;border-radius:28px;padding:24px}.x{float:right;border:0;background:none;font-size:25px;color:#777}.emotions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.emotion{border:1px solid #d2c4ba;background:#fff;border-radius:14px;padding:8px 2px;font-size:11px}.emotion.on{outline:2px solid var(--c)}.dot{width:22px;height:22px;border-radius:50%;margin:auto auto 5px;background:var(--c);box-shadow:0 0 12px var(--c)}textarea{width:100%;height:300px;margin-top:12px;border:0;outline:0;resize:none;background:repeating-linear-gradient(transparent 0 39px,#ded1c5 40px);font:17px/40px Georgia,"PingFang SC",serif;color:#352b31}.sign{text-align:center;margin:10px}.sign button{border:1px solid #c8bbb2;background:#fff;border-radius:99px;padding:8px 17px}.sign .on{background:#3b2c38;color:#fff}.row{text-align:center}.primary{border:0;border-radius:99px;background:#3b2c38;color:#fff;padding:11px 22px}.note{padding:15px 0;border-bottom:1px solid #ded2c8}.tag{padding:4px 9px;border-radius:99px;color:#fff;font-size:11px}.who{float:right;color:#88747e}.note p{white-space:pre-wrap;line-height:1.8}.status{position:fixed;bottom:15px;right:16px;font-size:10px;color:#a69aaa}
-.mood-wash{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .7s;background:radial-gradient(circle,rgba(255,255,255,.04),transparent 65%)}
-@media(max-width:520px){.emotions{grid-template-columns:repeat(3,1fr)}.intro h1{font-size:31px}}
-</style></head><body>
-<div id="world"><div id="fx"></div><div class="mood-wash" id="moodWash"></div></div><section id="gate"><div class="intro"><div class="big">✦</div><h1>Ink × Yyi</h1><p>我们的星星瓶<br>把想说的话，折成星星。</p><button class="enter" id="enter">打开我们的星星瓶 ✦</button></div></section>
-<main><div class="top"><span id="date"></span><span>OUR STAR BOTTLE</span></div><div class="bottle" id="bottle">
-<svg id="glass" viewBox="0 0 440 640"><defs><linearGradient id="g"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".45" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#9b7ad0" stop-opacity=".18"/></linearGradient><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#e7d19b"/><stop offset="1" stop-color="#725938"/></linearGradient></defs><path d="M158 55h124v78c0 18 48 32 64 65 9 19 13 43 13 73v278c0 48-27 72-75 72H156c-48 0-75-24-75-72V271c0-30 4-54 13-73 16-33 64-47 64-65V55z" fill="url(#g)" stroke="#eee6ff44" stroke-width="3"/><path d="M168 55h104v86c0 18 39 33 54 62 8 16 11 38 11 67v277c0 35-19 53-57 53H160c-38 0-57-18-57-53V270c0-29 3-51 11-67 15-29 54-44 54-62V55z" fill="none" stroke="#fff3" stroke-width="10"/><rect x="149" y="31" width="142" height="30" rx="9" fill="url(#gold)"/><rect x="161" y="21" width="118" height="14" rx="5" fill="#6d5436"/><path d="M112 243c16-44 46-59 66-80M329 279c8 52 8 116 7 181" fill="none" stroke="#fff5" stroke-width="7" stroke-linecap="round"/></svg><div id="stars"></div></div>
-<div class="stats"><span>Ink <b id="ic">0</b> ✦</span><span>Yyi <b id="yc">0</b> ✦</span><span>总计 <b id="tc">0</b></span></div><div class="actions"><button class="btn" id="write">写一封星星信 ✦</button><button class="btn" id="archive">星星档案</button><button class="btn" id="shake">摇一摇 ✦</button></div></main>
-<section class="panel" id="compose"><div class="card"><button class="x" id="close">×</button><h2>把一句话，留下来</h2><div class="emotions" id="emotions"></div><textarea id="text" maxlength="5000" placeholder="写下现在想留下的话……"></textarea><div class="sign"><button class="on" data-who="Ink">Ink 写的</button><button data-who="Yyi">Yyi 写的</button></div><div class="row"><button class="primary" id="fold">折成星星 ✦</button></div></div></section>
-<section class="panel" id="box"><div class="card"><button class="x" id="closeBox">×</button><h2>星星档案</h2><div id="notes"></div></div></section><div class="status" id="status">● 云端连接中</div>
+
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    margin:0;
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    font-family:
+        "Noto Serif SC",
+        "PingFang SC",
+        serif;
+
+    color:#fff;
+    background:#080711;
+}
+
+button,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+
+/* ================================
+   WORLD
+================================ */
+
+#world{
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle,
+            #2b2340,
+            #09070e 70%
+        );
+
+    transition:
+        background 1s ease;
+}
+
+#fx{
+    position:absolute;
+    inset:0;
+
+    pointer-events:none;
+
+    overflow:hidden;
+}
+
+
+/* ================================
+   FULLSCREEN FX
+================================ */
+
+.p{
+    position:absolute;
+    pointer-events:none;
+}
+
+.rain{
+
+    width:1px;
+    height:75px;
+
+    background:
+        linear-gradient(
+            transparent,
+            #d8edff
+        );
+
+    opacity:.55;
+
+    animation:
+        rainFall linear infinite;
+}
+
+@keyframes rainFall{
+
+    from{
+        transform:
+            translate3d(
+                0,
+                -100px,
+                0
+            )
+            rotate(10deg);
+    }
+
+    to{
+        transform:
+            translate3d(
+                -12vw,
+                125vh,
+                0
+            )
+            rotate(10deg);
+    }
+
+}
+
+
+.ember{
+
+    width:4px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ff6048;
+
+    box-shadow:
+        0 0 8px #ff6048,
+        0 0 18px #ff3b2b;
+
+    animation:
+        emberUp linear infinite;
+}
+
+@keyframes emberUp{
+
+    from{
+
+        transform:
+            translate3d(
+                0,
+                110vh,
+                0
+            );
+
+        opacity:0;
+    }
+
+    15%{
+        opacity:1;
+    }
+
+    to{
+
+        transform:
+            translate3d(
+                -30px,
+                -120vh,
+                0
+            );
+
+        opacity:0;
+    }
+
+}
+
+
+.spark{
+
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:currentColor;
+
+    box-shadow:
+        0 0 15px currentColor;
+
+    animation:
+        sparkMove linear infinite;
+}
+
+@keyframes sparkMove{
+
+    0%{
+
+        transform:
+            translate3d(
+                0,
+                20px,
+                0
+            )
+            scale:.5;
+
+        opacity:0;
+    }
+
+    30%{
+        opacity:1;
+    }
+
+    55%{
+
+        transform:
+            translate3d(
+                30px,
+                -20px,
+                0
+            )
+            scale:1.7;
+
+    }
+
+    100%{
+
+        transform:
+            translate3d(
+                -15px,
+                -110vh,
+                0
+            )
+            scale:.2;
+
+        opacity:0;
+    }
+
+}
+
+
+.wave{
+
+    width:18px;
+    height:18px;
+
+    border:
+        1px solid currentColor;
+
+    border-radius:50%;
+
+    animation:
+        waveExpand 4s ease-out infinite;
+}
+
+@keyframes waveExpand{
+
+    from{
+
+        opacity:.7;
+
+        transform:
+            translate(-50%,-50%)
+            scale:.1;
+    }
+
+    to{
+
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale:25;
+    }
+
+}
+
+
+.wind{
+
+    width:35vw;
+    height:1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            currentColor,
+            transparent
+        );
+
+    box-shadow:
+        0 0 8px currentColor;
+
+    animation:
+        windMove 1.2s linear infinite;
+}
+
+@keyframes windMove{
+
+    from{
+        transform:
+            translateX(-100vw);
+    }
+
+    to{
+        transform:
+            translateX(180vw);
+    }
+
+}
+
+
+.heart{
+
+    font-size:18px;
+
+    color:currentColor;
+
+    text-shadow:
+        0 0 12px currentColor,
+        0 0 28px currentColor;
+
+    animation:
+        heartFloat linear infinite;
+}
+
+.heart::before{
+    content:"♥";
+}
+
+@keyframes heartFloat{
+
+    0%{
+
+        transform:
+            translate3d(
+                0,
+                20vh,
+                0
+            )
+            scale(.7);
+
+        opacity:0;
+    }
+
+    25%{
+        opacity:1;
+    }
+
+    75%{
+
+        transform:
+            translate3d(
+                35px,
+                -50vh,
+                0
+            )
+            scale(1.2);
+
+    }
+
+    100%{
+
+        transform:
+            translate3d(
+                -20px,
+                -110vh,
+                0
+            )
+            scale(.6);
+
+        opacity:0;
+    }
+
+}
+
+
+/* ================================
+   GATE
+================================ */
+
+#gate{
+
+    position:fixed;
+    inset:0;
+
+    z-index:100;
+
+    display:grid;
+
+    place-items:center;
+
+    background:
+        radial-gradient(
+            circle,
+            #251d32,
+            #09070e 75%
+        );
+
+    transition:
+        opacity .8s ease,
+        visibility .8s ease;
+}
+
+#gate.hide{
+
+    opacity:0;
+
+    visibility:hidden;
+
+    pointer-events:none;
+}
+
+.intro{
+    text-align:center;
+}
+
+.big{
+
+    font-size:90px;
+
+    color:#e8d17d;
+
+    text-shadow:
+        0 0 20px #e8d17d,
+        0 0 45px #e8d17d66;
+
+    animation:
+        starBreath 4s ease-in-out infinite;
+}
+
+@keyframes starBreath{
+
+    50%{
+        transform:
+            scale(1.08);
+
+        opacity:.75;
+    }
+
+}
+
+.intro h1{
+
+    font-size:38px;
+
+    font-weight:400;
+
+    letter-spacing:8px;
+}
+
+.intro p{
+
+    color:#aaa0b1;
+
+    line-height:2;
+}
+
+.btn,
+.enter{
+
+    background:
+        rgba(255,255,255,.04);
+
+    border:
+        1px solid
+        rgba(215,197,140,.35);
+
+    color:#eee5d9;
+
+    border-radius:99px;
+
+    padding:
+        11px 20px;
+
+    transition:.25s;
+}
+
+.btn:hover,
+.enter:hover{
+
+    background:
+        rgba(255,255,255,.11);
+
+    transform:
+        translateY(-2px);
+
+}
+
+
+/* ================================
+   MAIN
+================================ */
+
+main{
+
+    position:relative;
+
+    z-index:2;
+
+    height:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-direction:column;
+}
+
+.top{
+
+    position:fixed;
+
+    top:18px;
+
+    left:22px;
+
+    right:22px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    font-size:10px;
+
+    letter-spacing:3px;
+
+    color:#a69aaa;
+}
+
+
+/* ================================
+   BOTTLE
+================================ */
+
+.bottle{
+
+    position:relative;
+
+    width:
+        min(440px,90vw);
+
+    height:
+        min(640px,72vh);
+
+    filter:
+        drop-shadow(
+            0 35px 60px
+            rgba(0,0,0,.75)
+        );
+
+    transform-origin:center;
+}
+
+#glass{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    z-index:3;
+
+    pointer-events:none;
+}
+
+
+/* Matter 容器 */
+
+#stars{
+
+    position:absolute;
+
+    left:16%;
+    right:16%;
+
+    top:25%;
+    bottom:7%;
+
+    overflow:hidden;
+
+    border-radius:
+        40% 40% 18% 18%;
+
+    z-index:4;
+}
+
+
+/* ================================
+   STAR
+================================ */
+
+.star{
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    clip-path:
+        polygon(
+            50% 0,
+            61% 35%,
+            100% 35%,
+            69% 57%,
+            81% 100%,
+            50% 73%,
+            19% 100%,
+            31% 57%,
+            0 35%,
+            39% 35%
+        );
+
+    background:
+        var(--c);
+
+    box-shadow:
+        0 0 12px var(--c),
+        0 0 30px var(--c),
+        0 0 55px var(--c);
+
+    cursor:pointer;
+
+    will-change:
+        transform,
+        left,
+        top;
+
+    transform:
+        translate(-50%,-50%);
+
+}
+
+
+/* 星星中心亮点 */
+
+.star::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:5px;
+    height:5px;
+
+    left:50%;
+    top:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    border-radius:50%;
+
+    background:#fff;
+
+    opacity:.7;
+
+    box-shadow:
+        0 0 8px #fff;
+
+}
+
+
+/* ================================
+   TRAIL
+================================ */
+
+.trail{
+
+    position:absolute;
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:
+        var(--c);
+
+    box-shadow:
+        0 0 10px var(--c),
+        0 0 18px var(--c);
+
+    pointer-events:none;
+
+    opacity:.7;
+
+    transform:
+        translate(-50%,-50%);
+
+    animation:
+        trailFade .6s ease-out forwards;
+}
+
+@keyframes trailFade{
+
+    to{
+
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.1);
+
+    }
+
+}
+
+
+/* ================================
+   STATS
+================================ */
+
+.stats{
+
+    display:flex;
+
+    gap:28px;
+
+    color:#aaa0b0;
+
+    font-size:12px;
+}
+
+.stats b{
+
+    color:#e9d68d;
+
+    font-size:18px;
+
+    font-weight:400;
+}
+
+
+.actions{
+
+    display:flex;
+
+    gap:8px;
+
+    margin-top:12px;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+}
+
+
+/* ================================
+   PANELS
+================================ */
+
+.panel{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:50;
+
+    background:
+        rgba(5,4,11,.92);
+
+    backdrop-filter:
+        blur(18px);
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:16px;
+}
+
+.panel.open{
+    display:flex;
+}
+
+.card{
+
+    width:
+        min(650px,95vw);
+
+    max-height:92vh;
+
+    overflow:auto;
+
+    background:#f7eee2;
+
+    color:#352b31;
+
+    border-radius:28px;
+
+    padding:24px;
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.7);
+}
+
+.x{
+
+    float:right;
+
+    border:0;
+
+    background:none;
+
+    font-size:25px;
+
+    color:#777;
+}
+
+
+/* ================================
+   EMOTIONS
+================================ */
+
+.emotions{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(6,1fr);
+
+    gap:7px;
+}
+
+.emotion{
+
+    border:
+        1px solid #d2c4ba;
+
+    background:#fff;
+
+    border-radius:14px;
+
+    padding:8px 2px;
+
+    font-size:11px;
+
+    color:#352b31;
+}
+
+.emotion.on{
+
+    outline:
+        2px solid var(--c);
+
+    box-shadow:
+        0 0 15px
+        var(--c);
+}
+
+.dot{
+
+    width:22px;
+    height:22px;
+
+    border-radius:50%;
+
+    margin:
+        auto auto 5px;
+
+    background:
+        var(--c);
+
+    box-shadow:
+        0 0 12px var(--c);
+}
+
+
+/* ================================
+   TEXT
+================================ */
+
+textarea{
+
+    width:100%;
+
+    height:300px;
+
+    margin-top:12px;
+
+    border:0;
+
+    outline:0;
+
+    resize:none;
+
+    background:
+        repeating-linear-gradient(
+            transparent 0 39px,
+            #ded1c5 40px
+        );
+
+    font:
+        17px/40px
+        Georgia,
+        "PingFang SC",
+        serif;
+
+    color:#352b31;
+}
+
+.sign{
+
+    text-align:center;
+
+    margin:10px;
+}
+
+.sign button{
+
+    border:
+        1px solid #c8bbb2;
+
+    background:#fff;
+
+    border-radius:99px;
+
+    padding:
+        8px 17px;
+
+    margin:
+        0 3px;
+}
+
+.sign .on{
+
+    background:#3b2c38;
+
+    color:#fff;
+}
+
+.row{
+    text-align:center;
+}
+
+.primary{
+
+    border:0;
+
+    border-radius:99px;
+
+    background:#3b2c38;
+
+    color:#fff;
+
+    padding:
+        11px 22px;
+}
+
+
+/* ================================
+   NOTES
+================================ */
+
+.note{
+
+    padding:
+        15px 0;
+
+    border-bottom:
+        1px solid #ded2c8;
+}
+
+.tag{
+
+    display:inline-block;
+
+    padding:
+        4px 9px;
+
+    border-radius:99px;
+
+    color:#fff;
+
+    font-size:11px;
+}
+
+.who{
+
+    float:right;
+
+    color:#88747e;
+}
+
+.note p{
+
+    white-space:pre-wrap;
+
+    line-height:1.8;
+}
+
+.note small{
+
+    color:#9b8c92;
+}
+
+
+/* ================================
+   STATUS
+================================ */
+
+.status{
+
+    position:fixed;
+
+    bottom:
+        15px;
+
+    right:16px;
+
+    z-index:20;
+
+    font-size:10px;
+
+    color:#a69aaa;
+
+    letter-spacing:1px;
+}
+
+
+/* ================================
+   MOBILE
+================================ */
+
+@media(max-width:520px){
+
+    .emotions{
+
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+    .intro h1{
+
+        font-size:31px;
+    }
+
+    .bottle{
+
+        width:94vw;
+
+        height:68vh;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<div id="world">
+
+    <div id="fx"></div>
+
+</div>
+
+
+<!-- ================================
+     GATE
+================================ -->
+
+<section id="gate">
+
+    <div class="intro">
+
+        <div class="big">
+            ✦
+        </div>
+
+        <h1>
+            Ink × Yyi
+        </h1>
+
+        <p>
+            我们的星星瓶<br>
+            把想说的话，折成星星。
+        </p>
+
+        <button
+            class="enter"
+            id="enter"
+            type="button"
+        >
+            打开我们的星星瓶 ✦
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================================
+     MAIN
+================================ -->
+
+<main>
+
+    <div class="top">
+
+        <span id="date"></span>
+
+        <span>
+            OUR STAR BOTTLE
+        </span>
+
+    </div>
+
+
+    <div
+        class="bottle"
+        id="bottle"
+    >
+
+        <svg
+            id="glass"
+            viewBox="0 0 440 640"
+        >
+
+            <defs>
+
+                <linearGradient
+                    id="g"
+                >
+
+                    <stop
+                        stop-color="#fff"
+                        stop-opacity=".24"
+                    />
+
+                    <stop
+                        offset=".45"
+                        stop-color="#fff"
+                        stop-opacity=".02"
+                    />
+
+                    <stop
+                        offset="1"
+                        stop-color="#9b7ad0"
+                        stop-opacity=".18"
+                    />
+
+                </linearGradient>
+
+
+                <linearGradient
+                    id="gold"
+                    x2="0"
+                    y2="1"
+                >
+
+                    <stop
+                        stop-color="#e7d19b"
+                    />
+
+                    <stop
+                        offset="1"
+                        stop-color="#725938"
+                    />
+
+                </linearGradient>
+
+            </defs>
+
+
+            <path
+                d="
+                    M158 55
+                    h124
+                    v78
+                    c0 18 48 32 64 65
+                    9 19 13 43 13 73
+                    v278
+                    c0 48-27 72-75 72
+                    H156
+                    c-48 0-75-24-75-72
+                    V271
+                    c0-30 4-54 13-73
+                    16-33 64-47 64-65
+                    V55z
+                "
+                fill="url(#g)"
+                stroke="#eee6ff44"
+                stroke-width="3"
+            />
+
+
+            <path
+                d="
+                    M168 55
+                    h104
+                    v86
+                    c0 18 39 33 54 62
+                    8 16 11 38 11 67
+                    v277
+                    c0 35-19 53-57 53
+                    H160
+                    c-38 0-57-18-57-53
+                    V270
+                    c0-29 3-51 11-67
+                    15-29 54-44 54-62
+                    V55z
+                "
+                fill="none"
+                stroke="#fff3"
+                stroke-width="10"
+            />
+
+
+            <rect
+                x="149"
+                y="31"
+                width="142"
+                height="30"
+                rx="9"
+                fill="url(#gold)"
+            />
+
+
+            <rect
+                x="161"
+                y="21"
+                width="118"
+                height="14"
+                rx="5"
+                fill="#6d5436"
+            />
+
+
+            <path
+                d="
+                    M112 243
+                    c16-44 46-59 66-80
+
+                    M329 279
+                    c8 52 8 116 7 181
+                "
+                fill="none"
+                stroke="#fff5"
+                stroke-width="7"
+                stroke-linecap="round"
+            />
+
+        </svg>
+
+
+        <div id="stars"></div>
+
+    </div>
+
+
+    <div class="stats">
+
+        <span>
+            Ink
+            <b id="ic">0</b>
+            ✦
+        </span>
+
+        <span>
+            Yyi
+            <b id="yc">0</b>
+            ✦
+        </span>
+
+        <span>
+            总计
+            <b id="tc">0</b>
+        </span>
+
+    </div>
+
+
+    <div class="actions">
+
+        <button
+            class="btn"
+            id="write"
+            type="button"
+        >
+            写一封星星信 ✦
+        </button>
+
+
+        <button
+            class="btn"
+            id="archive"
+            type="button"
+        >
+            星星档案
+        </button>
+
+
+        <button
+            class="btn"
+            id="shake"
+            type="button"
+        >
+            摇一摇 ✦
+        </button>
+
+    </div>
+
+</main>
+
+
+<!-- ================================
+     WRITE
+================================ -->
+
+<section
+    class="panel"
+    id="compose"
+>
+
+    <div class="card">
+
+        <button
+            class="x"
+            id="close"
+            type="button"
+        >
+            ×
+        </button>
+
+
+        <h2>
+            把一句话，留下来
+        </h2>
+
+
+        <div
+            class="emotions"
+            id="emotions"
+        ></div>
+
+
+        <textarea
+            id="text"
+            maxlength="5000"
+            placeholder="写下现在想留下的话……"
+        ></textarea>
+
+
+        <div class="sign">
+
+            <button
+                class="on"
+                data-who="Ink"
+                type="button"
+            >
+                Ink 写的
+            </button>
+
+
+            <button
+                data-who="Yyi"
+                type="button"
+            >
+                Yyi 写的
+            </button>
+
+        </div>
+
+
+        <div class="row">
+
+            <button
+                class="primary"
+                id="fold"
+                type="button"
+            >
+                折成星星 ✦
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================================
+     ARCHIVE
+================================ -->
+
+<section
+    class="panel"
+    id="box"
+>
+
+    <div class="card">
+
+        <button
+            class="x"
+            id="closeBox"
+            type="button"
+        >
+            ×
+        </button>
+
+
+        <h2>
+            星星档案
+        </h2>
+
+
+        <div id="notes"></div>
+
+    </div>
+
+</section>
+
+
+<div
+    class="status"
+    id="status"
+>
+    ● 云端连接中
+</div>
+
+
 <script>
-const SUPABASE_URL="https://fgerhmqwqflgggnqpuas.supabase.co";
-const SUPABASE_KEY="sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
-const ROOM="ink-yyi";
-const E=[["开心","#f4d24f","happy"],["难过","#78a9df","sad"],["生气","#ef5a4f","angry"],["平静","#79c8b1","calm"],["焦虑","#b58bd8","anxious"],["想念","#8c78e8","miss"]];
-let db=null,channel=null,letters=[],ei=0,who="Ink";
-let physRunning=false,physRaf=0,physLast=0,activeStars=[],lastShake=0;
-let audioCtx=null;
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
-function status(s){$("status").textContent=s}
-function colorFor(n){return n?.color||E.find(e=>e[0]===n?.emotion)?.[1]||E[0][1]}
-function hexToRgb(hex){const h=hex.replace("#","");const n=parseInt(h,16);return{r:n>>16&255,g:n>>8&255,b:n&255}}
-function mix(hex,a){const c=hexToRgb(hex),t=a>=0?255:0,x=Math.abs(a);return`rgb(${Math.round(c.r+(t-c.r)*x)},${Math.round(c.g+(t-c.g)*x)},${Math.round(c.b+(t-c.b)*x)})`}
-function starColors(hex){return{top:mix(hex,.45),light:mix(hex,.22),base:hex,dark:mix(hex,-.24),edge:mix(hex,-.42)}}
-function buildStarFaces(c){const tips=["50,8","89.9,37.1","74.7,83.9","25.3,83.9","10.1,37.1"],notchs=["61.8,33.8","69,56.2","50,70","31,56.2","38.2,33.8"],inner=["50,30.5","65.96,42.14","59.88,60.86","40.12,60.86","34.04,42.14"];let h=`<path d="M50 8L61.8 33.8 89.9 37.1 69 56.2 74.7 83.9 50 70 25.3 83.9 31 56.2 10.1 37.1 38.2 33.8Z" fill="${c.base}" stroke="${c.edge}" stroke-width="1.6" stroke-linejoin="round"/>`;for(let i=0;i<5;i++){const p=(i+4)%5;h+=`<polygon points="${inner[i]} ${tips[i]} ${notchs[p]}" fill="${c.light}"/><polygon points="${tips[i]} ${notchs[i]} ${inner[i]}" fill="${c.dark}"/>`}return h+`<polygon points="${inner.join(" ")}" fill="${c.top}"/><polygon points="${inner.join(" ")}" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1"/><path d="M50 30.5L50 8M65.96 42.14L89.9 37.1M59.88 60.86L74.7 83.9M40.12 60.86L25.3 83.9M34.04 42.14L10.1 37.1" stroke="rgba(255,255,255,.28)" stroke-width="1" fill="none"/>`}
-function makeStar(letter,index,entering){const seed=String(letter.id).split("").reduce((a,c)=>a+c.charCodeAt(0),0)+index*7919,r=n=>{const x=Math.sin(seed+n)*10000;return x-Math.floor(x)},c=$("stars"),w=c.clientWidth||240,h=c.clientHeight||360,total=Math.max(1,letters.length),size=total<=30?18+r(2)*8:total<=60?15+r(2)*7:11+r(2)*6;return{id:String(letter.id),letter,x:entering?w/2:20+r(1)*(w-40),y:entering?15:Math.max(30,h*.55+r(2)*h*.3),vx:entering?(Math.random()-.5)*80:(r(3)-.5)*20,vy:entering?40:0,r:size/2,rot:r(4)*360,rotV:(r(5)-.5)*100,color:colorFor(letter),trail:[],el:null}}
-function addStar(letter,index,entering){const s=makeStar(letter,index,entering),el=document.createElement("i");el.className="star";el.style.setProperty("--c",s.color);el.dataset.id=s.id;el.title=(letter.emotion||"星星")+" · "+(letter.who||"");el.onclick=e=>{e.stopPropagation();show(letter)};$("stars").appendChild(el);s.el=el;activeStars.push(s);return s}
-function rebuildStars(){const old=new Map(activeStars.map(s=>[s.id,s])),next=[];letters.forEach((l,i)=>{const id=String(l.id);let s=old.get(id);if(!s)s=addStar(l,i,false);else{s.letter=l;s.color=colorFor(l);s.el.style.setProperty("--c",s.color)}next.push(s)});activeStars.forEach(s=>{if(!next.includes(s))s.el?.remove()});activeStars=next;$("ic").textContent=letters.filter(x=>x.who==="Ink").length;$("yc").textContent=letters.filter(x=>x.who==="Yyi").length;$("tc").textContent=letters.length}
-function bounds(s){const c=$("stars"),w=c.clientWidth,h=c.clientHeight,r=s.r;if(!w||!h)return;const bottom=h-4-10*Math.pow(Math.abs(s.x-w/2)/(w/2),2);if(s.x<8+r){s.x=8+r;if(s.vx<0)s.vx=-s.vx*.72}if(s.x>w-8-r){s.x=w-8-r;if(s.vx>0)s.vx=-s.vx*.72}if(s.y-r<4){s.y=4+r;if(s.vy<0)s.vy=0}if(s.y+r>bottom){s.y=bottom-r;if(s.vy>10)s.vy=-s.vy*.35;else s.vy=0;s.vx*=.88}}
-function collide(a,b){const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy,min=a.r+b.r;if(d2<.001||d2>=min*min)return;const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,o=min-d,wa=b.r/(a.r+b.r),wb=a.r/(a.r+b.r);a.x-=nx*o*wa;a.y-=ny*o*wa;b.x+=nx*o*wb;b.y+=ny*o*wb;const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;if(rel>0){if(rel<18){const na=a.vx*nx+a.vy*ny,nb=b.vx*nx+b.vy*ny;a.vx-=na*nx;a.vy-=na*ny;b.vx-=nb*nx;b.vy-=nb*ny}else{const imp=1.38*rel*.5;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny;a.rotV+=(Math.random()-.5)*25;b.rotV+=(Math.random()-.5)*25}}}
-function renderStar(s){if(!s.el)return;s.el.style.left=s.x+"px";s.el.style.top=s.y+"px";s.el.style.transform=`translate(-50%,-50%) rotate(${s.rot}deg)`;if(Math.abs(s.vx)+Math.abs(s.vy)>10){const q=document.createElement("i");q.className="trail";q.style.setProperty("--c",s.color);q.style.left=s.x+"px";q.style.top=s.y+"px";$("stars").appendChild(q);setTimeout(()=>q.remove(),550)}}
-function physicsStep(dt){for(const s of activeStars){s.vy+=620*dt;s.vx*=Math.pow(.992,dt*60);s.vy*=Math.pow(.992,dt*60);s.x+=s.vx*dt;s.y+=s.vy*dt;s.rot+=s.rotV*dt;s.rotV*=Math.pow(.985,dt*60);if(Math.abs(s.vx)<5)s.vx=0;if(Math.abs(s.vy)<8)s.vy=0;if(Math.abs(s.rotV)<.4)s.rotV=0;bounds(s)}for(let pass=0;pass<3;pass++){for(let i=0;i<activeStars.length;i++)for(let j=i+1;j<activeStars.length;j++)collide(activeStars[i],activeStars[j]);for(const s of activeStars)bounds(s)}for(const s of activeStars)renderStar(s)}
-function startPhysics(){if(physRunning)return;physRunning=true;physLast=performance.now();const loop=now=>{const dt=Math.min(.033,(now-physLast)/1000);physLast=now;physicsStep(dt);physRaf=requestAnimationFrame(loop)};physRaf=requestAnimationFrame(loop)}
-function shake(power=1){const now=Date.now();if(now-lastShake<500||!activeStars.length)return;lastShake=now;activeStars.forEach(s=>{s.vx+=(Math.random()-.5)*700*power;s.vy-=180+Math.random()*420*power;s.rotV+=(Math.random()-.5)*480*power});$("bottle").classList.remove("big-shake");void $("bottle").offsetWidth;$("bottle").classList.add("big-shake");setTimeout(()=>$("bottle").classList.remove("big-shake"),900);if(navigator.vibrate)navigator.vibrate([45,30,70])}
-function stopAudio(){if(audioCtx){try{audioCtx.close()}catch(e){}}audioCtx=null}
-function noise(ctx,seconds){const b=ctx.createBuffer(1,ctx.sampleRate*seconds,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b}
-function sound(k){stopAudio();try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C(),master=ctx.createGain();master.gain.value=.09;master.connect(ctx.destination);audioCtx=ctx;const tones={happy:[523.25,659.25,783.99],sad:[196,246.94,293.66],angry:[73.42,92.5,110],calm:[174.61,220,261.63],anxious:[146.83,220,329.63],miss:[261.63,329.63,392]}[k]||[174.61,220,261.63],type={happy:"sine",sad:"sine",angry:"sawtooth",calm:"sine",anxious:"triangle",miss:"sine"}[k]||"sine";tones.forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.value=k==="angry"?.012:.018;o.connect(g).connect(master);o.start()});if(k==="sad"){const n=ctx.createBufferSource(),g=ctx.createGain(),lp=ctx.createBiquadFilter();n.buffer=noise(ctx,2);n.loop=true;lp.type="lowpass";lp.frequency.value=2600;g.gain.value=.12;n.connect(lp).connect(g).connect(master);n.start()}else if(k==="calm"){const n=ctx.createBufferSource(),g=ctx.createGain(),lp=ctx.createBiquadFilter();n.buffer=noise(ctx,2);n.loop=true;lp.type="lowpass";lp.frequency.value=900;g.gain.value=.025;n.connect(lp).connect(g).connect(master);n.start()}else{const n=ctx.createBufferSource(),g=ctx.createGain(),hp=ctx.createBiquadFilter();n.buffer=noise(ctx,1);n.loop=true;hp.type="highpass";hp.frequency.value=k==="happy"?1800:k==="miss"?900:700;g.gain.value=.016;n.connect(hp).connect(g).connect(master);n.start()}ctx.resume()}catch(e){console.warn("audio",e)}}
-function stopFx(){$("fx").innerHTML="";$("moodWash").style.opacity=0;$('world').style.background="radial-gradient(circle,#2b2340,#09070e 70%)";stopAudio()}
-function fx(){stopFx();const [name,color,key]=E[ei];const bg={happy:"radial-gradient(circle,#66521d,#0d0a08 68%)",sad:"radial-gradient(circle,#315b82,#07131d 68%)",angry:"radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",calm:"radial-gradient(circle,#27736b,#06181b 68%)",anxious:"radial-gradient(circle,#5d377e,#10091b 68%)",miss:"radial-gradient(circle,#514791,#100c24 68%)"}[key];$('world').style.background=bg;$('moodWash').style.opacity=.35;const cl=key==="sad"?"rain":key==="angry"?"ember":key==="calm"?"wave":key==="anxious"?"wind":key==="miss"?"heart":"spark",count=cl==="rain"?220:cl==="wave"?12:100;for(let i=0;i<count;i++){const p=document.createElement("i");p.className="p "+cl;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.color=color;p.style.animationDuration=(cl==="rain"?.35+Math.random()*.55:2+Math.random()*4)+"s";p.style.animationDelay=-Math.random()*5+"s";if(cl==="heart")p.textContent="♥";$('fx').appendChild(p)}if(key==="sad")for(let i=0;i<3;i++){const p=document.createElement('i');p.className='rainGlow';p.style.left=(10+Math.random()*80)+'%';p.style.top=(20+Math.random()*60)+'%';$('fx').appendChild(p)}sound(key)}
-function emo(){$('emotions').innerHTML=E.map((e,i)=>`<button class="emotion ${i===ei?'on':''}" style="--c:${e[1]}" data-i="${i}"><div class="dot"></div>${e[0]}</button>`).join('');document.querySelectorAll('.emotion').forEach(b=>b.onclick=()=>{ei=+b.dataset.i;emo();fx();updateFold()})}
-function updateFold(){$('fold').disabled=!$('text').value.trim()}
-async function cloud(){try{if(!window.supabase)throw Error('supabase unavailable');db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const r=await db.from('star_letters').select('*').eq('room',ROOM).order('created_at',{ascending:true});if(r.error)throw r.error;letters=r.dat
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const URL =
+    "https://fgerhmqwqflgggnqpuas.supabase.co";
+
+const KEY =
+    "sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
+
+const ROOM =
+    "ink-yyi";
+
+const db =
+    supabase.createClient(
+        URL,
+        KEY
+    );
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+const E = [
+
+    ["开心","#f4d24f","happy"],
+
+    ["难过","#78a9df","sad"],
+
+    ["生气","#ef5a4f","angry"],
+
+    ["平静","#79c8b1","calm"],
+
+    ["焦虑","#b58bd8","anxious"],
+
+    ["想念","#8c78e8","miss"]
+
+];
+
+
+let ei = 0;
+
+let who = "Ink";
+
+let letters = [];
+
+let stars = [];
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const $ =
+    id =>
+        document.getElementById(id);
+
+
+/* =========================================================
+   SAFE HTML
+========================================================= */
+
+function esc(value){
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"]/g,
+            m => ({
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;"
+            })[m]
+        );
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function status(text){
+
+    $("status").textContent =
+        text;
+
+}
+
+
+/* =========================================================
+   SUPABASE CLOUD
+========================================================= */
+
+let realtimeChannel = null;
+
+async function cloud(){
+
+    status(
+        "● 云端连接中"
+    );
+
+
+    const result =
+        await db
+            .from("star_letters")
+            .select("*")
+            .eq("room",ROOM)
+            .order(
+                "created_at",
+                {
+                    ascending:true
+                }
+            );
+
+
+    if(result.error){
+
+        console.error(
+            result.error
+        );
+
+        status(
+            "● 云端连接失败"
+        );
+
+        return;
+
+    }
+
+
+    letters =
+        result.data || [];
+
+
+    render();
+
+
+    /*
+     * 防止重复建立 realtime channel。
+     */
+
+    if(realtimeChannel){
+
+        try{
+
+            await db.removeChannel(
+                realtimeChannel
+            );
+
+        }catch(e){}
+
+    }
+
+
+    realtimeChannel =
+        db
+            .channel(
+                "star-bottle-" + ROOM
+            )
+            .on(
+                "postgres_changes",
+                {
+                    event:"INSERT",
+                    schema:"public",
+                    table:"star_letters",
+                    filter:
+                        "room=eq." + ROOM
+                },
+                payload => {
+
+                    const incoming =
+                        payload.new;
+
+
+                    if(
+                        !letters.some(
+                            x =>
+                                String(x.id) ===
+                                String(incoming.id)
+                        )
+                    ){
+
+                        letters.push(
+                            incoming
+                        );
+
+
+                        render();
+
+                    }
+
+                }
+            )
+            .subscribe(
+                state => {
+
+                    if(
+                        state ===
+                        "SUBSCRIBED"
+                    ){
+
+                        status(
+                            "● 已连接 · 两个人共享同一瓶"
+                        );
+
+                    }
+
+                }
+            );
+
+}
+
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+
+function render(){
+
+    $("ic").textContent =
+        letters.filter(
+            x =>
+                x.who === "Ink"
+        ).length;
+
+
+    $("yc").textContent =
+        letters.filter(
+            x =>
+                x.who === "Yyi"
+        ).length;
+
+
+    $("tc").textContent =
+        letters.length;
+
+
+    rebuildStars();
+
+}
+
+
+/* =========================================================
+   SHOW LETTER
+========================================================= */
+
+function show(note){
+
+    $("box")
+        .classList
+        .add("open");
+
+
+    $("notes").innerHTML = `
+
+        <article class="note">
+
+            <span
+                class="tag"
+                style="background:${esc(
+                    note.color
+                )}"
+            >
+                ${esc(
+                    note.emotion
+                )}
+            </span>
+
+
+            <span class="who">
+
+                ${esc(
+                    note.who
+                )}
+
+                写的
+
+            </span>
+
+
+            <p>
+                ${esc(
+                    note.text
+                )}
+            </p>
+
+
+            <small>
+
+                ${
+                    note.created_at
+                    ? new Date(
+                        note.created_at
+                    ).toLocaleString(
+                        "zh-CN"
+                    )
+                    : ""
+
+                }
+
+            </small>
+
+        </article>
+
+    `;
+
+}
+
+
+/* =========================================================
+   ARCHIVE
+========================================================= */
+
+function archive(){
+
+    $("box")
+        .classList
+        .add("open");
+
+
+    if(!letters.length){
+
+        $("notes").innerHTML =
+            "<p>还没有星星信。</p>";
+
+        return;
+
+    }
+
+
+    $("notes").innerHTML =
+        letters
+            .slice()
+            .reverse()
+            .map(
+                note => `
+
+                    <article class="note">
+
+                        <span
+                            class="tag"
+                            style="background:${esc(
+                                note.color
+                            )}"
+                        >
+                            ${esc(
+                                note.emotion
+                            )}
+                        </span>
+
+
+                        <span class="who">
+
+                            ${esc(
+                                note.who
+                            )}
+
+                            写的
+
+                        </span>
+
+
+                        <p>
+                            ${esc(
+                                note.text
+                            )}
+                        </p>
+
+
+                        <small>
+
+                            ${
+                                note.created_at
+                                ? new Date(
+                                    note.created_at
+                                ).toLocaleString(
+                                    "zh-CN"
+                                )
+                                : ""
+
+                            }
+
+                        </small>
+
+                    </article>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   EMOTION BUTTONS
+========================================================= */
+
+function emo(){
+
+    $("emotions").innerHTML =
+        E
+            .map(
+                (e,i) => `
+
+                    <button
+                        class="emotion ${
+                            i === ei
+                            ? "on"
+                            : ""
+                        }"
+                        style="--c:${e[1]}"
+                        data-i="${i}"
+                        type="button"
+                    >
+
+                        <div
+                            class="dot"
+                            style="--c:${e[1]}"
+                        ></div>
+
+                        ${e[0]}
+
+                    </button>
+
+                `
+            )
+            .join("");
+
+
+    document
+        .querySelectorAll(
+            ".emotion"
+        )
+        .forEach(
+            button => {
+
+                button.onclick =
+                    () => {
+
+                        ei =
+                            Number(
+                                button.dataset.i
+                            );
+
+
+                        emo();
+
+                        fx();
+
+                    };
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   AUDIO
+========================================================= */
+
+let audioMaster = null;
+
+
+function stopAudio(){
+
+    if(audioMaster){
+
+        try{
+
+            audioMaster.close();
+
+        }catch(e){}
+
+        audioMaster =
+            null;
+
+    }
+
+}
+
+
+function createNoise(
+    ctx,
+    seconds
+){
+
+    const buffer =
+        ctx.createBuffer(
+            1,
+            Math.floor(
+                ctx.sampleRate *
+                seconds
+            ),
+            ctx.sampleRate
+        );
+
+
+    const data =
+        buffer.getChannelData(0);
+
+
+    for(
+        let i=0;
+        i<data.length;
+        i++
+    ){
+
+        data[i] =
+            Math.random()*2-1;
+
+    }
+
+
+    return buffer;
+
+}
+
+
+function sound(key){
+
+    stopAudio();
+
+
+    try{
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+
+        if(!AudioContext){
+
+            return;
+
+        }
+
+
+        const ctx =
+            new AudioContext();
+
+
+        audioMaster =
+            ctx;
+
+
+        const master =
+            ctx.createGain();
+
+
+        master.gain.value =
+            .11;
+
+
+        master.connect(
+            ctx.destination
+        );
+
+
+        const profiles = {
+
+            happy:{
+                tones:[
+                    523.25,
+                    659.25,
+                    783.99
+                ],
+                type:"sine"
+            },
+
+            sad:{
+                tones:[
+                    196,
+                    246.94,
+                    293.66
+                ],
+                type:"sine"
+            },
+
+            angry:{
+                tones:[
+                    73.42,
+                    92.5,
+                    110
+                ],
+                type:"sawtooth"
+            },
+
+            calm:{
+                tones:[
+                    174.61,
+                    220,
+                    261.63
+                ],
+                type:"sine"
+            },
+
+            anxious:{
+                tones:[
+                    146.83,
+                    220,
+                    329.63
+                ],
+                type:"triangle"
+            },
+
+            miss:{
+                tones:[
+                    261.63,
+                    329.63,
+                    392
+                ],
+                type:"sine"
+            }
+
+        };
+
+
+        const profile =
+            profiles[key] ||
+            profiles.calm;
+
+
+        profile.tones.forEach(
+            (frequency,index) => {
+
+                const oscillator =
+                    ctx.createOscillator();
+
+
+                const gain =
+                    ctx.createGain();
+
+
+                oscillator.type =
+                    profile.type;
+
+
+                oscillator.frequency.value =
+                    frequency;
+
+
+                gain.gain.value =
+                    .025;
+
+
+                oscillator
+                    .connect(gain)
+                    .connect(master);
+
+
+                oscillator.start();
+
+            }
+        );
+
+
+        /*
+         * 难过：
+         * 雨声 + 白噪音。
+         */
+
+        if(
+            key === "sad"
+        ){
+
+            const noise =
+                ctx.createBufferSource();
+
+
+            const gain =
+                ctx.createGain();
+
+
+            const filter =
+                ctx.createBiquadFilter();
+
+
+            noise.buffer =
+                createNoise(
+                    ctx,
+                    2
+                );
+
+
+            noise.loop =
+                true;
+
+
+            filter.type =
+                "lowpass";
+
+
+            filter.frequency.value =
+                2400;
+
+
+            gain.gain.value =
+                .09;
+
+
+            noise
+                .connect(filter)
+                .connect(gain)
+                .connect(master);
+
+
+            noise.start();
+
+        }
+
+
+        /*
+         * 开心/想念：
+         * 轻微空气噪声。
+         */
+
+        if(
+            key === "happy" ||
+            key === "miss"
+        ){
+
+            const noise =
+                ctx.createBufferSource();
+
+
+            const gain =
+                ctx.createGain();
+
+
+            const filter =
+                ctx.createBiquadFilter();
+
+
+            noise.buffer =
+                createNoise(
+                    ctx,
+                    1
+                );
+
+
+            noise.loop =
+                true;
+
+
+            filter.type =
+                "highpass";
+
+
+            filter.frequency.value =
+                key === "happy"
+                ? 1800
+                : 900;
+
+
+            gain.gain.value =
+                .025;
+
+
+            noise
+                .connect(filter)
+                .connect(gain)
+                .connect(master);
+
+
+            noise.start();
+
+        }
+
+
+        ctx.resume();
+
+    }catch(error){
+
+        console.warn(
+            "Audio error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   FX
+========================================================= */
+
+function stopFX(){
+
+    $("fx").innerHTML = "";
+
+    $("world").style.background =
+        "radial-gradient(circle,#2b2340,#09070e 70%)";
+
+    stopAudio();
+
+}
+
+
+function fx(){
+
+    stopFX();
+
+
+    const [
+        name,
+        color,
+        key
+    ] =
+        E[ei];
+
+
+    const backgrounds = {
+
+        happy:
+            "radial-gradient(circle,#66521d,#0d0a08 68%)",
+
+        sad:
+            "radial-gradient(circle,#315b82,#07131d 68%)",
+
+        angry:
+            "radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",
+
+        calm:
+            "radial-gradient(circle,#27736b,#06181b 68%)",
+
+        anxious:
+            "radial-gradient(circle,#5d377e,#10091b 68%)",
+
+        miss:
+            "radial-gradient(circle,#514791,#100c24 68%)"
+
+    };
+
+
+    $("world").style.background =
+        backgrounds[key];
+
+
+    let type =
+        "spark";
+
+
+    let count =
+        100;
+
+
+    if(key === "sad"){
+
+        type =
+            "rain";
+
+        count =
+            240;
+
+    }
+
+    else if(key === "angry"){
+
+        type =
+            "ember";
+
+        count =
+            120;
+
+    }
+
+    else if(key === "calm"){
+
+        type =
+            "wave";
+
+        count =
+            14;
+
+    }
+
+    else if(key === "anxious"){
+
+        type =
+            "wind";
+
+        count =
+            50;
+
+    }
+
+    else if(key === "miss"){
+
+        type =
+            "heart";
+
+        count =
+            60;
+
+    }
+
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        const particle =
+            document.createElement("i");
+
+
+        particle.className =
+            "p " + type;
+
+
+        particle.style.left =
+            Math.random()*100 +
+            "%";
+
+
+        particle.style.top =
+            Math.random()*100 +
+            "%";
+
+
+        particle.style.color =
+            color;
+
+
+        if(
+            key === "sad"
+        ){
+
+            particle.style.animationDuration =
+                (
+                    .35 +
+                    Math.random()*.65
+                ) + "s";
+
+        }else{
+
+            particle.style.animationDuration =
+                (
+                    2 +
+                    Math.random()*4
+                ) + "s";
+
+        }
+
+
+        particle.style.animationDelay =
+            (
+                -Math.random()*5
+            ) + "s";
+
+
+        $("fx").appendChild(
+            particle
+        );
+
+    }
+
+
+    sound(key);
+
+}
+
+
+/* =========================================================
+   WRITE
+========================================================= */
+
+function openWrite(){
+
+    $("compose")
+        .classList
+        .add("open");
+
+
+    emo();
+
+
+    /*
+     * 用户点击“写信”本身就是浏览器
+     * 允许启动 AudioContext 的手势。
+     */
+
+    fx();
+
+
+    $("text").focus();
+
+}
+
+
+function closeWrite(){
+
+    $("compose")
+        .classList
+        .remove("open");
+
+
+    /*
+     * 写完/关闭时停止。
+     */
+
+    stopFX();
+
+}
+
+
+/* =========================================================
+   SAVE LETTER
+========================================================= */
+
+let saving = false;
+
+
+async function fold(){
+
+    if(saving){
+
+        return;
+
+    }
+
+
+    const text =
+        $("text")
+            .value
+            .trim();
+
+
+    if(!text){
+
+        $("text").focus();
+
+        return;
+
+    }
+
+
+    saving = true;
+
+
+    const emotion =
+        E[ei];
+
+
+    status(
+        "● 正在把信折成星星……"
+    );
+
+
+    const row = {
+
+        room:
+            ROOM,
+
+        text:
+            text,
+
+        emotion:
+            emotion[0],
+
+        color:
+            emotion[1],
+
+        who:
+            who
+
+    };
+
+
+    const result =
+        await db
+            .from("star_letters")
+            .insert(row)
+            .select()
+            .single();
+
+
+    if(result.error){
+
+        console.error(
+            result.error
+        );
+
+
+        status(
+            "● 保存失败，请稍后再试"
+        );
+
+
+        saving = false;
+
+        return;
+
+    }
+
+
+    if(
+        result.data &&
+        !letters.some(
+            x =>
+                String(x.id) ===
+                String(
+                    result.data.id
+                )
+        )
+    ){
+
+        letters.push(
+            result.data
+        );
+
+    }
+
+
+    $("text").value =
+        "";
+
+
+    closeWrite();
+
+
+    render();
+
+
+    /*
+     * 新星星稍微弹起来。
+     */
+
+    const body =
+        bodies.find(
+            b =>
+                !b.isStatic &&
+                String(b.starId) ===
+                String(
+                    result.data.id
+                )
+        );
+
+
+    if(body){
+
+        Matter.Body.setVelocity(
+            body,
+            {
+                x:
+                    (Math.random()-.5) *
+                    1.5,
+
+                y:
+                    -2.5
+            }
+        );
+
+    }
+
+
+    status(
+        "● 星星已经留下"
+    );
+
+
+    saving = false;
+
+}
+
+
+/* =========================================================
+   MATTER PHYSICS
+========================================================= */
+
+let engine = null;
+
+let runner = null;
+
+let bodies = [];
+
+let physicsStarted = false;
+
+
+/* =========================================================
+   INIT PHYSICS
+========================================================= */
+
+function initPhysics(){
+
+    /*
+     * 如果已经存在物理世界，
+     * 不重复创建。
+     */
+
+    if(
+        engine
+    ){
+
+        return;
+
+    }
+
+
+    const {
+        Engine,
+        World,
+        Bodies,
+        Runner
+    } = Matter;
+
+
+    engine =
+        Engine.create({
+            enableSleeping:false
+        });
+
+
+    engine.gravity.y =
+        .38;
+
+
+    const container =
+        $("stars");
+
+
+    const width =
+        container.clientWidth;
+
+
+    const height =
+        container.clientHeight;
+
+
+    const wall =
+        18;
+
+
+    const common = {
+
+        isStatic:true,
+
+        restitution:.82,
+
+        friction:.05
+
+    };
+
+
+    bodies = [
+
+        Bodies.rectangle(
+            width/2,
+            -wall/2,
+            width,
+            wall,
+            common
+        ),
+
+        Bodies.rectangle(
+            width/2,
+            height+wall/2,
+            width,
+            wall,
+            common
+        ),
+
+        Bodies.rectangle(
+            -wall/2,
+            height/2,
+            wall,
+            height,
+            common
+        ),
+
+        Bodies.rectangle(
+            width+wall/2,
+            height/2,
+            wall,
+            height,
+            common
+        )
+
+    ];
+
+
+    World.add(
+        engine,
+        bodies
+    );
+
+
+    runner =
+        Runner.create();
+
+
+    Runner.run(
+        runner,
+        engine
+    );
+
+
+    physicsStarted =
+        true;
+
+
+    rebuildMatter();
+
+}
+
+
+/* =========================================================
+   REBUILD MATTER
+========================================================= */
+
+function rebuildMatter(){
+
+    if(
+        !engine
+    ){
+
+        return;
+
+    }
+
+
+    const {
+        World,
+        Bodies,
+        Body
+    } = Matter;
+
+
+    const container =
+        $("stars");
+
+
+    const width =
+        container.clientWidth;
+
+
+    const height =
+        container.clientHeight;
+
+
+    /*
+     * 只删除动态星星。
+     * 四面墙保留。
+     */
+
+    const staticBodies =
+        bodies.filter(
+            b =>
+                b.isStatic
+        );
+
+
+    const dynamicBodies =
+        bodies.filter(
+            b =>
+                !b.isStatic
+        );
+
+
+    dynamicBodies.forEach(
+        body => {
+
+            World.remove(
+                engine.world,
+                body
+            );
+
+        }
+    );
+
+
+    bodies =
+        staticBodies;
+
+
+    /*
+     * 为每封信建立一个 body。
+     */
+
+    stars.forEach(
+        star => {
+
+            let x =
+                (star.x/100) *
+                width;
+
+
+            let y =
+                (star.y/100) *
+                height;
+
+
+            const radius =
+                10;
+
+
+            x =
+                Math.max(
+                    radius,
+                    Math.min(
+                        width-radius,
+                        x
+                    )
+                );
+
+
+            y =
+                Math.max(
+                    radius,
+                    Math.min(
+                        height-radius,
+                        y
+                    )
+                );
+
+
+            const body =
+                Bodies.circle(
+                    x,
+                    y,
+                    radius,
+                    {
+
+                        restitution:.88,
+
+                        friction:.015,
+
+                        frictionAir:.006,
+
+                        density:.006,
+
+                        slop:.01
+
+                    }
+                );
+
+
+            body.starId =
+                star.id;
+
+
+            body.color =
+                star.color;
+
+
+            /*
+             * 轻微初速度。
+             */
+
+            Body.setVelocity(
+                body,
+                {
+                    x:
+                        (Math.random()-.5) *
+                        .7,
+
+                    y:
+                        (Math.random()-.5) *
+                        .4
+                }
+            );
+
+
+            bodies.push(
+                body
+            );
+
+
+            World.add(
+                engine.world,
+                body
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   SYNC MATTER -> DOM
+========================================================= */
+
+let syncFrame = null;
+
+
+function syncMatterStars(){
+
+    if(
+        !engine
+    ){
+
+        return;
+
+    }
+
+
+    const container =
+        $("stars");
+
+
+    const width =
+        container.clientWidth;
+
+
+    const height =
+        container.clientHeight;
+
+
+    const dynamic =
+        bodies.filter(
+            b =>
+                !b.isStatic
+        );
+
+
+    /*
+     * 根据 starId 找 DOM。
+     * 不再依赖数组顺序。
+     */
+
+    const domMap =
+        new Map();
+
+
+    container
+        .querySelectorAll(".star")
+        .forEach(
+            element => {
+
+                domMap.set(
+                    String(
+                        element.dataset.id
+                    ),
+                    element
+                );
+
+            }
+        );
+
+
+    dynamic.forEach(
+        body => {
+
+            const element =
+                domMap.get(
+                    String(
+                        body.starId
+                    )
+                );
+
+
+            if(!element){
+
+                return;
+
+            }
+
+
+            const x =
+                body.position.x /
+                width *
+                100;
+
+
+            const y =
+                body.position.y /
+                height *
+                100;
+
+
+            element.style.left =
+                x + "%";
+
+
+            element.style.top =
+                y + "%";
+
+
+            element.style.transform =
+                `
+                    translate(-50%,-50%)
+                    rotate(${body.angle}rad)
+                `;
+
+
+            /*
+             * 速度足够快才产生拖尾。
+             */
+
+            const speed =
+                Math.hypot(
+                    body.velocity.x,
+                    body.velocity.y
+                );
+
+
+            if(
+                speed > .45 &&
+                Math.random() < .18
+            ){
+
+                createTrail(
+                    x,
+                    y,
+                    body.color
+                );
+
+            }
+
+        }
+    );
+
+
+    syncFrame =
+        requestAnimationFrame(
+            syncMatterStars
+        );
+
+}
+
+
+/* =========================================================
+   TRAIL
+========================================================= */
+
+function createTrail(
+    x,
+    y,
+    color
+){
+
+    const trail =
+        document.createElement("i");
+
+
+    trail.className =
+        "trail";
+
+
+    trail.style.left =
+        x + "%";
+
+
+    trail.style.top =
+        y + "%";
+
+
+    trail.style.setProperty(
+        "--c",
+        color
+    );
+
+
+    $("stars").appendChild(
+        trail
+    );
+
+
+    setTimeout(
+        () => {
+
+            trail.remove();
+
+        },
+        650
+    );
+
+}
+
+
+/* =========================================================
+   SHAKE
+========================================================= */
+
+let shaking = false;
+
+
+function shake(power=1){
+
+    if(
+        !engine ||
+        shaking
+    ){
+
+        return;
+
+    }
+
+
+    shaking =
+        true;
+
+
+    const {
+        Body
+    } = Matter;
+
+
+    const dynamic =
+        bodies.filter(
+            b =>
+                !b.isStatic
+        );
+
+
+    dynamic.forEach(
+        body => {
+
+            Body.applyForce(
+                body,
+                body.position,
+                {
+
+                    x:
+                        (
+                            Math.random()-.5
+                        ) *
+                        .055 *
+                        power,
+
+                    y:
+                        -(
+                            .035 +
+                            Math.random()*.045
+                        ) *
+                        power
+
+                }
+            );
+
+
+            Body.setAngularVelocity(
+                body,
+                (
+                    Math.random()-.5
+                ) *
+                .35 *
+                power
+            );
+
+        }
+    );
+
+
+    /*
+     * 瓶子本身摇晃。
+     */
+
+    $("bottle").animate(
+
+        [
+
+            {
+                transform:
+                    "translateX(0) rotate(0deg)"
+            },
+
+            {
+                transform:
+                    "translateX(-16px) rotate(-4deg)"
+            },
+
+            {
+                transform:
+                    "translateX(17px) rotate(4deg)"
+            },
+
+            {
+                transform:
+                    "translateX(-11px) rotate(-3deg)"
+            },
+
+            {
+                transform:
+                    "translateX(7px) rotate(2deg)"
+            },
+
+            {
+                transform:
+                    "translateX(0) rotate(0deg)"
+            }
+
+        ],
+
+        {
+
+            duration:950,
+
+            easing:
+                "cubic-bezier(.2,.8,.2,1)"
+
+        }
+
+    );
+
+
+    if(
+        navigator.vibrate
+    ){
+
+        navigator.vibrate(
+            [45,30,70]
+        );
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            shaking =
+                false;
+
+        },
+        950
+    );
+
+}
+
+
+/* =========================================================
+   REBUILD STARS
+========================================================= */
+
+function rebuildStars(){
+
+    /*
+     * 保存旧位置。
+     */
+
+    const old =
+        new Map(
+            stars.map(
+                star =>
+                    [
+                        String(star.id),
+                        star
+                    ]
+            )
+        );
+
+
+    stars =
+        letters.map(
+            note => {
+
+                const previous =
+                    old.get(
+                        String(note.id)
+                    );
+
+
+                if(previous){
+
+                    /*
+                     * 更新颜色。
+                     */
+
+                    previous.color =
+                        note.color;
+
+
+                    return previous;
+
+                }
+
+
+                return {
+
+                    id:
+                        note.id,
+
+                    color:
+                        note.color,
+
+                    x:
+                        30 +
+                        Math.random()*40,
+
+                    y:
+                        65 +
+                        Math.random()*20
+
+                };
+
+            }
+        );
+
+
+    const layer =
+        $("stars");
+
+
+    /*
+     * 不保留旧 DOM 星星，
+     * 但物理 body 会根据同一批 stars
+     * 重新建立。
+     */
+
+    layer.innerHTML =
+        "";
+
+
+    letters.forEach(
+        note => {
+
+            const element =
+                document.createElement("i");
+
+
+            element.className =
+                "star";
+
+
+            element.dataset.id =
+                note.id;
+
+
+            element.style.setProperty(
+                "--c",
+                note.color
+            );
+
+
+            element.title =
+                `${note.emotion} · ${note.who}`;
+
+
+            element.onclick =
+                event => {
+
+                    event.stopPropagation();
+
+                    show(note);
+
+                };
+
+
+            layer.appendChild(
+                element
+            );
+
+        }
+    );
+
+
+    if(
+        engine
+    ){
+
+        rebuildMatter();
+
+    }
+
+}
+
+
+/* =========================================================
+   ENTER
+========================================================= */
+
+$("enter").onclick =
+    async () => {
+
+        $("gate")
+            .classList
+            .add("hide");
+
+
+        /*
+         * 先启动物理，
+         * 所以即使云端稍后返回，
+         * 瓶子也已经能正常工作。
+         */
+
+        initPhysics();
+
+
+        if(
+            !syncFrame
+        ){
+
+            syncMatterStars();
+
+        }
+
+
+        await cloud();
+
+    };
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+$("write").onclick =
+    openWrite;
+
+
+$("close").onclick =
+    closeWrite;
+
+
+$("fold").onclick =
+    fold;
+
+
+$("archive").onclick =
+    archive;
+
+
+$("closeBox").onclick =
+    () => {
+
+        $("box")
+            .classList
+            .remove("open");
+
+    };
+
+
+$("shake").onclick =
+    () =>
+        shake(1);
+
+
+/* =========================================================
+   SIGNATURE
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".sign button"
+    )
+    .forEach(
+        button => {
+
+            button.onclick =
+                () => {
+
+                    who =
+                        button.dataset.who;
+
+
+                    document
+                        .querySelectorAll(
+                            ".sign button"
+                        )
+                        .forEach(
+                            other => {
+
+                                other.classList.toggle(
+                                    "on",
+                                    other === button
+                                );
+
+                            }
+                        );
+
+                };
+
+        }
+    );
+
+
+/* =========================================================
+   CLOSE BY BACKDROP
+========================================================= */
+
+$("compose").onclick =
+    event => {
+
+        if(
+            event.target ===
+            $("compose")
+        ){
+
+            closeWrite();
+
+        }
+
+    };
+
+
+$("box").onclick =
+    event => {
+
+        if(
+            event.target ===
+            $("box"
+        ){
+
+            $("box")
+                .classList
+                .remove("open");
+
+        }
+
+    };
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+let resizeTimer = null;
+
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        clearTimeout(
+            resizeTimer
+        );
+
+
+        resizeTimer =
+            setTimeout(
+                () => {
+
+                    if(
+                        engine
+                    ){
+
+                        /*
+                         * 只重新设置墙和星星，
+                         * 不创建第二个 Engine。
+                         */
+
+                        const container =
+                            $("stars");
+
+
+                        const width =
+                            container.clientWidth;
+
+
+                        const height =
+                            container.clientHeight;
+
+
+                        const staticBodies =
+                            bodies.filter(
+                                b =>
+                                    b.isStatic
+                            );
+
+
+                        if(
+                            staticBodies.length === 4
+                        ){
+
+                            Matter.Body.setPosition(
+                                staticBodies[0],
+                                {
+                                    x:
+                                        width/2,
+
+                                    y:
+                                        -9
+                                }
+                            );
+
+
+                            Matter.Body.setPosition(
+                                staticBodies[1],
+                                {
+                                    x:
+                                        width/2,
+
+                                    y:
+                                        height+9
+                                }
+                            );
+
+
+                            Matter.Body.setPosition(
+                                staticBodies[2],
+                                {
+                                    x:
+                                        -9,
+
+                                    y:
+                                        height/2
+                                }
+                            );
+
+
+                            Matter.Body.setPosition(
+                                staticBodies[3],
+                                {
+                                    x:
+                                        width+9,
+
+                                    y:
+                                        height/2
+                                }
+                            );
+
+
+                            Matter.Body.setVertices(
+                                staticBodies[0],
+                                Matter.Bodies.rectangle(
+                                    width/2,
+                                    -9,
+                                    width,
+                                    18
+                                ).vertices
+                            );
+
+
+                            Matter.Body.setVertices(
+                                staticBodies[1],
+                                Matter.Bodies.rectangle(
+                                    width/2,
+                                    height+9,
+                                    width,
+                                    18
+                                ).vertices
+                            );
+
+
+                            Matter.Body.setVertices(
+                                staticBodies[2],
+                                Matter.Bodies.rectangle(
+                                    -9,
+                                    height/2,
+                                    18,
+                                    height
+                                ).vertices
+                            );
+
+
+                            Matter.Body.setVertices(
+                                staticBodies[3],
+                                Matter.Bodies.rectangle(
+                                    width+9,
+                                    height/2,
+                                    18,
+                                    height
+                                ).vertices
+                            );
+
+                        }
+
+                    }
+
+                },
+                150
+            );
+
+    }
+);
+
+
+/* =========================================================
+   DEVICE SHAKE
+========================================================= */
+
+let lastShakeCheck =
+    0;
+
+let lastAcc = {
+
+    x:0,
+    y:0,
+    z:0
+
+};
+
+
+window.addEventListener(
+    "devicemotion",
+    event => {
+
+        const acc =
+            event.accelerationIncludingGravity;
+
+
+        if(!acc){
+
+            return;
+
+        }
+
+
+        const now =
+            Date.now();
+
+
+        if(
+            now -
+            lastShakeCheck <
+            150
+        ){
+
+            return;
+
+        }
+
+
+        lastShakeCheck =
+            now;
+
+
+        const dx =
+            Math.abs(
+                (acc.x || 0) -
+                lastAcc.x
+            );
+
+
+        const dy =
+            Math.abs(
+                (acc.y || 0) -
+                lastAcc.y
+            );
+
+
+        const dz =
+            Math.abs(
+                (acc.z || 0) -
+                lastAcc.z
+            );
+
+
+        lastAcc.x =
+            acc.x || 0;
+
+        lastAcc.y =
+            acc.y || 0;
+
+        lastAcc.z =
+            acc.z || 0;
+
+
+        if(
+            dx +
+            dy +
+            dz >
+            30
+        ){
+
+            shake(.8);
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+$("date").textContent =
+    new Date()
+        .toLocaleDateString(
+            "zh-CN",
+            {
+                year:"numeric",
+                month:"long",
+                day:"numeric"
+            }
+        );
+
+</script>
+
+</body>
+</html>
