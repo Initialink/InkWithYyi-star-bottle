@@ -2,18 +2,23 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07060d">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
+
+<meta
+    name="theme-color"
+    content="#08070d"
+>
+
 <title>Ink × Yyi · Our Star Bottle</title>
 
-<!--
-  两个 CDN 都使用 defer。
-  即使其中一个加载失败，也不会阻止页面本身启动。
--->
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
 }
@@ -34,8 +39,8 @@ body{
         "PingFang SC",
         serif;
 
-    color:#fff;
-    background:#07060d;
+    background:#08070d;
+    color:white;
 }
 
 button,
@@ -47,6 +52,11 @@ button{
     cursor:pointer;
     -webkit-tap-highlight-color:transparent;
 }
+
+
+/* =========================================================
+   世界
+========================================================= */
 
 #world{
     position:fixed;
@@ -65,26 +75,29 @@ button{
         background 1s ease;
 }
 
+#fx{
+    position:absolute;
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+}
+
 #vignette{
     position:absolute;
     inset:-10%;
-    z-index:10;
+
     pointer-events:none;
 
     background:
         radial-gradient(
             circle,
-            transparent 38%,
-            rgba(0,0,0,.78) 100%
+            transparent 35%,
+            rgba(0,0,0,.8) 100%
         );
 }
 
-#fx{
-    position:absolute;
-    inset:0;
-    overflow:hidden;
-    pointer-events:none;
-}
 
 /* =========================================================
    开场
@@ -93,6 +106,7 @@ button{
 #gate{
     position:fixed;
     inset:0;
+
     z-index:9999;
 
     display:grid;
@@ -122,8 +136,7 @@ button{
 }
 
 .big{
-    font-size:90px;
-    line-height:1;
+    font-size:92px;
     color:#e9d98f;
 
     text-shadow:
@@ -159,10 +172,12 @@ button{
     margin:0 0 28px;
 
     color:#aaa0b1;
+
     line-height:2;
 }
 
 .enter{
+
     border:
         1px solid
         rgba(215,197,140,.4);
@@ -177,11 +192,11 @@ button{
     padding:
         13px 25px;
 
-    transition:
-        .25s;
+    transition:.25s;
 }
 
 .enter:hover{
+
     background:
         rgba(255,255,255,.15);
 
@@ -193,10 +208,6 @@ button{
         rgba(220,200,140,.16);
 }
 
-.enter:active{
-    transform:
-        scale(.97);
-}
 
 /* =========================================================
    主界面
@@ -204,18 +215,23 @@ button{
 
 main{
     position:relative;
+
     z-index:20;
 
     width:100%;
     height:100%;
 
     display:flex;
+
     flex-direction:column;
+
     align-items:center;
+
     justify-content:center;
 }
 
 .top{
+
     position:fixed;
 
     top:
@@ -225,25 +241,28 @@ main{
     right:22px;
 
     display:flex;
+
     justify-content:space-between;
 
     color:#a69aaa;
 
     font-size:10px;
+
     letter-spacing:3px;
 }
+
 
 /* =========================================================
    瓶子
 ========================================================= */
 
 .bottle{
+
     position:relative;
 
     width:min(440px,90vw);
-    height:min(640px,72vh);
 
-    transform-origin:center;
+    height:min(640px,72vh);
 
     filter:
         drop-shadow(
@@ -255,125 +274,57 @@ main{
             rgba(153,120,220,.12)
         );
 
-    will-change:
-        transform;
+    transform-origin:center;
 }
 
 #glass{
+
     position:absolute;
+
     inset:0;
 
     width:100%;
     height:100%;
 
-    z-index:2;
+    z-index:5;
 
     pointer-events:none;
 }
 
-#stars{
+
+/*
+    这里不再用 DOM 星星 + Matter.js。
+    一个 canvas 统一负责：
+    物理、碰撞、绘制、拖尾。
+*/
+
+#starCanvas{
+
     position:absolute;
 
     left:16%;
     right:16%;
+
     top:25%;
     bottom:7%;
 
-    z-index:3;
+    width:68%;
+    height:68%;
 
-    overflow:hidden;
+    z-index:4;
 
-    border-radius:
-        40%
-        40%
-        18%
-        18%;
+    pointer-events:auto;
 }
 
-/* =========================================================
-   星星
-========================================================= */
-
-.star{
-    position:absolute;
-
-    width:20px;
-    height:20px;
-
-    background:
-        var(--c);
-
-    clip-path:
-        polygon(
-            50% 0,
-            61% 35%,
-            100% 35%,
-            69% 57%,
-            81% 100%,
-            50% 73%,
-            19% 100%,
-            31% 57%,
-            0 35%,
-            39% 35%
-        );
-
-    box-shadow:
-        0 0 9px var(--c),
-        0 0 22px var(--c),
-        0 0 42px var(--c);
-
-    will-change:
-        left,
-        top,
-        transform;
-
-    cursor:pointer;
-}
-
-.star:hover{
-    filter:
-        brightness(1.5);
-}
-
-/* =========================================================
-   拖尾
-========================================================= */
-
-.trail{
-    position:absolute;
-
-    width:5px;
-    height:5px;
-
-    border-radius:50%;
-
-    background:
-        var(--c);
-
-    box-shadow:
-        0 0 12px var(--c);
-
-    pointer-events:none;
-
-    animation:
-        trailFade .6s forwards;
-}
-
-@keyframes trailFade{
-
-    to{
-        opacity:0;
-        transform:scale(.08);
-    }
-
-}
 
 /* =========================================================
    数据
 ========================================================= */
 
 .stats{
+
     display:flex;
+
     gap:28px;
 
     color:#aaa0b0;
@@ -382,23 +333,29 @@ main{
 }
 
 .stats b{
+
     color:#e9d68d;
 
     font-size:18px;
+
     font-weight:400;
 }
 
 .actions{
+
     display:flex;
+
     gap:8px;
 
     margin-top:12px;
 
     flex-wrap:wrap;
+
     justify-content:center;
 }
 
 .btn{
+
     border:
         1px solid
         rgba(215,197,140,.35);
@@ -417,6 +374,7 @@ main{
 }
 
 .btn:hover{
+
     background:
         rgba(255,255,255,.13);
 
@@ -425,22 +383,28 @@ main{
 }
 
 .btn:active{
+
     transform:
         scale(.97);
 }
 
+
 /* =========================================================
-   特效
+   全屏特效
 ========================================================= */
 
 .p{
+
     position:absolute;
+
     pointer-events:none;
 }
+
 
 /* 雨 */
 
 .rain{
+
     width:1px;
     height:85px;
 
@@ -451,7 +415,7 @@ main{
             rgba(220,240,255,.95)
         );
 
-    opacity:.55;
+    opacity:.58;
 
     animation:
         rainFall linear infinite;
@@ -460,6 +424,7 @@ main{
 @keyframes rainFall{
 
     from{
+
         transform:
             translate3d(
                 0,
@@ -467,9 +432,11 @@ main{
                 0
             )
             rotate(10deg);
+
     }
 
     to{
+
         transform:
             translate3d(
                 -120px,
@@ -477,13 +444,16 @@ main{
                 0
             )
             rotate(10deg);
+
     }
 
 }
 
+
 /* 火 */
 
 .ember{
+
     width:4px;
     height:18px;
 
@@ -502,13 +472,13 @@ main{
 @keyframes emberUp{
 
     from{
+
         transform:
             translate3d(
                 0,
                 110vh,
                 0
-            )
-            rotate(0);
+            );
 
         opacity:0;
     }
@@ -518,6 +488,7 @@ main{
     }
 
     to{
+
         transform:
             translate3d(
                 -60px,
@@ -531,16 +502,17 @@ main{
 
 }
 
+
 /* 星光 */
 
 .spark{
+
     width:4px;
     height:4px;
 
     border-radius:50%;
 
-    background:
-        currentColor;
+    background:currentColor;
 
     box-shadow:
         0 0 15px currentColor;
@@ -552,6 +524,7 @@ main{
 @keyframes sparkMove{
 
     0%{
+
         transform:
             translate3d(
                 0,
@@ -568,6 +541,7 @@ main{
     }
 
     60%{
+
         transform:
             translate3d(
                 30px,
@@ -575,9 +549,11 @@ main{
                 0
             )
             scale(1.7);
+
     }
 
     100%{
+
         transform:
             translate3d(
                 -25px,
@@ -591,9 +567,11 @@ main{
 
 }
 
-/* 平静水波 */
+
+/* 平静 */
 
 .wave{
+
     width:20px;
     height:20px;
 
@@ -610,26 +588,32 @@ main{
 @keyframes waveExpand{
 
     0%{
+
         opacity:.65;
 
         transform:
             translate(-50%,-50%)
             scale(.1);
+
     }
 
     100%{
+
         opacity:0;
 
         transform:
             translate(-50%,-50%)
             scale(35);
+
     }
 
 }
 
-/* 焦虑风 */
+
+/* 焦虑 */
 
 .wind{
+
     width:35vw;
     height:1px;
 
@@ -662,12 +646,15 @@ main{
 
 }
 
+
 /* =========================================================
    弹窗
 ========================================================= */
 
 .panel{
+
     position:fixed;
+
     inset:0;
 
     z-index:500;
@@ -675,6 +662,7 @@ main{
     display:none;
 
     align-items:center;
+
     justify-content:center;
 
     padding:16px;
@@ -687,16 +675,20 @@ main{
 }
 
 .panel.open{
+
     display:flex;
 }
 
 .card{
+
     width:min(650px,95vw);
+
     max-height:92vh;
 
     overflow:auto;
 
     background:#f7eee2;
+
     color:#352b31;
 
     border-radius:28px;
@@ -709,25 +701,32 @@ main{
 }
 
 .card h2{
+
     font-weight:400;
+
     letter-spacing:2px;
 }
 
 .x{
+
     float:right;
 
     border:0;
+
     background:none;
 
     font-size:25px;
+
     color:#777;
 }
+
 
 /* =========================================================
    情绪
 ========================================================= */
 
 .emotions{
+
     display:grid;
 
     grid-template-columns:
@@ -737,6 +736,7 @@ main{
 }
 
 .emotion{
+
     border:
         1px solid
         #d2c4ba;
@@ -745,7 +745,8 @@ main{
 
     border-radius:14px;
 
-    padding:8px 2px;
+    padding:
+        8px 2px;
 
     font-size:11px;
 
@@ -755,6 +756,7 @@ main{
 }
 
 .emotion.on{
+
     outline:
         2px solid
         var(--c);
@@ -765,6 +767,7 @@ main{
 }
 
 .dot{
+
     width:22px;
     height:22px;
 
@@ -781,17 +784,21 @@ main{
         0 0 18px var(--c);
 }
 
+
 /* =========================================================
    写信
 ========================================================= */
 
 textarea{
+
     width:100%;
+
     height:300px;
 
     margin-top:12px;
 
     border:0;
+
     outline:0;
 
     resize:none;
@@ -811,15 +818,19 @@ textarea{
 }
 
 textarea::placeholder{
+
     color:#aa9c9d;
 }
 
 .sign{
+
     text-align:center;
+
     margin:10px;
 }
 
 .sign button{
+
     border:
         1px solid
         #c8bbb2;
@@ -831,19 +842,24 @@ textarea::placeholder{
     padding:
         8px 17px;
 
-    margin:0 3px;
+    margin:
+        0 3px;
 }
 
 .sign button.on{
+
     background:#3b2c38;
+
     color:#fff;
 }
 
 .row{
+
     text-align:center;
 }
 
 .primary{
+
     border:0;
 
     border-radius:99px;
@@ -856,11 +872,13 @@ textarea::placeholder{
         11px 22px;
 }
 
+
 /* =========================================================
    信件
 ========================================================= */
 
 .note{
+
     padding:
         15px 0;
 
@@ -870,6 +888,7 @@ textarea::placeholder{
 }
 
 .tag{
+
     display:inline-block;
 
     padding:
@@ -883,26 +902,37 @@ textarea::placeholder{
 }
 
 .who{
+
     float:right;
+
     color:#88747e;
 }
 
 .note p{
+
     white-space:pre-wrap;
+
     line-height:1.8;
 }
 
 .note small{
+
     color:#9b8c92;
 }
 
+
+/* =========================================================
+   状态
+========================================================= */
+
 .status{
+
     position:fixed;
+
+    right:16px;
 
     bottom:
         max(15px,env(safe-area-inset-bottom));
-
-    right:16px;
 
     z-index:200;
 
@@ -913,31 +943,39 @@ textarea::placeholder{
     letter-spacing:1px;
 }
 
+
+/* =========================================================
+   手机
+========================================================= */
+
 @media(max-width:520px){
 
     .emotions{
+
         grid-template-columns:
             repeat(3,1fr);
     }
 
     .intro h1{
+
         font-size:31px;
     }
 
     .bottle{
+
         width:94vw;
+
         height:68vh;
     }
 
-    .top{
-        font-size:8px;
-    }
-
 }
+
 </style>
 </head>
 
+
 <body>
+
 
 <div id="world">
 
@@ -969,17 +1007,10 @@ textarea::placeholder{
             把想说的话，折成星星。
         </p>
 
-        <!--
-          这里使用原生 onclick。
-          即使后面的云端 / 物理脚本发生错误，
-          这个按钮仍然能够打开。
-        -->
-
         <button
             class="enter"
             id="enter"
             type="button"
-            onclick="openStarBottle()"
         >
             打开我们的星星瓶 ✦
         </button>
@@ -990,7 +1021,7 @@ textarea::placeholder{
 
 
 <!-- =========================================================
-     主界面
+     主页面
 ========================================================= -->
 
 <main>
@@ -1064,19 +1095,19 @@ textarea::placeholder{
 
             <path
                 d="
-                M158 55
-                h124
-                v78
-                c0 18 48 32 64 65
-                c9 19 13 43 13 73
-                v278
-                c0 48-27 72-75 72
-                H156
-                c-48 0-75-24-75-72
-                V271
-                c0-30 4-54 13-73
-                c16-33 64-47 64-65
-                V55z
+                    M158 55
+                    h124
+                    v78
+                    c0 18 48 32 64 65
+                    c9 19 13 43 13 73
+                    v278
+                    c0 48-27 72-75 72
+                    H156
+                    c-48 0-75-24-75-72
+                    V271
+                    c0-30 4-54 13-73
+                    c16-33 64-47 64-65
+                    V55z
                 "
                 fill="url(#glassFill)"
                 stroke="#eee6ff44"
@@ -1086,19 +1117,19 @@ textarea::placeholder{
 
             <path
                 d="
-                M168 55
-                h104
-                v86
-                c0 18 39 33 54 62
-                c8 16 11 38 11 67
-                v277
-                c0 35-19 53-57 53
-                H160
-                c-38 0-57-18-57-53
-                V270
-                c0-29 3-51 11-67
-                c15-29 54-44 54-62
-                V55z
+                    M168 55
+                    h104
+                    v86
+                    c0 18 39 33 54 62
+                    c8 16 11 38 11 67
+                    v277
+                    c0 35-19 53-57 53
+                    H160
+                    c-38 0-57-18-57-53
+                    V270
+                    c0-29 3-51 11-67
+                    c15-29 54-44 54-62
+                    V55z
                 "
                 fill="none"
                 stroke="#fff3"
@@ -1128,10 +1159,11 @@ textarea::placeholder{
 
             <path
                 d="
-                M112 243
-                c16-44 46-59 66-80
-                M329 279
-                c8 52 8 116 7 181
+                    M112 243
+                    c16-44 46-59 66-80
+
+                    M329 279
+                    c8 52 8 116 7 181
                 "
                 fill="none"
                 stroke="#fff5"
@@ -1142,7 +1174,7 @@ textarea::placeholder{
         </svg>
 
 
-        <div id="stars"></div>
+        <canvas id="starCanvas"></canvas>
 
     </div>
 
@@ -1179,6 +1211,7 @@ textarea::placeholder{
             写一封星星信 ✦
         </button>
 
+
         <button
             class="btn"
             id="archive"
@@ -1186,6 +1219,7 @@ textarea::placeholder{
         >
             星星档案
         </button>
+
 
         <button
             class="btn"
@@ -1247,6 +1281,7 @@ textarea::placeholder{
             >
                 Ink 写的
             </button>
+
 
             <button
                 data-who="Yyi"
@@ -1311,87 +1346,47 @@ textarea::placeholder{
     class="status"
     id="status"
 >
-    ● 等待连接
+    ● 正在准备星星瓶
 </div>
 
 
 <script>
 
 /* =========================================================
-   立即定义打开按钮
-   这个函数不依赖任何外部 CDN。
+   Supabase
 ========================================================= */
 
-function openStarBottle(){
+const SUPABASE_URL =
+    "https://fgerhmqwqflgggnqpuas.supabase.co";
 
-    var gate =
-        document.getElementById("gate");
+const SUPABASE_KEY =
+    "sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
 
-    if(gate){
-
-        gate.classList.add("hide");
-
-    }
-
-    /*
-     * 后续初始化全部使用 try/catch。
-     * 任何一个模块失败，都不能阻止网页打开。
-     */
-
-    try{
-
-        if(
-            typeof window.startStarBottle ===
-            "function"
-        ){
-
-            window.startStarBottle();
-
-        }
-
-    }catch(error){
-
-        console.warn(
-            "Star Bottle initialization:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   基础变量
-========================================================= */
-
-(function(){
-
-"use strict";
-
-
-var $ =
-    function(id){
-        return document.getElementById(id);
-    };
-
-
-var ROOM =
+const ROOM =
     "ink-yyi";
 
 
-var SUPABASE_URL =
-    "https://fgerhmqwqflgggnqpuas.supabase.co";
+let db = null;
+
+let channel = null;
 
 
-var SUPABASE_KEY =
-    "sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
+/* =========================================================
+   数据
+========================================================= */
+
+let letters = [];
+
+let currentWho = "Ink";
+
+let currentEmotion = 0;
 
 
-var db = null;
+/* =========================================================
+   六情绪
+========================================================= */
 
-
-var EMOTIONS = [
+const EMOTIONS = [
 
     {
         name:"开心",
@@ -1432,34 +1427,20 @@ var EMOTIONS = [
 ];
 
 
-var emotionIndex = 0;
+/* =========================================================
+   DOM
+========================================================= */
 
-var currentWho = "Ink";
-
-var letters = [];
-
-var engine = null;
-
-var physicsBodies = [];
-
-var physicsReady = false;
-
-var animationStarted = false;
-
-var audioContext = null;
-
-var audioMaster = null;
-
-var audioObjects = [];
-
-var lastShake = 0;
+const $ =
+    id =>
+        document.getElementById(id);
 
 
 /* =========================================================
    状态
 ========================================================= */
 
-function setStatus(text){
+function status(text){
 
     $("status").textContent =
         text;
@@ -1468,26 +1449,10 @@ function setStatus(text){
 
 
 /* =========================================================
-   HTML 安全
+   Supabase
 ========================================================= */
 
-function escapeHTML(value){
-
-    return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
-
-}
-
-
-/* =========================================================
-   Supabase 初始化
-========================================================= */
-
-function initSupabase(){
+function initCloud(){
 
     try{
 
@@ -1507,31 +1472,33 @@ function initSupabase(){
 
         }
 
-    }catch(error){
+    }catch(e){
 
-        console.warn(
-            "Supabase initialization failed:",
-            error
-        );
+        console.warn(e);
 
     }
 
     return false;
-
 }
 
 
 /* =========================================================
-   云端读取
+   读取云端
 ========================================================= */
 
-async function loadCloud(){
+async function loadLetters(){
 
     if(!db){
 
-        setStatus(
-            "● 云端未连接 · 本地模式"
-        );
+        initCloud();
+
+    }
+
+    if(!db){
+
+        loadLocal();
+
+        renderAll();
 
         return;
 
@@ -1540,7 +1507,7 @@ async function loadCloud(){
 
     try{
 
-        var result =
+        const result =
             await db
                 .from("star_letters")
                 .select("*")
@@ -1559,91 +1526,94 @@ async function loadCloud(){
                 result.error
             );
 
-            setStatus(
-                "● 云端连接失败 · 网页仍可使用"
-            );
+            loadLocal();
 
-            return;
+        }else{
+
+            letters =
+                result.data || [];
 
         }
-
-
-        letters =
-            result.data || [];
 
 
         renderAll();
 
 
         /*
-         * 双向实时同步
+         * 实时双向同步。
          */
 
-        db
-            .channel(
-                "ink-yyi-star-bottle"
-            )
-            .on(
-                "postgres_changes",
-                {
-                    event:"INSERT",
-                    schema:"public",
-                    table:"star_letters",
-                    filter:
-                        "room=eq." + ROOM
-                },
-                function(payload){
+        if(channel){
 
-                    var newLetter =
-                        payload.new;
+            try{
+
+                await db.removeChannel(
+                    channel
+                );
+
+            }catch(e){}
+
+        }
 
 
-                    if(
-                        !letters.some(
-                            function(item){
-                                return item.id ===
-                                    newLetter.id;
-                            }
-                        )
-                    ){
+        channel =
+            db
+                .channel(
+                    "star-bottle-" +
+                    ROOM
+                )
+                .on(
+                    "postgres_changes",
+                    {
+                        event:"INSERT",
+                        schema:"public",
+                        table:"star_letters",
+                        filter:
+                            "room=eq." + ROOM
+                    },
+                    payload => {
 
-                        letters.push(
-                            newLetter
-                        );
+                        const incoming =
+                            payload.new;
 
-                        renderAll();
+
+                        if(
+                            !letters.some(
+                                x =>
+                                    String(x.id) ===
+                                    String(incoming.id)
+                            )
+                        ){
+
+                            letters.push(
+                                incoming
+                            );
+
+
+                            renderAll();
+
+                        }
 
                     }
+                )
+                .subscribe(
+                    () => {}
+                );
 
-                }
-            )
-            .subscribe(
-                function(state){
 
-                    if(
-                        state ===
-                        "SUBSCRIBED"
-                    ){
-
-                        setStatus(
-                            "● 已连接 · 两个人共享同一瓶"
-                        );
-
-                    }
-
-                }
-            );
+        status(
+            "● 已连接 · 两个人共享同一瓶"
+        );
 
     }catch(error){
 
         console.warn(
-            "Cloud error:",
             error
         );
 
-        setStatus(
-            "● 云端异常 · 网页仍可使用"
-        );
+        loadLocal();
+
+        renderAll();
 
     }
 
@@ -1651,667 +1621,1138 @@ async function loadCloud(){
 
 
 /* =========================================================
-   音频
+   本地备用
 ========================================================= */
 
-function stopAudio(){
+function loadLocal(){
 
-    audioObjects.forEach(
-        function(item){
+    try{
 
-            try{
+        letters =
+            JSON.parse(
+                localStorage.getItem(
+                    "ink-yyi-stars"
+                ) || "[]"
+            );
 
-                if(item.stop){
-                    item.stop();
-                }
+    }catch(e){
 
-            }catch(e){}
-
-        }
-    );
-
-
-    audioObjects = [];
-
-
-    if(audioContext){
-
-        try{
-            audioContext.close();
-        }catch(e){}
+        letters = [];
 
     }
-
-
-    audioContext = null;
-
-    audioMaster = null;
 
 }
 
 
-function resumeAudio(){
+function saveLocal(){
 
     try{
 
-        if(
-            audioContext &&
-            audioContext.state ===
-            "suspended"
-        ){
-
-            audioContext.resume();
-
-        }
+        localStorage.setItem(
+            "ink-yyi-stars",
+            JSON.stringify(
+                letters
+            )
+        );
 
     }catch(e){}
 
 }
 
 
-function noiseBuffer(){
-
-    var buffer =
-        audioContext.createBuffer(
-            1,
-            audioContext.sampleRate * 2,
-            audioContext.sampleRate
-        );
-
-
-    var data =
-        buffer.getChannelData(0);
-
-
-    for(
-        var i=0;
-        i<data.length;
-        i++
-    ){
-
-        data[i] =
-            Math.random()*2-1;
-
-    }
-
-
-    return buffer;
-
-}
-
-
-function startSound(key){
-
-    stopAudio();
-
-
-    try{
-
-        var AudioContextClass =
-            window.AudioContext ||
-            window.webkitAudioContext;
-
-
-        if(!AudioContextClass){
-
-            return;
-
-        }
-
-
-        audioContext =
-            new AudioContextClass();
-
-
-        audioMaster =
-            audioContext.createGain();
-
-
-        audioMaster.gain.value =
-            .18;
-
-
-        audioMaster.connect(
-            audioContext.destination
-        );
-
-
-        var profiles = {
-
-            happy:{
-                tones:
-                    [523.25,659.25,783.99],
-                type:"sine",
-                volume:.045
-            },
-
-            sad:{
-                tones:
-                    [196,246.94,293.66],
-                type:"sine",
-                volume:.032
-            },
-
-            angry:{
-                tones:
-                    [73.42,92.5,110],
-                type:"sawtooth",
-                volume:.035
-            },
-
-            calm:{
-                tones:
-                    [174.61,220,261.63],
-                type:"sine",
-                volume:.032
-            },
-
-            anxious:{
-                tones:
-                    [146.83,220,329.63],
-                type:"triangle",
-                volume:.035
-            },
-
-            miss:{
-                tones:
-                    [261.63,329.63,392],
-                type:"sine",
-                volume:.035
-            }
-
-        };
-
-
-        var profile =
-            profiles[key] ||
-            profiles.calm;
-
-
-        profile.tones.forEach(
-            function(frequency,index){
-
-                var osc =
-                    audioContext.createOscillator();
-
-
-                var gain =
-                    audioContext.createGain();
-
-
-                osc.type =
-                    profile.type;
-
-
-                osc.frequency.value =
-                    frequency;
-
-
-                gain.gain.value =
-                    profile.volume;
-
-
-                osc.connect(gain);
-
-                gain.connect(
-                    audioMaster
-                );
-
-
-                osc.start();
-
-
-                audioObjects.push(
-                    osc
-                );
-
-
-                /*
-                 * 缓慢呼吸 LFO
-                 */
-
-                var lfo =
-                    audioContext.createOscillator();
-
-
-                var lfoGain =
-                    audioContext.createGain();
-
-
-                lfo.frequency.value =
-                    .08 +
-                    index*.035;
-
-
-                lfoGain.gain.value =
-                    7;
-
-
-                lfo.connect(
-                    lfoGain
-                );
-
-
-                lfoGain.connect(
-                    osc.frequency
-                );
-
-
-                lfo.start();
-
-
-                audioObjects.push(
-                    lfo
-                );
-
-            }
-        );
-
-
-        /*
-         * 难过：
-         * 雨声 + 白噪音
-         */
-
-        if(key === "sad"){
-
-            var rain =
-                audioContext.createBufferSource();
-
-
-            var rainGain =
-                audioContext.createGain();
-
-
-            var filter =
-                audioContext.createBiquadFilter();
-
-
-            rain.buffer =
-                noiseBuffer();
-
-
-            rain.loop =
-                true;
-
-
-            filter.type =
-                "lowpass";
-
-
-            filter.frequency.value =
-                2800;
-
-
-            rainGain.gain.value =
-                .14;
-
-
-            rain
-                .connect(filter)
-                .connect(rainGain)
-                .connect(audioMaster);
-
-
-            rain.start();
-
-
-            audioObjects.push(
-                rain
-            );
-
-        }
-
-
-        /*
-         * 开心：
-         * 高空空气感
-         */
-
-        if(key === "happy"){
-
-            var happyNoise =
-                audioContext.createBufferSource();
-
-
-            var happyGain =
-                audioContext.createGain();
-
-
-            var happyFilter =
-                audioContext.createBiquadFilter();
-
-
-            happyNoise.buffer =
-                noiseBuffer();
-
-
-            happyNoise.loop =
-                true;
-
-
-            happyFilter.type =
-                "highpass";
-
-
-            happyFilter.frequency.value =
-                1600;
-
-
-            happyGain.gain.value =
-                .025;
-
-
-            happyNoise
-                .connect(happyFilter)
-                .connect(happyGain)
-                .connect(audioMaster);
-
-
-            happyNoise.start();
-
-
-            audioObjects.push(
-                happyNoise
-            );
-
-        }
-
-
-        /*
-         * 生气：
-         * 低频脉冲
-         */
-
-        if(key === "angry"){
-
-            var angryOsc =
-                audioContext.createOscillator();
-
-
-            var angryGain =
-                audioContext.createGain();
-
-
-            angryOsc.type =
-                "square";
-
-
-            angryOsc.frequency.value =
-                2.2;
-
-
-            angryGain.gain.value =
-                .018;
-
-
-            angryOsc
-                .connect(angryGain)
-                .connect(audioMaster);
-
-
-            angryOsc.start();
-
-
-            audioObjects.push(
-                angryOsc
-            );
-
-        }
-
-
-        /*
-         * 焦虑：
-         * 快速颤动
-         */
-
-        if(key === "anxious"){
-
-            var anxiousOsc =
-                audioContext.createOscillator();
-
-
-            var anxiousGain =
-                audioContext.createGain();
-
-
-            anxiousOsc.type =
-                "triangle";
-
-
-            anxiousOsc.frequency.value =
-                6;
-
-
-            anxiousGain.gain.value =
-                .025;
-
-
-            anxiousOsc
-                .connect(anxiousGain)
-                .connect(audioMaster);
-
-
-            anxiousOsc.start();
-
-
-            audioObjects.push(
-                anxiousOsc
-            );
-
-        }
-
-
-        audioContext.resume();
-
-    }catch(error){
-
-        console.warn(
-            "Audio:",
-            error
-        );
-
-    }
+/* =========================================================
+   HTML 安全
+========================================================= */
+
+function safe(value){
+
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
 
 /* =========================================================
-   特效
+   情绪颜色
 ========================================================= */
 
-function clearEffects(){
+function colorFor(letter){
 
-    $("fx").innerHTML = "";
+    if(letter && letter.color){
 
-    $("world").style.background =
-        "radial-gradient(circle at 50% 38%,#302640 0%,#0a080f 68%,#030207 100%)";
-
-    stopAudio();
-
-}
-
-
-function createParticles(
-    className,
-    color,
-    count
-){
-
-    for(
-        var i=0;
-        i<count;
-        i++
-    ){
-
-        var particle =
-            document.createElement("i");
-
-
-        particle.className =
-            "p " + className;
-
-
-        particle.style.left =
-            Math.random()*100 + "%";
-
-
-        particle.style.top =
-            Math.random()*100 + "%";
-
-
-        particle.style.color =
-            color;
-
-
-        if(className === "rain"){
-
-            particle.style.animationDuration =
-                (.3 + Math.random()*.7) +
-                "s";
-
-        }else{
-
-            particle.style.animationDuration =
-                (2 + Math.random()*4) +
-                "s";
-
-        }
-
-
-        particle.style.animationDelay =
-            (-Math.random()*5) +
-            "s";
-
-
-        $("fx").appendChild(
-            particle
-        );
+        return letter.color;
 
     }
 
+
+    const found =
+        EMOTIONS.find(
+            x =>
+                x.name ===
+                letter?.emotion
+        );
+
+
+    return found
+        ? found.color
+        : "#f4d24f";
+
 }
 
 
-function startEmotionEffect(){
+/* =========================================================
+   Canvas 物理
+========================================================= */
 
-    clearEffects();
+const canvas =
+    $("starCanvas");
 
-
-    var emotion =
-        EMOTIONS[
-            emotionIndex
-        ];
-
-
-    var key =
-        emotion.key;
+const ctx =
+    canvas.getContext("2d");
 
 
-    var color =
-        emotion.color;
+let physics = [];
 
 
-    var backgrounds = {
+let canvasWidth = 0;
 
-        happy:
-            "radial-gradient(circle at 50% 40%,#6b561b,#120e07 72%)",
+let canvasHeight = 0;
 
-        sad:
-            "radial-gradient(circle at 50% 30%,#315b82,#07131d 72%)",
 
-        angry:
-            "radial-gradient(circle at 50% 85%,#7d281d,#120507 72%)",
+/* =========================================================
+   尺寸
+========================================================= */
 
-        calm:
-            "radial-gradient(circle at 50% 40%,#27736b,#06181b 72%)",
+function resizeCanvas(){
 
-        anxious:
-            "radial-gradient(circle at 50% 40%,#5d377e,#10091b 72%)",
+    const rect =
+        canvas.getBoundingClientRect();
 
-        miss:
-            "radial-gradient(circle at 50% 40%,#514791,#100c24 72%)"
+
+    const ratio =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    canvasWidth =
+        rect.width;
+
+
+    canvasHeight =
+        rect.height;
+
+
+    canvas.width =
+        Math.round(
+            rect.width *
+            ratio
+        );
+
+
+    canvas.height =
+        Math.round(
+            rect.height *
+            ratio
+        );
+
+
+    ctx.setTransform(
+        ratio,
+        0,
+        0,
+        ratio,
+        0,
+        0
+    );
+
+
+    /*
+     * 调整后把星星强制留在瓶子内部。
+     */
+
+    physics.forEach(
+        star => {
+
+            star.x =
+                Math.max(
+                    star.r,
+                    Math.min(
+                        canvasWidth-star.r,
+                        star.x
+                    )
+                );
+
+
+            star.y =
+                Math.max(
+                    star.r,
+                    Math.min(
+                        canvasHeight-star.r,
+                        star.y
+                    )
+                );
+
+        }
+    );
+
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+/* =========================================================
+   创建星星
+========================================================= */
+
+function createStar(
+    letter,
+    index
+){
+
+    const r =
+        7 +
+        Math.random()*3;
+
+
+    const padding =
+        r + 3;
+
+
+    const star = {
+
+        id:
+            String(
+                letter.id ??
+                index
+            ),
+
+        letter,
+
+        x:
+            padding +
+            Math.random() *
+            Math.max(
+                1,
+                canvasWidth -
+                padding*2
+            ),
+
+        y:
+            padding +
+            Math.random() *
+            Math.max(
+                1,
+                canvasHeight -
+                padding*2
+            ),
+
+        vx:
+            (
+                Math.random() -
+                .5
+            ) *
+            .35,
+
+        vy:
+            (
+                Math.random() -
+                .5
+            ) *
+            .35,
+
+        r,
+
+        angle:
+            Math.random() *
+            Math.PI*2,
+
+        spin:
+            (
+                Math.random() -
+                .5
+            ) *
+            .015,
+
+        color:
+            colorFor(letter),
+
+        trail:[]
 
     };
 
 
-    $("world").style.background =
-        backgrounds[key];
-
-
-    if(key === "sad"){
-
-        createParticles(
-            "rain",
-            color,
-            260
-        );
-
-    }
-
-    else if(key === "angry"){
-
-        createParticles(
-            "ember",
-            color,
-            130
-        );
-
-    }
-
-    else if(key === "calm"){
-
-        createParticles(
-            "wave",
-            color,
-            18
-        );
-
-    }
-
-    else if(key === "anxious"){
-
-        createParticles(
-            "wind",
-            color,
-            42
-        );
-
-    }
-
-    else{
-
-        createParticles(
-            "spark",
-            color,
-            120
-        );
-
-    }
-
-
-    startSound(key);
+    return star;
 
 }
 
 
 /* =========================================================
-   情绪按钮
+   完全重建物理星星
+========================================================= */
+
+function rebuildPhysics(){
+
+    resizeCanvas();
+
+
+    /*
+     * 每封信只对应一颗星。
+     * 不再有第二套 Matter 状态。
+     */
+
+    physics =
+        letters.map(
+            (letter,index) =>
+                createStar(
+                    letter,
+                    index
+                )
+        );
+
+
+    /*
+     * 防止星星一开始重叠。
+     */
+
+    for(
+        let pass=0;
+        pass<20;
+        pass++
+    ){
+
+        for(
+            let i=0;
+            i<physics.length;
+            i++
+        ){
+
+            for(
+                let j=i+1;
+                j<physics.length;
+                j++
+            ){
+
+                separate(
+                    physics[i],
+                    physics[j]
+                );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   碰撞分离
+========================================================= */
+
+function separate(a,b){
+
+    const dx =
+        b.x-a.x;
+
+    const dy =
+        b.y-a.y;
+
+
+    let distance =
+        Math.hypot(
+            dx,
+            dy
+        );
+
+
+    const minimum =
+        a.r+b.r+2;
+
+
+    if(
+        distance === 0
+    ){
+
+        distance = .001;
+
+    }
+
+
+    if(
+        distance < minimum
+    ){
+
+        const nx =
+            dx/distance;
+
+        const ny =
+            dy/distance;
+
+
+        const overlap =
+            minimum-distance;
+
+
+        a.x -=
+            nx *
+            overlap *
+            .5;
+
+
+        a.y -=
+            ny *
+            overlap *
+            .5;
+
+
+        b.x +=
+            nx *
+            overlap *
+            .5;
+
+
+        b.y +=
+            ny *
+            overlap *
+            .5;
+
+    }
+
+}
+
+
+/* =========================================================
+   星星碰撞
+========================================================= */
+
+function collide(a,b){
+
+    const dx =
+        b.x-a.x;
+
+    const dy =
+        b.y-a.y;
+
+
+    const distance =
+        Math.hypot(
+            dx,
+            dy
+        );
+
+
+    const minimum =
+        a.r+b.r;
+
+
+    if(
+        distance === 0 ||
+        distance >= minimum
+    ){
+
+        return;
+
+    }
+
+
+    const nx =
+        dx/distance;
+
+    const ny =
+        dy/distance;
+
+
+    const overlap =
+        minimum-distance;
+
+
+    /*
+     * 位置修正。
+     */
+
+    a.x -=
+        nx *
+        overlap *
+        .5;
+
+    a.y -=
+        ny *
+        overlap *
+        .5;
+
+    b.x +=
+        nx *
+        overlap *
+        .5;
+
+    b.y +=
+        ny *
+        overlap *
+        .5;
+
+
+    /*
+     * 相对速度。
+     */
+
+    const rvx =
+        b.vx-a.vx;
+
+    const rvy =
+        b.vy-a.vy;
+
+
+    const velocityAlongNormal =
+        rvx*nx+
+        rvy*ny;
+
+
+    if(
+        velocityAlongNormal > 0
+    ){
+
+        return;
+
+    }
+
+
+    const restitution =
+        .88;
+
+
+    const impulse =
+        -(
+            1+restitution
+        ) *
+        velocityAlongNormal /
+        2;
+
+
+    const ix =
+        impulse*nx;
+
+    const iy =
+        impulse*ny;
+
+
+    a.vx -= ix;
+    a.vy -= iy;
+
+    b.vx += ix;
+    b.vy += iy;
+
+
+    a.spin -=
+        impulse*.002;
+
+    b.spin +=
+        impulse*.002;
+
+}
+
+
+/* =========================================================
+   瓶壁碰撞
+========================================================= */
+
+function wallCollision(star){
+
+    const r =
+        star.r;
+
+
+    if(
+        star.x-r < 0
+    ){
+
+        star.x = r;
+
+        star.vx =
+            Math.abs(
+                star.vx
+            )*.92;
+
+    }
+
+
+    if(
+        star.x+r >
+        canvasWidth
+    ){
+
+        star.x =
+            canvasWidth-r;
+
+        star.vx =
+            -Math.abs(
+                star.vx
+            )*.92;
+
+    }
+
+
+    if(
+        star.y-r < 0
+    ){
+
+        star.y = r;
+
+        star.vy =
+            Math.abs(
+                star.vy
+            )*.92;
+
+    }
+
+
+    if(
+        star.y+r >
+        canvasHeight
+    ){
+
+        star.y =
+            canvasHeight-r;
+
+        star.vy =
+            -Math.abs(
+                star.vy
+            )*.88;
+
+    }
+
+}
+
+
+/* =========================================================
+   画星星
+========================================================= */
+
+function drawStar(
+    star
+){
+
+    ctx.save();
+
+
+    ctx.translate(
+        star.x,
+        star.y
+    );
+
+
+    ctx.rotate(
+        star.angle
+    );
+
+
+    /*
+     * 光晕。
+     */
+
+    ctx.shadowBlur =
+        18;
+
+    ctx.shadowColor =
+        star.color;
+
+
+    ctx.fillStyle =
+        star.color;
+
+
+    ctx.beginPath();
+
+
+    for(
+        let i=0;
+        i<10;
+        i++
+    ){
+
+        const angle =
+            -Math.PI/2 +
+            i*Math.PI/5;
+
+
+        const radius =
+            i%2 === 0
+            ? star.r
+            : star.r*.42;
+
+
+        const x =
+            Math.cos(angle)*
+            radius;
+
+
+        const y =
+            Math.sin(angle)*
+            radius;
+
+
+        if(i===0){
+
+            ctx.moveTo(
+                x,
+                y
+            );
+
+        }else{
+
+            ctx.lineTo(
+                x,
+                y
+            );
+
+        }
+
+    }
+
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /*
+     * 中心亮点。
+     */
+
+    ctx.shadowBlur =
+        0;
+
+    ctx.fillStyle =
+        "rgba(255,255,255,.8)";
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        1.5,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+/* =========================================================
+   物理循环
+========================================================= */
+
+let lastTime =
+    performance.now();
+
+
+function physicsLoop(now){
+
+    const dt =
+        Math.min(
+            (now-lastTime)/16.666,
+            2
+        );
+
+
+    lastTime =
+        now;
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvasWidth,
+        canvasHeight
+    );
+
+
+    /*
+     * 更新。
+     */
+
+    physics.forEach(
+        star => {
+
+            /*
+             * 微弱重力。
+             */
+
+            star.vy +=
+                .018 *
+                dt;
+
+
+            /*
+             * 空气阻力。
+             */
+
+            star.vx *=
+                Math.pow(
+                    .992,
+                    dt
+                );
+
+            star.vy *=
+                Math.pow(
+                    .992,
+                    dt
+                );
+
+
+            star.x +=
+                star.vx *
+                dt;
+
+
+            star.y +=
+                star.vy *
+                dt;
+
+
+            star.angle +=
+                star.spin *
+                dt;
+
+
+            /*
+             * 拖尾。
+             */
+
+            if(
+                Math.abs(star.vx)+
+                Math.abs(star.vy) >
+                .4
+            ){
+
+                star.trail.push({
+
+                    x:star.x,
+
+                    y:star.y,
+
+                    alpha:.6
+
+                });
+
+            }
+
+
+            if(
+                star.trail.length >
+                9
+            ){
+
+                star.trail.shift();
+
+            }
+
+
+            star.trail.forEach(
+                t => {
+
+                    t.alpha *=
+                        .82;
+
+                }
+            );
+
+
+            wallCollision(
+                star
+            );
+
+        }
+    );
+
+
+    /*
+     * 星星互撞。
+     */
+
+    for(
+        let i=0;
+        i<physics.length;
+        i++
+    ){
+
+        for(
+            let j=i+1;
+            j<physics.length;
+            j++
+        ){
+
+            collide(
+                physics[i],
+                physics[j]
+            );
+
+        }
+
+    }
+
+
+    /*
+     * 先画拖尾。
+     */
+
+    physics.forEach(
+        star => {
+
+            star.trail.forEach(
+                t => {
+
+                    ctx.globalAlpha =
+                        t.alpha;
+
+
+                    ctx.fillStyle =
+                        star.color;
+
+
+                    ctx.shadowBlur =
+                        12;
+
+                    ctx.shadowColor =
+                        star.color;
+
+
+                    ctx.beginPath();
+
+                    ctx.arc(
+                        t.x,
+                        t.y,
+                        2,
+                        0,
+                        Math.PI*2
+                    );
+
+                    ctx.fill();
+
+                }
+            );
+
+        }
+    );
+
+
+    ctx.globalAlpha =
+        1;
+
+
+    /*
+     * 再画星星。
+     */
+
+    physics.forEach(
+        drawStar
+    );
+
+
+    requestAnimationFrame(
+        physicsLoop
+    );
+
+}
+
+
+/* =========================================================
+   摇瓶子
+========================================================= */
+
+function shakeBottle(
+    power=1
+){
+
+    const bottle =
+        $("bottle");
+
+
+    bottle.animate(
+
+        [
+
+            {
+                transform:
+                    "translateX(0) rotate(0deg)"
+            },
+
+            {
+                transform:
+                    "translateX(-18px) rotate(-4deg)"
+            },
+
+            {
+                transform:
+                    "translateX(20px) rotate(4deg)"
+            },
+
+            {
+                transform:
+                    "translateX(-15px) rotate(-3deg)"
+            },
+
+            {
+                transform:
+                    "translateX(9px) rotate(2deg)"
+            },
+
+            {
+                transform:
+                    "translateX(0) rotate(0deg)"
+            }
+
+        ],
+
+        {
+            duration:950,
+            easing:
+                "cubic-bezier(.2,.8,.2,1)"
+        }
+
+    );
+
+
+    /*
+     * 物理冲击。
+     */
+
+    physics.forEach(
+        star => {
+
+            star.vx +=
+                (
+                    Math.random()-
+                    .5
+                ) *
+                3 *
+                power;
+
+
+            star.vy -=
+                (
+                    .5+
+                    Math.random()*.8
+                ) *
+                power;
+
+
+            star.spin +=
+                (
+                    Math.random()-
+                    .5
+                ) *
+                .3 *
+                power;
+
+        }
+    );
+
+
+    if(
+        navigator.vibrate
+    ){
+
+        navigator.vibrate(
+            [45,30,75]
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   点击星星
+========================================================= */
+
+canvas.addEventListener(
+    "click",
+    event => {
+
+        const rect =
+            canvas.getBoundingClientRect();
+
+
+        const x =
+            event.clientX -
+            rect.left;
+
+
+        const y =
+            event.clientY -
+            rect.top;
+
+
+        /*
+         * 从上到下检查。
+         */
+
+        for(
+            let i=physics.length-1;
+            i>=0;
+            i--
+        ){
+
+            const star =
+                physics[i];
+
+
+            if(
+                Math.hypot(
+                    star.x-x,
+                    star.y-y
+                ) <=
+                star.r+10
+            ){
+
+                showLetter(
+                    star.letter
+                );
+
+                return;
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   六种情绪按钮
 ========================================================= */
 
 function renderEmotionButtons(){
 
     $("emotions").innerHTML =
-        EMOTIONS.map(
-            function(emotion,index){
-
-                return `
+        EMOTIONS
+            .map(
+                (emotion,index) => `
 
                     <button
                         class="emotion ${
-                            index === emotionIndex
-                                ? "on"
-                                : ""
+                            index ===
+                            currentEmotion
+                            ? "on"
+                            : ""
                         }"
                         style="--c:${emotion.color}"
                         data-index="${index}"
@@ -2327,21 +2768,22 @@ function renderEmotionButtons(){
 
                     </button>
 
-                `;
-
-            }
-        ).join("");
+                `
+            )
+            .join("");
 
 
     document
-        .querySelectorAll(".emotion")
+        .querySelectorAll(
+            ".emotion"
+        )
         .forEach(
-            function(button){
+            button => {
 
                 button.onclick =
-                    function(){
+                    () => {
 
-                        emotionIndex =
+                        currentEmotion =
                             Number(
                                 button.dataset.index
                             );
@@ -2350,7 +2792,11 @@ function renderEmotionButtons(){
                         renderEmotionButtons();
 
 
-                        startEmotionEffect();
+                        startEmotion(
+                            EMOTIONS[
+                                currentEmotion
+                            ]
+                        );
 
                     };
 
@@ -2361,585 +2807,651 @@ function renderEmotionButtons(){
 
 
 /* =========================================================
-   Matter.js
+   音频
 ========================================================= */
 
-function initPhysics(){
+let audioCtx = null;
 
-    if(
-        !window.Matter
-    ){
+let audioMaster = null;
 
-        physicsReady =
-            false;
-
-        console.warn(
-            "Matter.js unavailable"
-        );
-
-        return;
-
-    }
+let audioSources = [];
 
 
-    try{
+function stopAudio(){
 
-        var Engine =
-            Matter.Engine;
+    audioSources.forEach(
+        source => {
 
-        var Runner =
-            Matter.Runner;
+            try{
 
-        var World =
-            Matter.World;
+                source.stop();
 
-        var Bodies =
-            Matter.Bodies;
+            }catch(e){}
 
-
-        engine =
-            Engine.create({
-                enableSleeping:false
-            });
+        }
+    );
 
 
-        engine.gravity.x =
-            0;
+    audioSources = [];
 
 
-        engine.gravity.y =
-            .45;
+    if(audioCtx){
 
+        try{
 
-        var layer =
-            $("stars");
+            audioCtx.close();
 
-
-        var width =
-            layer.clientWidth ||
-            300;
-
-
-        var height =
-            layer.clientHeight ||
-            400;
-
-
-        var wall =
-            20;
-
-
-        var options = {
-
-            isStatic:true,
-
-            restitution:.95,
-
-            friction:.01
-
-        };
-
-
-        physicsBodies = [
-
-            Bodies.rectangle(
-                width/2,
-                -wall/2,
-                width,
-                wall,
-                options
-            ),
-
-            Bodies.rectangle(
-                width/2,
-                height+wall/2,
-                width,
-                wall,
-                options
-            ),
-
-            Bodies.rectangle(
-                -wall/2,
-                height/2,
-                wall,
-                height,
-                options
-            ),
-
-            Bodies.rectangle(
-                width+wall/2,
-                height/2,
-                wall,
-                height,
-                options
-            )
-
-        ];
-
-
-        World.add(
-            engine.world,
-            physicsBodies
-        );
-
-
-        Runner.run(
-            Runner.create(),
-            engine
-        );
-
-
-        physicsReady =
-            true;
-
-
-        rebuildMatterStars();
-
-    }catch(error){
-
-        console.warn(
-            "Matter initialization:",
-            error
-        );
-
-        physicsReady =
-            false;
+        }catch(e){}
 
     }
+
+
+    audioCtx = null;
+
+    audioMaster = null;
 
 }
 
 
 /* =========================================================
-   Matter 星星
+   白噪音
 ========================================================= */
 
-function rebuildMatterStars(){
+function noiseBuffer(
+    seconds
+){
 
-    if(
-        !physicsReady ||
-        !window.Matter ||
-        !engine
+    const buffer =
+        audioCtx.createBuffer(
+            1,
+            audioCtx.sampleRate *
+            seconds,
+            audioCtx.sampleRate
+        );
+
+
+    const data =
+        buffer.getChannelData(0);
+
+
+    for(
+        let i=0;
+        i<data.length;
+        i++
     ){
 
-        return;
+        data[i] =
+            Math.random()*2-1;
 
     }
 
 
+    return buffer;
+
+}
+
+
+/* =========================================================
+   情绪声音
+========================================================= */
+
+function startSound(
+    emotion
+){
+
+    stopAudio();
+
+
     try{
 
-        var World =
-            Matter.World;
-
-        var Bodies =
-            Matter.Bodies;
-
-        var Body =
-            Matter.Body;
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
 
 
-        physicsBodies
-            .filter(
-                function(body){
-                    return !body.isStatic;
-                }
-            )
-            .forEach(
-                function(body){
+        if(!AudioContext){
 
-                    World.remove(
-                        engine.world,
-                        body
-                    );
+            return;
 
-                }
-            );
+        }
 
 
-        physicsBodies =
-            physicsBodies.filter(
-                function(body){
-                    return body.isStatic;
-                }
-            );
+        audioCtx =
+            new AudioContext();
 
 
-        var layer =
-            $("stars");
+        audioMaster =
+            audioCtx.createGain();
 
 
-        var width =
-            layer.clientWidth;
+        audioMaster.gain.value =
+            .14;
 
 
-        var height =
-            layer.clientHeight;
+        audioMaster.connect(
+            audioCtx.destination
+        );
 
 
-        letters.forEach(
-            function(letter,index){
+        const tones = {
 
-                var x =
-                    width *
-                    (.15 +
-                    Math.random()*.7);
+            happy:
+                [523.25,659.25,783.99],
 
+            sad:
+                [196,246.94,293.66],
 
-                var y =
-                    height *
-                    (.12 +
-                    Math.random()*.7);
+            angry:
+                [73.42,92.5,110],
 
+            calm:
+                [174.61,220,261.63],
 
-                var body =
-                    Bodies.circle(
-                        x,
-                        y,
-                        10,
-                        {
+            anxious:
+                [146.83,220,329.63],
 
-                            restitution:.95,
+            miss:
+                [261.63,329.63,392]
 
-                            friction:.01,
-
-                            frictionAir:.004,
-
-                            density:.006
-
-                        }
-                    );
+        };
 
 
-                body.starColor =
-                    letter.color;
+        const frequencies =
+            tones[
+                emotion.key
+            ] ||
+            tones.calm;
 
 
-                body.starId =
-                    letter.id;
+        frequencies.forEach(
+            (frequency,index) => {
+
+                const osc =
+                    audioCtx.createOscillator();
 
 
-                Body.setVelocity(
-                    body,
-                    {
-
-                        x:
-                            (Math.random()-.5)*.5,
-
-                        y:
-                            (Math.random()-.5)*.3
-
-                    }
-                );
+                const gain =
+                    audioCtx.createGain();
 
 
-                Body.setAngularVelocity(
-                    body,
-                    (Math.random()-.5)*.08
-                );
+                osc.type =
+                    emotion.key === "angry"
+                    ? "sawtooth"
+                    : "sine";
 
 
-                physicsBodies.push(
-                    body
-                );
+                osc.frequency.value =
+                    frequency;
 
 
-                World.add(
-                    engine.world,
-                    body
+                gain.gain.value =
+                    .025;
+
+
+                osc
+                    .connect(gain)
+                    .connect(audioMaster);
+
+
+                osc.start();
+
+
+                audioSources.push(
+                    osc
                 );
 
             }
         );
 
-    }catch(error){
 
-        console.warn(
-            "Matter stars:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   星星 DOM
-========================================================= */
-
-function renderStars(){
-
-    var layer =
-        $("stars");
-
-
-    layer.innerHTML = "";
-
-
-    letters.forEach(
-        function(letter){
-
-            var star =
-                document.createElement("i");
-
-
-            star.className =
-                "star";
-
-
-            star.style.setProperty(
-                "--c",
-                letter.color
-            );
-
-
-            star.dataset.id =
-                letter.id;
-
-
-            star.onclick =
-                function(){
-
-                    showLetter(
-                        letter
-                    );
-
-                };
-
-
-            layer.appendChild(
-                star
-            );
-
-        }
-    );
-
-
-    if(physicsReady){
-
-        rebuildMatterStars();
-
-    }
-
-}
-
-
-/* =========================================================
-   星星动画
-========================================================= */
-
-function physicsLoop(){
-
-    try{
+        /*
+         * 难过：
+         * 雨 + 白噪音。
+         */
 
         if(
-            physicsReady &&
-            window.Matter &&
-            physicsBodies.length
+            emotion.key === "sad"
         ){
 
-            var dynamic =
-                physicsBodies.filter(
-                    function(body){
-                        return !body.isStatic;
-                    }
-                );
+            const rain =
+                audioCtx.createBufferSource();
 
 
-            var elements =
-                Array.from(
-                    $("stars").children
-                );
+            const gain =
+                audioCtx.createGain();
 
 
-            dynamic.forEach(
-                function(body,index){
-
-                    var element =
-                        elements[index];
+            const filter =
+                audioCtx.createBiquadFilter();
 
 
-                    if(!element){
-                        return;
-                    }
+            rain.buffer =
+                noiseBuffer(2);
 
 
-                    var layer =
-                        $("stars");
+            rain.loop =
+                true;
 
 
-                    var x =
-                        body.position.x /
-                        layer.clientWidth *
-                        100;
+            filter.type =
+                "lowpass";
 
 
-                    var y =
-                        body.position.y /
-                        layer.clientHeight *
-                        100;
+            filter.frequency.value =
+                3000;
 
 
-                    element.style.left =
-                        x + "%";
+            gain.gain.value =
+                .09;
 
 
-                    element.style.top =
-                        y + "%";
+            rain
+                .connect(filter)
+                .connect(gain)
+                .connect(audioMaster);
 
 
-                    element.style.transform =
-                        "translate(-50%,-50%) rotate(" +
-                        body.angle +
-                        "rad)";
+            rain.start();
 
 
-                    if(
-                        Math.random() < .18
-                    ){
-
-                        var trail =
-                            document.createElement("i");
-
-
-                        trail.className =
-                            "trail";
-
-
-                        trail.style.setProperty(
-                            "--c",
-                            body.starColor
-                        );
-
-
-                        trail.style.left =
-                            x + "%";
-
-
-                        trail.style.top =
-                            y + "%";
-
-
-                        layer.appendChild(
-                            trail
-                        );
-
-
-                        setTimeout(
-                            function(){
-                                trail.remove();
-                            },
-                            600
-                        );
-
-                    }
-
-                }
+            audioSources.push(
+                rain
             );
 
         }
 
-    }catch(error){
+
+        /*
+         * 开心空气声。
+         */
+
+        if(
+            emotion.key === "happy"
+        ){
+
+            const air =
+                audioCtx.createBufferSource();
+
+
+            const gain =
+                audioCtx.createGain();
+
+
+            const filter =
+                audioCtx.createBiquadFilter();
+
+
+            air.buffer =
+                noiseBuffer(1);
+
+
+            air.loop =
+                true;
+
+
+            filter.type =
+                "highpass";
+
+
+            filter.frequency.value =
+                1500;
+
+
+            gain.gain.value =
+                .018;
+
+
+            air
+                .connect(filter)
+                .connect(gain)
+                .connect(audioMaster);
+
+
+            air.start();
+
+
+            audioSources.push(
+                air
+            );
+
+        }
+
+
+        audioCtx.resume();
+
+    }catch(e){
 
         console.warn(
-            "Physics frame:",
-            error
+            "audio",
+            e
         );
 
     }
-
-
-    requestAnimationFrame(
-        physicsLoop
-    );
 
 }
 
 
 /* =========================================================
-   摇一摇
+   情绪视觉
 ========================================================= */
 
-function shakeBottle(power){
+function clearEmotion(){
 
-    power =
-        power || 1;
+    $("fx").innerHTML = "";
+
+    $("world").style.background =
+        "radial-gradient(circle at 50% 38%,#302640 0%,#0a080f 68%,#030207 100%)";
+
+    stopAudio();
+
+}
 
 
-    var now =
-        Date.now();
+function particle(
+    type,
+    color,
+    count
+){
+
+    const fragment =
+        document.createDocumentFragment();
+
+
+    for(
+        let i=0;
+        i<count;
+        i++
+    ){
+
+        const p =
+            document.createElement("i");
+
+
+        p.className =
+            "p " + type;
+
+
+        p.style.left =
+            Math.random()*100+
+            "%";
+
+
+        p.style.top =
+            Math.random()*100+
+            "%";
+
+
+        p.style.color =
+            color;
+
+
+        p.style.animationDuration =
+            (
+                .5+
+                Math.random()*5
+            )+
+            "s";
+
+
+        p.style.animationDelay =
+            (
+                -Math.random()*5
+            )+
+            "s";
+
+
+        fragment.appendChild(
+            p
+        );
+
+    }
+
+
+    $("fx").appendChild(
+        fragment
+    );
+
+}
+
+
+function startEmotion(
+    emotion
+){
+
+    clearEmotion();
+
+
+    const backgrounds = {
+
+        happy:
+            "radial-gradient(circle at 50% 40%,#66521d,#0d0a08 68%)",
+
+        sad:
+            "radial-gradient(circle at 50% 30%,#315b82,#07131d 68%)",
+
+        angry:
+            "radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",
+
+        calm:
+            "radial-gradient(circle at 50% 40%,#27736b,#06181b 68%)",
+
+        anxious:
+            "radial-gradient(circle at 50% 40%,#5d377e,#10091b 68%)",
+
+        miss:
+            "radial-gradient(circle at 50% 40%,#514791,#100c24 68%)"
+
+    };
+
+
+    $("world").style.background =
+        backgrounds[
+            emotion.key
+        ];
 
 
     if(
-        now-lastShake < 220
+        emotion.key === "sad"
     ){
+
+        particle(
+            "rain",
+            emotion.color,
+            300
+        );
+
+    }
+
+    else if(
+        emotion.key === "angry"
+    ){
+
+        particle(
+            "ember",
+            emotion.color,
+            150
+        );
+
+    }
+
+    else if(
+        emotion.key === "calm"
+    ){
+
+        particle(
+            "wave",
+            emotion.color,
+            20
+        );
+
+    }
+
+    else if(
+        emotion.key === "anxious"
+    ){
+
+        particle(
+            "wind",
+            emotion.color,
+            50
+        );
+
+    }
+
+    else{
+
+        particle(
+            "spark",
+            emotion.color,
+            140
+        );
+
+    }
+
+
+    startSound(
+        emotion
+    );
+
+}
+
+
+/* =========================================================
+   打开写信
+========================================================= */
+
+function openComposer(){
+
+    $("compose")
+        .classList
+        .add("open");
+
+
+    renderEmotionButtons();
+
+
+    startEmotion(
+        EMOTIONS[
+            currentEmotion
+        ]
+    );
+
+
+    setTimeout(
+        () => {
+
+            $("text").focus();
+
+        },
+        150
+    );
+
+}
+
+
+/* =========================================================
+   关闭写信
+========================================================= */
+
+function closeComposer(){
+
+    $("compose")
+        .classList
+        .remove("open");
+
+
+    clearEmotion();
+
+}
+
+
+/* =========================================================
+   保存信
+========================================================= */
+
+async function saveLetter(){
+
+    const text =
+        $("text")
+            .value
+            .trim();
+
+
+    if(!text){
+
+        $("text").focus();
 
         return;
 
     }
 
 
-    lastShake =
-        now;
+    const emotion =
+        EMOTIONS[
+            currentEmotion
+        ];
+
+
+    const row = {
+
+        room:
+            ROOM,
+
+        text:
+            text,
+
+        emotion:
+            emotion.name,
+
+        color:
+            emotion.color,
+
+        who:
+            currentWho
+
+    };
+
+
+    status(
+        "● 正在把信折成星星……"
+    );
+
+
+    let saved =
+        false;
 
 
     if(
-        physicsReady &&
-        window.Matter
+        db
     ){
 
         try{
 
-            var Body =
-                Matter.Body;
+            const result =
+                await db
+                    .from("star_letters")
+                    .insert(row)
+                    .select()
+                    .single();
 
 
-            physicsBodies
-                .filter(
-                    function(body){
-                        return !body.isStatic;
-                    }
-                )
-                .forEach(
-                    function(body){
+            if(
+                !result.error
+            ){
 
-                        Body.applyForce(
-                            body,
-                            body.position,
-                            {
-
-                                x:
-                                    (Math.random()-.5) *
-                                    .055 *
-                                    power,
-
-                                y:
-                                    -(
-                                        .035 +
-                                        Math.random()*.045
-                                    ) *
-                                    power
-
-                            }
-                        );
-
-
-                        Body.setAngularVelocity(
-                            body,
-                            (Math.random()-.5) *
-                            .35 *
-                            power
-                        );
-
-                    }
+                letters.push(
+                    result.data
                 );
 
-        }catch(error){
 
-            console.warn(
-                error
-            );
+                saved =
+                    true;
+
+            }
+
+        }catch(e){
+
+            console.warn(e);
 
         }
 
@@ -2947,179 +3459,117 @@ function shakeBottle(power){
 
 
     /*
-     * 即使物理引擎没加载，
-     * 瓶子本身也会有明显摇动。
+     * 云端失败时不丢信。
      */
 
-    var bottle =
-        $("bottle");
+    if(!saved){
+
+        const local = {
+
+            ...row,
+
+            id:
+                "local-" +
+                Date.now(),
+
+            created_at:
+                new Date()
+                    .toISOString()
+
+        };
 
 
-    if(bottle){
-
-        bottle.animate(
-
-            [
-
-                {
-                    transform:
-                        "translateX(0) rotate(0)"
-                },
-
-                {
-                    transform:
-                        "translateX(-15px) rotate(-4deg)"
-                },
-
-                {
-                    transform:
-                        "translateX(17px) rotate(4deg)"
-                },
-
-                {
-                    transform:
-                        "translateX(-10px) rotate(-3deg)"
-                },
-
-                {
-                    transform:
-                        "translateX(6px) rotate(2deg)"
-                },
-
-                {
-                    transform:
-                        "translateX(0) rotate(0)"
-                }
-
-            ],
-
-            {
-                duration:950,
-                easing:
-                    "cubic-bezier(.2,.8,.2,1)"
-            }
-
+        letters.push(
+            local
         );
+
+
+        saveLocal();
 
     }
 
 
-    resumeAudio();
+    $("text").value =
+        "";
 
 
-    if(
-        navigator.vibrate
-    ){
+    closeComposer();
 
-        navigator.vibrate(
-            [45,30,70]
-        );
+
+    renderAll();
+
+
+    /*
+     * 新星星产生时，
+     * 给它一点向上弹出的速度。
+     */
+
+    const newest =
+        physics[
+            physics.length-1
+        ];
+
+
+    if(newest){
+
+        newest.vy =
+            -2.5;
+
+        newest.vx =
+            (
+                Math.random()-.5
+            )*2;
 
     }
+
+
+    status(
+        "● 星星已经留下"
+    );
 
 }
 
 
 /* =========================================================
-   手机摇一摇
-========================================================= */
-
-var lastMotion =
-    0;
-
-
-window.addEventListener(
-    "devicemotion",
-    function(event){
-
-        var acceleration =
-            event.accelerationIncludingGravity;
-
-
-        if(!acceleration){
-            return;
-        }
-
-
-        var x =
-            acceleration.x || 0;
-
-
-        var y =
-            acceleration.y || 0;
-
-
-        var z =
-            acceleration.z || 0;
-
-
-        var magnitude =
-            Math.sqrt(
-                x*x+y*y+z*z
-            );
-
-
-        var now =
-            Date.now();
-
-
-        if(
-            magnitude > 20 &&
-            now-lastMotion > 600
-        ){
-
-            lastMotion =
-                now;
-
-
-            shakeBottle(.8);
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   渲染
+   统计 + 星星
 ========================================================= */
 
 function renderAll(){
 
-    renderStars();
-
-
     $("ic").textContent =
         letters.filter(
-            function(item){
-                return item.who === "Ink";
-            }
+            x =>
+                x.who === "Ink"
         ).length;
 
 
     $("yc").textContent =
         letters.filter(
-            function(item){
-                return item.who === "Yyi";
-            }
+            x =>
+                x.who === "Yyi"
         ).length;
 
 
     $("tc").textContent =
         letters.length;
 
+
+    rebuildPhysics();
+
 }
 
 
 /* =========================================================
-   查看信件
+   查看信
 ========================================================= */
 
-function showLetter(letter){
+function showLetter(
+    letter
+){
 
-    $("box").classList.add(
-        "open"
-    );
+    $("box")
+        .classList
+        .add("open");
 
 
     $("notes").innerHTML = `
@@ -3128,18 +3578,31 @@ function showLetter(letter){
 
             <span
                 class="tag"
-                style="background:${escapeHTML(letter.color)}"
+                style="background:${safe(
+                    colorFor(letter)
+                )}"
             >
-                ${escapeHTML(letter.emotion)}
+                ${safe(
+                    letter.emotion ||
+                    "星星"
+                )}
             </span>
 
             <span class="who">
-                ${escapeHTML(letter.who)}
+
+                ${safe(
+                    letter.who ||
+                    ""
+                )}
+
                 写的
+
             </span>
 
             <p>
-                ${escapeHTML(letter.text)}
+                ${safe(
+                    letter.text
+                )}
             </p>
 
             <small>
@@ -3147,7 +3610,9 @@ function showLetter(letter){
                     letter.created_at
                     ? new Date(
                         letter.created_at
-                    ).toLocaleString("zh-CN")
+                    ).toLocaleString(
+                        "zh-CN"
+                    )
                     : ""
                 }
             </small>
@@ -3165,9 +3630,9 @@ function showLetter(letter){
 
 function openArchive(){
 
-    $("box").classList.add(
-        "open"
-    );
+    $("box")
+        .classList
+        .add("open");
 
 
     if(!letters.length){
@@ -3185,43 +3650,57 @@ function openArchive(){
             .slice()
             .reverse()
             .map(
-                function(letter){
+                letter => `
 
-                    return `
+                    <article class="note">
 
-                        <article class="note">
+                        <span
+                            class="tag"
+                            style="background:${safe(
+                                colorFor(letter)
+                            )}"
+                        >
+                            ${safe(
+                                letter.emotion ||
+                                "星星"
+                            )}
+                        </span>
 
-                            <span
-                                class="tag"
-                                style="background:${escapeHTML(letter.color)}"
-                            >
-                                ${escapeHTML(letter.emotion)}
-                            </span>
 
-                            <span class="who">
-                                ${escapeHTML(letter.who)}
-                                写的
-                            </span>
+                        <span class="who">
 
-                            <p>
-                                ${escapeHTML(letter.text)}
-                            </p>
+                            ${safe(
+                                letter.who ||
+                                ""
+                            )}
 
-                            <small>
-                                ${
+                            写的
+
+                        </span>
+
+
+                        <p>
+                            ${safe(
+                                letter.text
+                            )}
+                        </p>
+
+
+                        <small>
+                            ${
+                                letter.created_at
+                                ? new Date(
                                     letter.created_at
-                                    ? new Date(
-                                        letter.created_at
-                                    ).toLocaleString("zh-CN")
-                                    : ""
-                                }
-                            </small>
+                                ).toLocaleString(
+                                    "zh-CN"
+                                )
+                                : ""
+                            }
+                        </small>
 
-                        </article>
+                    </article>
 
-                    `;
-
-                }
+                `
             )
             .join("");
 
@@ -3229,284 +3708,39 @@ function openArchive(){
 
 
 /* =========================================================
-   写信
+   开场
 ========================================================= */
 
-function openComposer(){
+function openStarBottle(){
 
-    $("compose").classList.add(
-        "open"
-    );
+    $("gate")
+        .classList
+        .add("hide");
 
 
-    renderEmotionButtons();
-
-
-    /*
-     * 情绪特效从打开写信开始。
-     * 写完之前一直保持。
-     */
-
-    startEmotionEffect();
-
-
-    setTimeout(
-        function(){
-
-            $("text").focus();
-
-        },
-        100
-    );
-
-}
-
-
-function closeComposer(){
-
-    $("compose").classList.remove(
-        "open"
-    );
-
-
-    clearEffects();
-
-}
-
-
-/* =========================================================
-   保存
-========================================================= */
-
-async function saveLetter(){
-
-    var text =
-        $("text").value.trim();
-
-
-    if(!text){
-
-        $("text").focus();
-
-        return;
-
-    }
-
-
-    var emotion =
-        EMOTIONS[
-            emotionIndex
-        ];
-
-
-    var row = {
-
-        room:ROOM,
-
-        text:text,
-
-        emotion:
-            emotion.name,
-
-        color:
-            emotion.color,
-
-        who:
-            currentWho
-
-    };
-
-
-    setStatus(
-        "● 正在把信折成星星……"
-    );
-
-
-    /*
-     * 云端可用：
-     * 保存到 Supabase
-     */
-
-    if(db){
-
-        try{
-
-            var result =
-                await db
-                    .from("star_letters")
-                    .insert(row)
-                    .select()
-                    .single();
-
-
-            if(
-                result.error
-            ){
-
-                console.warn(
-                    result.error
-                );
-
-                /*
-                 * 云端失败仍然不丢信。
-                 * 本地先保存。
-                 */
-
-                saveLocal(row);
-
-            }else{
-
-                if(
-                    result.data &&
-                    !letters.some(
-                        function(item){
-                            return item.id ===
-                                result.data.id;
-                        }
-                    )
-                ){
-
-                    letters.push(
-                        result.data
-                    );
-
-                }
-
-            }
-
-        }catch(error){
-
-            console.warn(
-                error
-            );
-
-            saveLocal(row);
-
-        }
-
-    }else{
-
-        saveLocal(row);
-
-    }
-
-
-    $("text").value = "";
-
-
-    closeComposer();
+    resizeCanvas();
 
 
     renderAll();
 
 
-    setStatus(
-        "● 星星已经留下"
-    );
-
-}
+    loadLetters();
 
 
-function saveLocal(row){
-
-    var localRow =
-        Object.assign(
-            {},
-            row,
-            {
-                id:
-                    "local-" +
-                    Date.now() +
-                    "-" +
-                    Math.random()
-                        .toString(16)
-                        .slice(2),
-
-                created_at:
-                    new Date()
-                        .toISOString()
-            }
-        );
-
-
-    letters.push(
-        localRow
+    status(
+        "● 星星瓶已打开"
     );
 
 }
 
 
 /* =========================================================
-   启动
+   事件
 ========================================================= */
 
-window.startStarBottle =
-    function(){
+$("enter").onclick =
+    openStarBottle;
 
-        /*
-         * 物理
-         */
-
-        try{
-
-            initPhysics();
-
-        }catch(error){
-
-            console.warn(
-                "Physics:",
-                error
-            );
-
-        }
-
-
-        /*
-         * 云端
-         */
-
-        try{
-
-            initSupabase();
-
-            loadCloud();
-
-        }catch(error){
-
-            console.warn(
-                "Cloud:",
-                error
-            );
-
-        }
-
-
-        /*
-         * 动画
-         */
-
-        if(!animationStarted){
-
-            animationStarted =
-                true;
-
-            requestAnimationFrame(
-                physicsLoop
-            );
-
-        }
-
-
-        setStatus(
-            "● 星星瓶已打开"
-        );
-
-    };
-
-
-/* =========================================================
-   DOM 事件
-========================================================= */
 
 $("write").onclick =
     openComposer;
@@ -3516,34 +3750,31 @@ $("close").onclick =
     closeComposer;
 
 
-$("archive").onclick =
-    openArchive;
-
-
-$("closeBox").onclick =
-    function(){
-
-        $("box").classList.remove(
-            "open"
-        );
-
-    };
-
-
-$("shake").onclick =
-    function(){
-
-        shakeBottle(1);
-
-    };
-
-
 $("fold").onclick =
     saveLetter;
 
 
+$("archive").onclick =
+    openArchive;
+
+
+$("shake").onclick =
+    () =>
+        shakeBottle(1);
+
+
+$("closeBox").onclick =
+    () => {
+
+        $("box")
+            .classList
+            .remove("open");
+
+    };
+
+
 /* =========================================================
-   署名
+   签名
 ========================================================= */
 
 document
@@ -3551,10 +3782,10 @@ document
         ".sign button"
     )
     .forEach(
-        function(button){
+        button => {
 
             button.onclick =
-                function(){
+                () => {
 
                     currentWho =
                         button.dataset.who;
@@ -3565,11 +3796,11 @@ document
                             ".sign button"
                         )
                         .forEach(
-                            function(other){
+                            x => {
 
-                                other.classList.toggle(
+                                x.classList.toggle(
                                     "on",
-                                    other === button
+                                    x === button
                                 );
 
                             }
@@ -3579,6 +3810,94 @@ document
 
         }
     );
+
+
+/* =========================================================
+   弹窗点击外部关闭
+========================================================= */
+
+$("compose").onclick =
+    event => {
+
+        if(
+            event.target ===
+            $("compose")
+        ){
+
+            closeComposer();
+
+        }
+
+    };
+
+
+$("box").onclick =
+    event => {
+
+        if(
+            event.target ===
+            $("box")
+        ){
+
+            $("box")
+                .classList
+                .remove("open");
+
+        }
+
+    };
+
+
+/* =========================================================
+   手机摇一摇
+========================================================= */
+
+let lastShake =
+    0;
+
+
+window.addEventListener(
+    "devicemotion",
+    event => {
+
+        const a =
+            event.accelerationIncludingGravity;
+
+
+        if(!a){
+
+            return;
+
+        }
+
+
+        const strength =
+            Math.hypot(
+                a.x || 0,
+                a.y || 0,
+                a.z || 0
+            );
+
+
+        const now =
+            Date.now();
+
+
+        if(
+            strength > 20 &&
+            now-lastShake > 650
+        ){
+
+            lastShake =
+                now;
+
+
+            shakeBottle(.8);
+
+        }
+
+    }
+);
 
 
 /* =========================================================
@@ -3597,80 +3916,30 @@ $("date").textContent =
 
 
 /* =========================================================
-   点击背景关闭弹窗
+   启动
 ========================================================= */
 
-$("compose").addEventListener(
-    "click",
-    function(event){
+resizeCanvas();
 
-        if(
-            event.target ===
-            $("compose")
-        ){
-
-            closeComposer();
-
-        }
-
-    }
+requestAnimationFrame(
+    physicsLoop
 );
 
 
-$("box").addEventListener(
-    "click",
-    function(event){
-
-        if(
-            event.target ===
-            $("box")
-        ){
-
-            $("box").classList.remove(
-                "open"
-            );
-
-        }
-
-    }
-);
-
-
-/* =========================================================
-   窗口尺寸
-========================================================= */
+/*
+ * Supabase defer 加载完成后，
+ * 再初始化。
+ */
 
 window.addEventListener(
-    "resize",
-    function(){
+    "load",
+    () => {
 
-        /*
-         * 不重新创建整个物理世界。
-         * 避免手机旋转后出现多个 Matter Engine。
-         */
+        initCloud();
 
     }
 );
 
-
-/* =========================================================
-   用户第一次触摸页面时尝试恢复音频
-========================================================= */
-
-document.addEventListener(
-    "pointerdown",
-    function(){
-
-        resumeAudio();
-
-    },
-    {
-        passive:true
-    }
-);
-
-
-})();
 </script>
 
 </body>
