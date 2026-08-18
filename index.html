@@ -1,63 +1,182 @@
 <!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ink × Yyi · Our Star Bottle</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
 <style>
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden}body{font-family:"Noto Serif SC","PingFang SC",serif;color:#fff;background:#080711}button,textarea{font:inherit}button{cursor:pointer}
-#world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle,#2b2340,#09070e 70%);transition:1s}#fx{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
-.p{position:absolute;border-radius:50%}.rain{width:1px;height:70px;background:linear-gradient(transparent,#d8edff);opacity:.5;animation:rain linear infinite}@keyframes rain{to{transform:translate(-12vw,125vh)}}.ember{width:4px;height:18px;background:#ff6048;box-shadow:0 0 18px #ff3b2b;animation:up linear infinite}@keyframes up{to{transform:translate(-20px,-120vh);opacity:0}}.spark{width:4px;height:4px;background:currentColor;box-shadow:0 0 15px currentColor;animation:sp linear infinite}@keyframes sp{50%{transform:translate(30px,-20px) scale(1.7)}to{transform:translate(-15px,-110vh);opacity:0}}.wave{border:1px solid currentColor;width:18px;height:18px;animation:wa 4s ease-out infinite}@keyframes wa{to{width:70vw;height:70vw;opacity:0;transform:translate(-50%,-50%)}}.wind{width:35vw;height:1px;background:currentColor;animation:wi 1.2s linear infinite}@keyframes wi{from{transform:translateX(-100vw)}to{transform:translateX(180vw)}}
+#world{position:fixed;inset:0;overflow:hidden;background:radial-gradient(circle,#2b2340,#09070e 70%);transition:1s}#fx{position:absolute;inset:0;pointer-events:none}
+.p{position:absolute;border-radius:50%}.rain{width:1px;height:70px;background:linear-gradient(transparent,#d8edff);opacity:.5;animation:rain linear infinite}@keyframes rain{to{transform:translate(-12vw,125vh)}}.ember{width:4px;height:18px;background:#ff6048;box-shadow:0 0 18px #ff3b2b;animation:up linear infinite}@keyframes up{to{transform:translate(-20px,-120vh);opacity:0}}.spark{width:4px;height:4px;background:currentColor;box-shadow:0 0 15px currentColor;animation:sp linear infinite}@keyframes sp{50%{transform:translate(30px,-20px) scale(1.7)}to{transform:translate(-15px,-110vh);opacity:0}}.wave{border:1px solid currentColor;width:18px;height:18px;animation:wa 4s ease-out infinite}@keyframes wa{to{width:70vw;height:70vw;opacity:0;transform:translate(-50%,-50%)}}.wind{width:35vw;height:1px;background:currentColor;animation:wi 1.2s linear infinite}.heart{font-size:18px;color:currentColor;text-shadow:0 0 12px currentColor,0 0 24px currentColor;animation:heart 4s linear infinite}.heart:before{content:"♥"}@keyframes heart{0%{transform:translateY(20vh) scale(.6);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translate(30px,-110vh) scale(1.2);opacity:0}}@keyframes wi{from{transform:translateX(-100vw)}to{transform:translateX(180vw)}}
 #gate{position:fixed;inset:0;z-index:9;display:grid;place-items:center;background:#09070e;transition:.8s}.hide{opacity:0;pointer-events:none}.intro{text-align:center}.big{font-size:90px;text-shadow:0 0 35px #e8d17d}.intro h1{font-size:38px;font-weight:400;letter-spacing:8px}.intro p{color:#aaa0b1;line-height:2}.btn,.enter{background:#ffffff0b;border:1px solid #d7c58c55;color:#eee5d9;border-radius:99px;padding:11px 20px}
 main{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}.top{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;font-size:10px;letter-spacing:3px;color:#a69aaa}
-.bottle{position:relative;width:min(440px,90vw);height:min(640px,72vh);filter:drop-shadow(0 35px 60px #000b)}#glass{position:absolute;width:100%;height:100%}#stars{position:absolute;left:16%;right:16%;top:25%;bottom:7%;overflow:hidden;border-radius:40% 40% 22% 22%;z-index:4;pointer-events:auto;clip-path:inset(0 round 22% 22% 12% 12%);background:radial-gradient(circle at 50% 70%,rgba(255,255,255,.035),transparent 70%)}.star{position:absolute;width:20px;height:20px;will-change:left,top,transform;clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);background:var(--c);box-shadow:0 0 12px var(--c),0 0 30px var(--c);cursor:pointer}.trail{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);opacity:.6;animation:tr .55s forwards}@keyframes tr{to{opacity:0;transform:scale(.1)}}
+.bottle{position:relative;width:min(440px,90vw);height:min(640px,72vh);filter:drop-shadow(0 35px 60px #000b)}#glass{position:absolute;width:100%;height:100%}#stars{position:absolute;left:16%;right:16%;top:25%;bottom:7%;overflow:hidden;border-radius:40% 40% 18% 18%}.star{position:absolute;width:20px;height:20px;clip-path:polygon(50% 0,61% 35%,100% 35%,69% 57%,81% 100%,50% 73%,19% 100%,31% 57%,0 35%,39% 35%);background:var(--c);box-shadow:0 0 12px var(--c),0 0 30px var(--c);cursor:pointer}.trail{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);opacity:.6;animation:tr .55s forwards}@keyframes tr{to{opacity:0;transform:scale(.1)}}
 .stats{display:flex;gap:28px;color:#aaa0b0;font-size:12px}.stats b{color:#e9d68d;font-size:18px;font-weight:400}.actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
 .panel{position:fixed;inset:0;z-index:8;background:#05040bea;backdrop-filter:blur(18px);display:none;align-items:center;justify-content:center;padding:16px}.open{display:flex}.card{width:min(650px,95vw);max-height:92vh;overflow:auto;background:#f7eee2;color:#352b31;border-radius:28px;padding:24px}.x{float:right;border:0;background:none;font-size:25px;color:#777}.emotions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.emotion{border:1px solid #d2c4ba;background:#fff;border-radius:14px;padding:8px 2px;font-size:11px}.emotion.on{outline:2px solid var(--c)}.dot{width:22px;height:22px;border-radius:50%;margin:auto auto 5px;background:var(--c);box-shadow:0 0 12px var(--c)}textarea{width:100%;height:300px;margin-top:12px;border:0;outline:0;resize:none;background:repeating-linear-gradient(transparent 0 39px,#ded1c5 40px);font:17px/40px Georgia,"PingFang SC",serif;color:#352b31}.sign{text-align:center;margin:10px}.sign button{border:1px solid #c8bbb2;background:#fff;border-radius:99px;padding:8px 17px}.sign .on{background:#3b2c38;color:#fff}.row{text-align:center}.primary{border:0;border-radius:99px;background:#3b2c38;color:#fff;padding:11px 22px}.note{padding:15px 0;border-bottom:1px solid #ded2c8}.tag{padding:4px 9px;border-radius:99px;color:#fff;font-size:11px}.who{float:right;color:#88747e}.note p{white-space:pre-wrap;line-height:1.8}.status{position:fixed;bottom:15px;right:16px;font-size:10px;color:#a69aaa}
-.mood-wash{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .7s;background:radial-gradient(circle,rgba(255,255,255,.04),transparent 65%)}
 @media(max-width:520px){.emotions{grid-template-columns:repeat(3,1fr)}.intro h1{font-size:31px}}
 </style></head><body>
-<div id="world"><div id="fx"></div><div class="mood-wash" id="moodWash"></div></div><section id="gate"><div class="intro"><div class="big">✦</div><h1>Ink × Yyi</h1><p>我们的星星瓶<br>把想说的话，折成星星。</p><button class="enter" id="enter">打开我们的星星瓶 ✦</button></div></section>
+<div id="world"><div id="fx"></div></div><section id="gate"><div class="intro"><div class="big">✦</div><h1>Ink × Yyi</h1><p>我们的星星瓶<br>把想说的话，折成星星。</p><button class="enter" id="enter">打开我们的星星瓶 ✦</button></div></section>
 <main><div class="top"><span id="date"></span><span>OUR STAR BOTTLE</span></div><div class="bottle" id="bottle">
 <svg id="glass" viewBox="0 0 440 640"><defs><linearGradient id="g"><stop stop-color="#fff" stop-opacity=".24"/><stop offset=".45" stop-color="#fff" stop-opacity=".02"/><stop offset="1" stop-color="#9b7ad0" stop-opacity=".18"/></linearGradient><linearGradient id="gold" x2="0" y2="1"><stop stop-color="#e7d19b"/><stop offset="1" stop-color="#725938"/></linearGradient></defs><path d="M158 55h124v78c0 18 48 32 64 65 9 19 13 43 13 73v278c0 48-27 72-75 72H156c-48 0-75-24-75-72V271c0-30 4-54 13-73 16-33 64-47 64-65V55z" fill="url(#g)" stroke="#eee6ff44" stroke-width="3"/><path d="M168 55h104v86c0 18 39 33 54 62 8 16 11 38 11 67v277c0 35-19 53-57 53H160c-38 0-57-18-57-53V270c0-29 3-51 11-67 15-29 54-44 54-62V55z" fill="none" stroke="#fff3" stroke-width="10"/><rect x="149" y="31" width="142" height="30" rx="9" fill="url(#gold)"/><rect x="161" y="21" width="118" height="14" rx="5" fill="#6d5436"/><path d="M112 243c16-44 46-59 66-80M329 279c8 52 8 116 7 181" fill="none" stroke="#fff5" stroke-width="7" stroke-linecap="round"/></svg><div id="stars"></div></div>
 <div class="stats"><span>Ink <b id="ic">0</b> ✦</span><span>Yyi <b id="yc">0</b> ✦</span><span>总计 <b id="tc">0</b></span></div><div class="actions"><button class="btn" id="write">写一封星星信 ✦</button><button class="btn" id="archive">星星档案</button><button class="btn" id="shake">摇一摇 ✦</button></div></main>
 <section class="panel" id="compose"><div class="card"><button class="x" id="close">×</button><h2>把一句话，留下来</h2><div class="emotions" id="emotions"></div><textarea id="text" maxlength="5000" placeholder="写下现在想留下的话……"></textarea><div class="sign"><button class="on" data-who="Ink">Ink 写的</button><button data-who="Yyi">Yyi 写的</button></div><div class="row"><button class="primary" id="fold">折成星星 ✦</button></div></div></section>
 <section class="panel" id="box"><div class="card"><button class="x" id="closeBox">×</button><h2>星星档案</h2><div id="notes"></div></div></section><div class="status" id="status">● 云端连接中</div>
 <script>
-const SUPABASE_URL="https://fgerhmqwqflgggnqpuas.supabase.co";
-const SUPABASE_KEY="sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi";
-const ROOM="ink-yyi";
-const E=[["开心","#f4d24f","happy"],["难过","#78a9df","sad"],["生气","#ef5a4f","angry"],["平静","#79c8b1","calm"],["焦虑","#b58bd8","anxious"],["想念","#8c78e8","miss"]];
-let db=null,channel=null,letters=[],ei=0,who="Ink";
-let physRunning=false,physRaf=0,physLast=0,activeStars=[],lastShake=0;
-let audioCtx=null;
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));
+const URL="https://fgerhmqwqflgggnqpuas.supabase.co",KEY="sb_publishable_qkiY07ycZktk7tzeEfjT2g_C6hjmpSi",ROOM="ink-yyi",db=supabase.createClient(URL,KEY);
+const E=[["开心","#f4d24f","happy"],["难过","#78a9df","sad"],["生气","#ef5a4f","angry"],["平静","#79c8b1","calm"],["焦虑","#b58bd8","anxious"],["想念","#8c78e8","miss"]];let ei=0,who="Ink",letters=[],stars=[],last=0,ac=null,lock=0,$=x=>document.getElementById(x);
+const esc=s=>s.replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 function status(s){$("status").textContent=s}
-function colorFor(n){return n?.color||E.find(e=>e[0]===n?.emotion)?.[1]||E[0][1]}
-function hexToRgb(hex){const h=hex.replace("#","");const n=parseInt(h,16);return{r:n>>16&255,g:n>>8&255,b:n&255}}
-function mix(hex,a){const c=hexToRgb(hex),t=a>=0?255:0,x=Math.abs(a);return`rgb(${Math.round(c.r+(t-c.r)*x)},${Math.round(c.g+(t-c.g)*x)},${Math.round(c.b+(t-c.b)*x)})`}
-function starColors(hex){return{top:mix(hex,.45),light:mix(hex,.22),base:hex,dark:mix(hex,-.24),edge:mix(hex,-.42)}}
-function buildStarFaces(c){const tips=["50,8","89.9,37.1","74.7,83.9","25.3,83.9","10.1,37.1"],notchs=["61.8,33.8","69,56.2","50,70","31,56.2","38.2,33.8"],inner=["50,30.5","65.96,42.14","59.88,60.86","40.12,60.86","34.04,42.14"];let h=`<path d="M50 8L61.8 33.8 89.9 37.1 69 56.2 74.7 83.9 50 70 25.3 83.9 31 56.2 10.1 37.1 38.2 33.8Z" fill="${c.base}" stroke="${c.edge}" stroke-width="1.6" stroke-linejoin="round"/>`;for(let i=0;i<5;i++){const p=(i+4)%5;h+=`<polygon points="${inner[i]} ${tips[i]} ${notchs[p]}" fill="${c.light}"/><polygon points="${tips[i]} ${notchs[i]} ${inner[i]}" fill="${c.dark}"/>`}return h+`<polygon points="${inner.join(" ")}" fill="${c.top}"/><polygon points="${inner.join(" ")}" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1"/><path d="M50 30.5L50 8M65.96 42.14L89.9 37.1M59.88 60.86L74.7 83.9M40.12 60.86L25.3 83.9M34.04 42.14L10.1 37.1" stroke="rgba(255,255,255,.28)" stroke-width="1" fill="none"/>`}
-function makeStar(letter,index,entering){const seed=String(letter.id).split("").reduce((a,c)=>a+c.charCodeAt(0),0)+index*7919,r=n=>{const x=Math.sin(seed+n)*10000;return x-Math.floor(x)},c=$("stars"),w=c.clientWidth||240,h=c.clientHeight||360,total=Math.max(1,letters.length),size=total<=30?18+r(2)*8:total<=60?15+r(2)*7:11+r(2)*6;return{id:String(letter.id),letter,x:entering?w/2:20+r(1)*(w-40),y:entering?15:Math.max(30,h*.55+r(2)*h*.3),vx:entering?(Math.random()-.5)*80:(r(3)-.5)*20,vy:entering?40:0,r:size/2,rot:r(4)*360,rotV:(r(5)-.5)*100,color:colorFor(letter),trail:[],el:null}}
-function addStar(letter,index,entering){const s=makeStar(letter,index,entering),el=document.createElement("i");el.className="star";el.style.setProperty("--c",s.color);el.dataset.id=s.id;el.title=(letter.emotion||"星星")+" · "+(letter.who||"");el.onclick=e=>{e.stopPropagation();show(letter)};$("stars").appendChild(el);s.el=el;activeStars.push(s);return s}
-function rebuildStars(){const old=new Map(activeStars.map(s=>[s.id,s])),next=[];letters.forEach((l,i)=>{const id=String(l.id);let s=old.get(id);if(!s)s=addStar(l,i,false);else{s.letter=l;s.color=colorFor(l);s.el.style.setProperty("--c",s.color)}next.push(s)});activeStars.forEach(s=>{if(!next.includes(s))s.el?.remove()});activeStars=next;$("ic").textContent=letters.filter(x=>x.who==="Ink").length;$("yc").textContent=letters.filter(x=>x.who==="Yyi").length;$("tc").textContent=letters.length}
-function bounds(s){const c=$("stars"),w=c.clientWidth,h=c.clientHeight,r=s.r;if(!w||!h)return;const bottom=h-4-10*Math.pow(Math.abs(s.x-w/2)/(w/2),2);if(s.x<8+r){s.x=8+r;if(s.vx<0)s.vx=-s.vx*.72}if(s.x>w-8-r){s.x=w-8-r;if(s.vx>0)s.vx=-s.vx*.72}if(s.y-r<4){s.y=4+r;if(s.vy<0)s.vy=0}if(s.y+r>bottom){s.y=bottom-r;if(s.vy>10)s.vy=-s.vy*.35;else s.vy=0;s.vx*=.88}}
-function collide(a,b){const dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy,min=a.r+b.r;if(d2<.001||d2>=min*min)return;const d=Math.sqrt(d2),nx=dx/d,ny=dy/d,o=min-d,wa=b.r/(a.r+b.r),wb=a.r/(a.r+b.r);a.x-=nx*o*wa;a.y-=ny*o*wa;b.x+=nx*o*wb;b.y+=ny*o*wb;const rel=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;if(rel>0){if(rel<18){const na=a.vx*nx+a.vy*ny,nb=b.vx*nx+b.vy*ny;a.vx-=na*nx;a.vy-=na*ny;b.vx-=nb*nx;b.vy-=nb*ny}else{const imp=1.38*rel*.5;a.vx-=imp*nx;a.vy-=imp*ny;b.vx+=imp*nx;b.vy+=imp*ny;a.rotV+=(Math.random()-.5)*25;b.rotV+=(Math.random()-.5)*25}}}
-function renderStar(s){if(!s.el)return;s.el.style.left=s.x+"px";s.el.style.top=s.y+"px";s.el.style.transform=`translate(-50%,-50%) rotate(${s.rot}deg)`;if(Math.abs(s.vx)+Math.abs(s.vy)>10){const q=document.createElement("i");q.className="trail";q.style.setProperty("--c",s.color);q.style.left=s.x+"px";q.style.top=s.y+"px";$("stars").appendChild(q);setTimeout(()=>q.remove(),550)}}
-function physicsStep(dt){for(const s of activeStars){s.vy+=620*dt;s.vx*=Math.pow(.992,dt*60);s.vy*=Math.pow(.992,dt*60);s.x+=s.vx*dt;s.y+=s.vy*dt;s.rot+=s.rotV*dt;s.rotV*=Math.pow(.985,dt*60);if(Math.abs(s.vx)<5)s.vx=0;if(Math.abs(s.vy)<8)s.vy=0;if(Math.abs(s.rotV)<.4)s.rotV=0;bounds(s)}for(let pass=0;pass<3;pass++){for(let i=0;i<activeStars.length;i++)for(let j=i+1;j<activeStars.length;j++)collide(activeStars[i],activeStars[j]);for(const s of activeStars)bounds(s)}for(const s of activeStars)renderStar(s)}
-function startPhysics(){if(physRunning)return;physRunning=true;physLast=performance.now();const loop=now=>{const dt=Math.min(.033,(now-physLast)/1000);physLast=now;physicsStep(dt);physRaf=requestAnimationFrame(loop)};physRaf=requestAnimationFrame(loop)}
-function shake(power=1){const now=Date.now();if(now-lastShake<500||!activeStars.length)return;lastShake=now;activeStars.forEach(s=>{s.vx+=(Math.random()-.5)*700*power;s.vy-=180+Math.random()*420*power;s.rotV+=(Math.random()-.5)*480*power});$("bottle").classList.remove("big-shake");void $("bottle").offsetWidth;$("bottle").classList.add("big-shake");setTimeout(()=>$("bottle").classList.remove("big-shake"),900);if(navigator.vibrate)navigator.vibrate([45,30,70])}
-function stopAudio(){if(audioCtx){try{audioCtx.close()}catch(e){}}audioCtx=null}
-function noise(ctx,seconds){const b=ctx.createBuffer(1,ctx.sampleRate*seconds,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;return b}
-function sound(k){stopAudio();try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C(),master=ctx.createGain();master.gain.value=.09;master.connect(ctx.destination);audioCtx=ctx;const tones={happy:[523.25,659.25,783.99],sad:[196,246.94,293.66],angry:[73.42,92.5,110],calm:[174.61,220,261.63],anxious:[146.83,220,329.63],miss:[261.63,329.63,392]}[k]||[174.61,220,261.63],type={happy:"sine",sad:"sine",angry:"sawtooth",calm:"sine",anxious:"triangle",miss:"sine"}[k]||"sine";tones.forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.value=k==="angry"?.012:.018;o.connect(g).connect(master);o.start()});if(k==="sad"){const n=ctx.createBufferSource(),g=ctx.createGain(),lp=ctx.createBiquadFilter();n.buffer=noise(ctx,2);n.loop=true;lp.type="lowpass";lp.frequency.value=2600;g.gain.value=.12;n.connect(lp).connect(g).connect(master);n.start()}else if(k==="calm"){const n=ctx.createBufferSource(),g=ctx.createGain(),lp=ctx.createBiquadFilter();n.buffer=noise(ctx,2);n.loop=true;lp.type="lowpass";lp.frequency.value=900;g.gain.value=.025;n.connect(lp).connect(g).connect(master);n.start()}else{const n=ctx.createBufferSource(),g=ctx.createGain(),hp=ctx.createBiquadFilter();n.buffer=noise(ctx,1);n.loop=true;hp.type="highpass";hp.frequency.value=k==="happy"?1800:k==="miss"?900:700;g.gain.value=.016;n.connect(hp).connect(g).connect(master);n.start()}ctx.resume()}catch(e){console.warn("audio",e)}}
-function stopFx(){$("fx").innerHTML="";$("moodWash").style.opacity=0;$('world').style.background="radial-gradient(circle,#2b2340,#09070e 70%)";stopAudio()}
-function fx(){stopFx();const [name,color,key]=E[ei];const bg={happy:"radial-gradient(circle,#66521d,#0d0a08 68%)",sad:"radial-gradient(circle,#315b82,#07131d 68%)",angry:"radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",calm:"radial-gradient(circle,#27736b,#06181b 68%)",anxious:"radial-gradient(circle,#5d377e,#10091b 68%)",miss:"radial-gradient(circle,#514791,#100c24 68%)"}[key];$('world').style.background=bg;$('moodWash').style.opacity=.35;const cl=key==="sad"?"rain":key==="angry"?"ember":key==="calm"?"wave":key==="anxious"?"wind":key==="miss"?"heart":"spark",count=cl==="rain"?220:cl==="wave"?12:100;for(let i=0;i<count;i++){const p=document.createElement("i");p.className="p "+cl;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.color=color;p.style.animationDuration=(cl==="rain"?.35+Math.random()*.55:2+Math.random()*4)+"s";p.style.animationDelay=-Math.random()*5+"s";if(cl==="heart")p.textContent="♥";$('fx').appendChild(p)}if(key==="sad")for(let i=0;i<3;i++){const p=document.createElement('i');p.className='rainGlow';p.style.left=(10+Math.random()*80)+'%';p.style.top=(20+Math.random()*60)+'%';$('fx').appendChild(p)}sound(key)}
-function emo(){$('emotions').innerHTML=E.map((e,i)=>`<button class="emotion ${i===ei?'on':''}" style="--c:${e[1]}" data-i="${i}"><div class="dot"></div>${e[0]}</button>`).join('');document.querySelectorAll('.emotion').forEach(b=>b.onclick=()=>{ei=+b.dataset.i;emo();fx();updateFold()})}
-function updateFold(){$('fold').disabled=!$('text').value.trim()}
-async function cloud(){try{if(!window.supabase)throw Error('supabase unavailable');db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const r=await db.from('star_letters').select('*').eq('room',ROOM).order('created_at',{ascending:true});if(r.error)throw r.error;letters=r.data||[];render();channel=db.channel('star-bottle-'+ROOM).on('postgres_changes',{event:'INSERT',schema:'public',table:'star_letters',filter:'room=eq.'+ROOM},p=>{if(!letters.some(x=>String(x.id)===String(p.new.id))){letters.push(p.new);render()}}).subscribe(s=>status(s==='SUBSCRIBED'?'● 已连接 · 两个人共享同一瓶':'● 云端连接中'));return true}catch(e){console.warn(e);status('● 云端连接失败 · 本机暂存仍可用');return false}}
-function loadLocal(){try{letters=JSON.parse(localStorage.getItem('ink-yyi-local')||'[]')}catch(e){letters=[]}render()}
-function saveLocal(){try{localStorage.setItem('ink-yyi-local',JSON.stringify(letters))}catch(e){}}
-function render(){rebuildStars();$('ic').textContent=letters.filter(x=>x.who==='Ink').length;$('yc').textContent=letters.filter(x=>x.who==='Yyi').length;$('tc').textContent=letters.length}
-async function fold(){const t=$('text').value.trim();if(!t)return;const e=E[ei],row={room:ROOM,text:t,emotion:e[0],color:e[1],who};status('● 正在把这封信折成星星……');let saved=null;if(db){try{const r=await db.from('star_letters').insert(row).select().single();if(!r.error)saved=r.data}catch(err){console.warn(err)}}if(!saved){saved={...row,id:'local-'+Date.now(),created_at:new Date().toISOString()};letters.push(saved);saveLocal()}else if(!letters.some(x=>String(x.id)===String(saved.id)))letters.push(saved);$('text').value='';closeWrite();render();$('foldStar').style.color=e[1];$('foldOverlay').classList.add('show');setTimeout(()=>$('foldOverlay').classList.remove('show'),1100);const s=activeStars.find(x=>x.id===String(saved.id));if(s){s.vy=-220;s.vx=(Math.random()-.5)*80}status('● 星星已经留下')}
-function openWrite(){$('compose').classList.add('open');emo();fx();$('text').focus()}
-function closeWrite(){$('compose').classList.remove('open');stopFx()}
-function show(n){$('box').classList.add('open');$('notes').innerHTML=`<article class="note"><span class="tag" style="background:${esc(colorFor(n))}">${esc(n.emotion||'星星')}</span><span class="who">${esc(n.who||'')} 写的</span><p>${esc(n.text||'')}</p><small>${n.created_at?new Date(n.created_at).toLocaleString('zh-CN'):''}</small></article>`}
-function archive(){$('box').classList.add('open');$('notes').innerHTML=letters.length?letters.slice().reverse().map(n=>`<article class="note"><span class="tag" style="background:${esc(colorFor(n))}">${esc(n.emotion||'星星')}</span><span class="who">${esc(n.who||'')} 写的</span><p>${esc(n.text||'')}</p><small>${n.created_at?new Date(n.created_at).toLocaleString('zh-CN'):''}</small></article>`).join(''):'还没有星星信。'}
-$('enter').onclick=()=>{$('gate').classList.add('hide');startPhysics();cloud().then(ok=>{if(!ok)loadLocal()})};$('write').onclick=openWrite;$('close').onclick=closeWrite;$('fold').onclick=fold;$('archive').onclick=archive;$('closeBox').onclick=()=>$('box').classList.remove('open');$('shake').onclick=()=>shake();$('text').addEventListener('input',updateFold);document.querySelectorAll('.sign button').forEach(b=>b.onclick=()=>{who=b.dataset.who;document.querySelectorAll('.sign button').forEach(x=>x.classList.toggle('on',x===b))});$('compose').addEventListener('click',e=>{if(e.target===$('compose'))closeWrite()});$('box').addEventListener('click',e=>{if(e.target===$('box'))$('box').classList.remove('open')});window.addEventListener('resize',()=>activeStars.forEach(bounds));window.addEventListener('devicemotion',e=>{const a=e.accelerationIncludingGravity;if(a&&Math.hypot(a.x||0,a.y||0,a.z||0)>23)shake(.7)});$('date').textContent=new Date().toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric'});startPhysics();
+async function cloud(){let r=await db.from("star_letters").select("*").eq("room",ROOM).order("created_at");if(r.error){status("● 云端连接失败");return}letters=r.data||[];render();db.channel("star-bottle").on("postgres_changes",{event:"INSERT",schema:"public",table:"star_letters",filter:"room=eq."+ROOM},p=>{if(!letters.some(x=>x.id===p.new.id)){letters.push(p.new);render()}}).subscribe(s=>status(s==="SUBSCRIBED"?"● 已连接 · 两个人共享同一瓶":"● 云端连接中"))}
+function render(){
+  rebuildStars();
+  $("ic").textContent=letters.filter(x=>x.who==="Ink").length;
+  $("yc").textContent=letters.filter(x=>x.who==="Yyi").length;
+  $("tc").textContent=letters.length;
+}
+function show(n){$("box").classList.add("open");$("notes").innerHTML=`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`}
+function archive(){$("box").classList.add("open");$("notes").innerHTML=letters.length?letters.slice().reverse().map(n=>`<article class="note"><span class="tag" style="background:${n.color}">${esc(n.emotion)}</span><span class="who">${esc(n.who)} 写的</span><p>${esc(n.text)}</p><small>${new Date(n.created_at).toLocaleString("zh-CN")}</small></article>`).join(""):"还没有星星信。"}
+function emo(){ $("emotions").innerHTML=E.map((e,i)=>`<button class="emotion ${i===ei?"on":""}" style="--c:${e[1]}" data-i="${i}"><div class="dot"></div>${e[0]}</button>`).join("");document.querySelectorAll(".emotion").forEach(b=>b.onclick=()=>{ei=+b.dataset.i;emo();fx()})}
+function stop(){ $("fx").innerHTML="";$("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";if(ac)try{ac.close()}catch(e){}ac=null}
+function fx(){stop();let [n,c,k]=E[ei];$("world").style.background={happy:"radial-gradient(circle,#66521d,#0d0a08 68%)",sad:"radial-gradient(circle,#315b82,#07131d 68%)",angry:"radial-gradient(circle at 50% 90%,#7c251b,#100407 68%)",calm:"radial-gradient(circle,#27736b,#06181b 68%)",anxious:"radial-gradient(circle,#5d377e,#10091b 68%)",miss:"radial-gradient(circle,#514791,#100c24 68%)"}[k];let cl=k==="sad"?"rain":k==="angry"?"ember":k==="calm"?"wave":k==="anxious"?"wind":"spark";for(let i=0;i<(cl==="rain"?200:cl==="wave"?10:90);i++){let p=document.createElement("i");p.className="p "+cl;p.style.left=Math.random()*100+"%";p.style.top=Math.random()*100+"%";p.style.color=c;p.style.animationDuration=(cl==="rain"?(.35+Math.random()*.55):(2+Math.random()*4))+"s";p.style.animationDelay=-Math.random()*5+"s";$("fx").appendChild(p)}sound(k)}
+let audioMaster=null, audioNodes=[];
+function sound(k){
+  try{
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return;
+    if(audioMaster){try{audioMaster.close()}catch(e){}}
+    audioMaster=new C();
+    const ctx=audioMaster, master=ctx.createGain();
+    master.gain.value=.12; master.connect(ctx.destination); audioNodes=[master];
+
+    // Every emotion gets an audible soundscape. Sadness additionally gets rain/white noise.
+    const profiles={
+      happy:{tones:[523.25,659.25,783.99],type:"sine",speed:1.6},
+      sad:{tones:[196,246.94,293.66],type:"sine",speed:3.2},
+      angry:{tones:[73.42,92.5,110],type:"sawtooth",speed:.55},
+      calm:{tones:[174.61,220,261.63],type:"sine",speed:5.5},
+      anxious:{tones:[146.83,220,329.63],type:"triangle",speed:1.05},
+      miss:{tones:[261.63,329.63,392],type:"sine",speed:2.6}
+    };
+    const p=profiles[k]||profiles.calm;
+    p.tones.forEach((f,i)=>{
+      const o=ctx.createOscillator(), g=ctx.createGain(), l=ctx.createOscillator(), lg=ctx.createGain();
+      o.type=p.type;o.frequency.value=f;
+      l.frequency.value=p.speed*(.15+i*.07); lg.gain.value=.018;
+      l.connect(lg).connect(g.gain); g.gain.value=.035;
+      o.connect(g).connect(master); o.start(); l.start();
+      audioNodes.push(o,g,l,lg);
+    });
+    if(k==="sad"){
+      const buffer=ctx.createBuffer(1,ctx.sampleRate*2,ctx.sampleRate), d=buffer.getChannelData(0);
+      for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1);
+      const n=ctx.createBufferSource(), ng=ctx.createGain(), lp=ctx.createBiquadFilter();
+      n.buffer=buffer;n.loop=true;lp.type="lowpass";lp.frequency.value=2400;ng.gain.value=.085;
+      n.connect(lp).connect(ng).connect(master);n.start();audioNodes.push(n,ng,lp);
+    }
+    if(k==="happy"||k==="miss"){
+      const noise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate),d=noise.getChannelData(0);
+      for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.08;
+      const n=ctx.createBufferSource(),g=ctx.createGain(),f=ctx.createBiquadFilter();
+      n.buffer=noise;n.loop=true;f.type="highpass";f.frequency.value=k==="happy"?1800:900;g.gain.value=.035;
+      n.connect(f).connect(g).connect(master);n.start();audioNodes.push(n,g,f);
+    }
+  }catch(e){console.warn("audio",e)}
+}
+function stop(){
+  $("fx").innerHTML="";
+  $("world").style.background="radial-gradient(circle,#2b2340,#09070e 70%)";
+  if(audioMaster){try{audioMaster.close()}catch(e){}audioMaster=null}
+}
+async function fold(){let t=$("text").value.trim();if(!t)return;let e=E[ei],r=await db.from("star_letters").insert({room:ROOM,text:t,emotion:e[0],color:e[1],who}).select().single();if(r.error){status("● 保存失败");return}if(r.data&&!letters.some(x=>x.id===r.data.id))letters.push(r.data);$("text").value="";closeWrite();render()}
+function openWrite(){$("compose").classList.add("open");emo();fx();$("text").focus()}function closeWrite(){$("compose").classList.remove("open");stop()}
+let engine=null,bodies=[],runner=null,physicsStarted=false,lastTrail=0;
+function initPhysics(){
+  if(engine)return;
+  const {Engine,World,Bodies,Runner}=Matter;
+  engine=Engine.create({enableSleeping:false});
+  engine.gravity.y=.38;
+  const c=$("stars"),w=c.clientWidth,h=c.clientHeight,wall=18;
+  const opt={isStatic:true,restitution:.88,friction:.04};
+  bodies=[
+    Bodies.rectangle(w/2,-wall/2,w,wall,opt),
+    Bodies.rectangle(w/2,h+wall/2,w,wall,opt),
+    Bodies.rectangle(-wall/2,h/2,wall,h,opt),
+    Bodies.rectangle(w+wall/2,h/2,wall,h,opt)
+  ];
+  World.add(engine,bodies);
+  runner=Runner.create();
+  Runner.run(runner,engine);
+  physicsStarted=true;
+}
+function updateWalls(){
+  if(!engine)return;
+  const {Body}=Matter,c=$("stars"),w=c.clientWidth,h=c.clientHeight;
+  const wall=18,ws=bodies.filter(b=>b.isStatic);
+  if(ws.length!==4)return;
+  Body.setPosition(ws[0],{x:w/2,y:-wall/2});
+  Body.setPosition(ws[1],{x:w/2,y:h+wall/2});
+  Body.setPosition(ws[2],{x:-wall/2,y:h/2});
+  Body.setPosition(ws[3],{x:w+wall/2,y:h/2});
+  Body.setVertices(ws[0],Matter.Bodies.rectangle(w/2,-wall/2,w,wall).vertices);
+  Body.setVertices(ws[1],Matter.Bodies.rectangle(w/2,h+wall/2,w,wall).vertices);
+  Body.setVertices(ws[2],Matter.Bodies.rectangle(-wall/2,h/2,wall,h).vertices);
+  Body.setVertices(ws[3],Matter.Bodies.rectangle(w+wall/2,h/2,wall,h).vertices);
+}
+function rebuildMatter(){
+  if(!engine)return;
+  const {World,Bodies,Body}=Matter,c=$("stars"),w=c.clientWidth,h=c.clientHeight;
+  bodies.filter(b=>!b.isStatic).forEach(b=>World.remove(engine.world,b));
+  bodies=bodies.filter(b=>b.isStatic);
+  stars.forEach(s=>{
+    let x=(s.x/100)*w,y=(s.y/100)*h;
+    x=Math.max(12,Math.min(w-12,x));y=Math.max(12,Math.min(h-12,y));
+    const b=Bodies.circle(x,y,10,{restitution:.9,friction:.012,frictionAir:.004,density:.006,slop:.01});
+    b.starId=s.id;b.color=s.color;
+    Body.setVelocity(b,{x:(Math.random()-.5)*.7,y:(Math.random()-.5)*.45});
+    Body.setAngularVelocity(b,(Math.random()-.5)*.08);
+    bodies.push(b);World.add(engine.world,b);
+  });
+}
+function syncMatterStars(){
+  if(!engine){requestAnimationFrame(syncMatterStars);return}
+  const c=$("stars"),w=c.clientWidth,h=c.clientHeight;
+  const map=new Map([...c.querySelectorAll('.star')].map(el=>[String(el.dataset.id),el]));
+  bodies.filter(b=>!b.isStatic).forEach(b=>{
+    const el=map.get(String(b.starId));if(!el)return;
+    const x=b.position.x/w*100,y=b.position.y/h*100;
+    el.style.left=x+'%';el.style.top=y+'%';el.style.transform=`translate(-50%,-50%) rotate(${b.angle}rad)`;
+    const speed=Math.hypot(b.velocity.x,b.velocity.y);
+    if(speed>.45 && performance.now()-lastTrail>24 && Math.random()<.35){
+      lastTrail=performance.now();const q=document.createElement('i');q.className='trail';q.style.setProperty('--c',b.color);q.style.left=x+'%';q.style.top=y+'%';c.appendChild(q);setTimeout(()=>q.remove(),560);
+    }
+  });
+  requestAnimationFrame(syncMatterStars);
+}
+function shake(p=1){
+  if(!engine)return;
+  const {Body}=Matter;
+  bodies.filter(b=>!b.isStatic).forEach(b=>{
+    Body.applyForce(b,b.position,{x:(Math.random()-.5)*.055*p,y:-((.035+Math.random()*.045)*p)});
+    Body.setAngularVelocity(b,(Math.random()-.5)*.32*p);
+  });
+  $("bottle").animate([{transform:'translateX(0) rotate(0deg)'},{transform:'translateX(-14px) rotate(-4deg)'},{transform:'translateX(16px) rotate(4deg)'},{transform:'translateX(-9px) rotate(-2deg)'},{transform:'translateX(0) rotate(0deg)'}],{duration:950,easing:'cubic-bezier(.2,.8,.2,1)'});
+  if(navigator.vibrate)navigator.vibrate([45,30,70]);
+}
+function rebuildStars(){
+  const old=new Map(stars.map(s=>[String(s.id),s]));
+  stars=letters.map(n=>old.get(String(n.id))||{id:n.id,color:n.color,x:40+Math.random()*25,y:68+Math.random()*20});
+  const layer=$("stars");layer.innerHTML='';
+  letters.forEach(n=>{const el=document.createElement('i');el.className='star';el.style.setProperty('--c',n.color);el.dataset.id=n.id;el.title=n.emotion+' · '+n.who;el.onclick=()=>show(n);layer.appendChild(el)});
+  if(engine)rebuildMatter();
+}
+function physicsFrame(){syncMatterStars()}
+$("enter").onclick=()=>{$("gate").classList.add("hide");initPhysics();cloud();};
+$("write").onclick=openWrite;
+$("close").onclick=closeWrite;
+$("fold").onclick=fold;
+$("archive").onclick=archive;
+$("closeBox").onclick=()=>$("box").classList.remove("open");
+$("shake").onclick=()=>shake();
+document.querySelectorAll(".sign button").forEach(b=>b.onclick=()=>{who=b.dataset.who;document.querySelectorAll(".sign button").forEach(x=>x.classList.toggle("on",x===b))});
+window.addEventListener("resize",()=>{if(engine)updateWalls()});
+let motionLast=0;
+window.addEventListener("devicemotion",e=>{const a=e.accelerationIncludingGravity;if(!a)return;const now=Date.now();if(now-motionLast<180)return;motionLast=now;if(Math.hypot(a.x||0,a.y||0,a.z||0)>23)shake(.8)});
+$("date").textContent=new Date().toLocaleDateString("zh-CN",{year:"numeric",month:"long",day:"numeric"});
 </script></body></html>
