@@ -10,11 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== 样式与之前相同，为保证完整，此处保留全部原有样式（已整合） ===== */
+    /* ===== 样式（全部保留，无变化） ===== */
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html, body { width:100%; height:100%; overflow:hidden; font-family:"Noto Serif SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif; background:#0b0810; color:#f0ebe3; -webkit-user-select:none; user-select:none; }
     textarea { -webkit-user-select:text; user-select:text; }
-    /* ===== 开场 ===== */
     #intro { position:fixed; inset:0; z-index:300; background:#0b0810; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 1.2s ease; }
     #intro.hidden { opacity:0; pointer-events:none; }
     .intro-star { width:12px; height:12px; background:#f5e6d3; border-radius:50%; box-shadow:0 0 40px #f5e6d3; animation:introPulse 2.6s ease-in-out infinite; }
@@ -25,7 +24,6 @@
     .intro-btn { margin-top:36px; padding:14px 40px; border-radius:60px; border:1.5px solid rgba(245,230,211,0.3); background:transparent; color:#f5e6d3; font-family:inherit; font-size:16px; letter-spacing:4px; cursor:pointer; transition:all 0.4s; opacity:0; animation:fadeUp 1s ease 1.8s forwards; position:relative; overflow:hidden; }
     .intro-btn:hover { background:rgba(245,230,211,0.08); border-color:#d4a574; box-shadow:0 0 40px rgba(212,165,116,0.15); }
     @keyframes fadeUp { 0%{opacity:0;transform:translateY(18px);} 100%{opacity:1;transform:translateY(0);} }
-    /* ===== 主场景 ===== */
     #app { position:fixed; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; opacity:0; transition:opacity 1.2s ease; }
     #app.ready { opacity:1; }
     .galaxy-bg { position:absolute; inset:0; z-index:0; background:radial-gradient(ellipse 70% 50% at 50% 60%, #1c1428 0%, #0b0810 70%); overflow:hidden; }
@@ -110,17 +108,17 @@
     .filter-btn.active { border-color:rgba(212,165,116,0.2); color:#f5e6d3; background:rgba(212,165,116,0.06); }
     .emotion-effect { position:fixed; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity 0.8s ease; }
     .emotion-effect.active { opacity:1; }
-    .rain-drop { position:absolute; width:2px; background:rgba(180,210,240,0.35); animation:rainFall linear infinite; border-radius:1px; }
+    .rain-drop { position:absolute; width:2px; background:rgba(180,210,240,0.4); animation:rainFall linear infinite; border-radius:1px; }
     @keyframes rainFall { 0%{transform:translateY(-20vh) translateX(0) rotate(15deg);} 100%{transform:translateY(120vh) translateX(40px) rotate(15deg);} }
-    .fire-particle { position:absolute; border-radius:50%; background:radial-gradient(circle, #ff6b35, #e74c3c); box-shadow:0 0 20px #e74c3c; animation:fireRise linear infinite; }
-    @keyframes fireRise { 0%{opacity:0;transform:translateY(0) scale(0.3) rotate(0deg);} 30%{opacity:1;} 100%{opacity:0;transform:translateY(-80vh) scale(1.5) rotate(720deg);} }
-    .heart-float { position:absolute; font-size:28px; animation:heartUp linear infinite; opacity:0; text-shadow:0 0 20px rgba(230,126,154,0.3); }
-    @keyframes heartUp { 0%{opacity:0;transform:translateY(0) scale(0.5);} 20%{opacity:0.9;} 80%{opacity:0.9;} 100%{opacity:0;transform:translateY(-60vh) scale(1.4);} }
-    .wave-ring { position:absolute; border-radius:50%; border:2px solid rgba(72,201,176,0.25); animation:waveExpand 4s ease-out infinite; }
-    @keyframes waveExpand { 0%{width:0;height:0;opacity:0.6;} 100%{width:200px;height:200px;opacity:0;} }
-    .wind-line { position:absolute; height:2px; background:linear-gradient(90deg, transparent, rgba(142,68,173,0.3), transparent); animation:windLine 2s linear infinite; }
-    @keyframes windLine { 0%{transform:translateX(-80px) rotate(var(--rot,0deg));opacity:0;} 20%{opacity:0.6;} 80%{opacity:0.6;} 100%{transform:translateX(80vw) rotate(var(--rot,0deg));opacity:0;} }
-    .happy-dust { position:absolute; border-radius:50%; background:radial-gradient(circle, #f9e79f, #f4d03f); box-shadow:0 0 20px #f4d03f; animation:happyDust 3s ease-in-out infinite; }
+    .fire-particle { position:absolute; border-radius:50%; background:radial-gradient(circle, #ff6b35, #e74c3c); box-shadow:0 0 25px #e74c3c; animation:fireRise linear infinite; }
+    @keyframes fireRise { 0%{opacity:0;transform:translateY(0) scale(0.3) rotate(0deg);} 30%{opacity:1;} 100%{opacity:0;transform:translateY(-80vh) scale(1.6) rotate(720deg);} }
+    .heart-float { position:absolute; font-size:28px; animation:heartUp linear infinite; opacity:0; text-shadow:0 0 25px rgba(230,126,154,0.4); }
+    @keyframes heartUp { 0%{opacity:0;transform:translateY(0) scale(0.5);} 20%{opacity:0.9;} 80%{opacity:0.9;} 100%{opacity:0;transform:translateY(-60vh) scale(1.5);} }
+    .wave-ring { position:absolute; border-radius:50%; border:3px solid rgba(72,201,176,0.35); animation:waveExpand 4s ease-out infinite; }
+    @keyframes waveExpand { 0%{width:0;height:0;opacity:0.7;} 100%{width:220px;height:220px;opacity:0;} }
+    .wind-line { position:absolute; height:2px; background:linear-gradient(90deg, transparent, rgba(142,68,173,0.4), transparent); animation:windLine 2s linear infinite; }
+    @keyframes windLine { 0%{transform:translateX(-80px) rotate(var(--rot,0deg));opacity:0;} 20%{opacity:0.7;} 80%{opacity:0.7;} 100%{transform:translateX(80vw) rotate(var(--rot,0deg));opacity:0;} }
+    .happy-dust { position:absolute; border-radius:50%; background:radial-gradient(circle, #f9e79f, #f4d03f); box-shadow:0 0 25px #f4d03f; animation:happyDust 3s ease-in-out infinite; }
     @keyframes happyDust { 0%{opacity:0;transform:translate(0,0) scale(0.3);} 50%{opacity:0.9;} 100%{opacity:0;transform:translate(var(--tx,30px),var(--ty,-50px)) scale(1.6);} }
     #detailModal .modal-card { max-height:80vh; }
     #detailContent { white-space:pre-wrap; font-size:16px; line-height:1.8; color:#f0ebe3; margin-bottom:16px; max-height:50vh; overflow-y:auto; }
@@ -635,7 +633,7 @@
     }
 
     // ============================================================
-    // 🎵 全新音效引擎（无底噪，旋律多变，情绪温和）
+    // 🎵 音效引擎（完整版，包含所有情绪的和弦走向）
     // ============================================================
     let audioCtx = null
     let soundNodes = []
@@ -678,7 +676,6 @@
       const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate)
       const data = buffer.getChannelData(0)
       for (let i = 0; i < bufferSize; i++) {
-        // 模拟雨滴：高频噪声 + 低频调制
         const env = 0.5 + 0.5 * Math.sin(i / 3000)
         data[i] = (Math.random() * 2 - 1) * amp * env * 0.8
       }
@@ -693,7 +690,7 @@
       return { source, gain }
     }
 
-    // 播放循环和弦（支持动态变化，此处简单用多次调用）
+    // 播放循环和弦
     function playLoopChord(frequencies, volume = 0.025, type = 'sine') {
       const nodes = []
       frequencies.forEach(freq => {
@@ -703,7 +700,7 @@
       return nodes
     }
 
-    // 播放循环琶音（旋律变化）
+    // 播放循环琶音
     function playLoopArpeggio(notes, interval = 0.3, volume = 0.02) {
       let index = 0
       const nodes = []
@@ -728,7 +725,7 @@
       return nodes
     }
 
-    // --- 主函数：播放情绪音乐（无底噪，旋律多变） ---
+    // --- 主函数：播放情绪音乐 ---
     function playEmotionSound(emoId) {
       initAudio()
       stopAllSounds()
@@ -737,71 +734,77 @@
       let allNodes = []
 
       if (emoId === 'happy') {
-        // 明亮 C 大调，和弦进行 C - G - Am - F
-        allNodes = allNodes.concat(playLoopChord([523, 659, 784], 0.035))  // C
-        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.025, 'sine')) // G
-        // 琶音旋律：上行 + 下行
-        allNodes = allNodes.concat(playLoopArpeggio([523, 587, 659, 784, 880, 784, 659, 587], 0.2, 0.025))
-        // 添加一些高音泛音
-        allNodes = allNodes.concat(playLoopArpeggio([1047, 1319, 1568], 1.0, 0.015))
+        // 和弦进行：C - G - Am - F
+        allNodes = allNodes.concat(playLoopChord([523, 659, 784], 0.03)) // C
+        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.025)) // G
+        const bass = createLoopOsc(130, 'sine', 0.02, 9999)
+        allNodes.push(bass.osc, bass.gain)
+        allNodes = allNodes.concat(playLoopArpeggio([523, 587, 659, 784, 880, 784, 659, 587], 0.15, 0.025))
+        allNodes = allNodes.concat(playLoopArpeggio([1047, 1319, 1568], 0.8, 0.01))
       } else if (emoId === 'sad') {
-        // 难过：小调背景，舒缓
-        allNodes = allNodes.concat(playLoopChord([440, 554, 659], 0.03))  // Am
-        allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.02))  // Dm
-        // 慢速琶音
-        allNodes = allNodes.concat(playLoopArpeggio([440, 554, 659, 880, 659, 554], 0.6, 0.02))
-      } else if (emoId === 'angry') {
-        // 生气：用大调但低音厚实，节奏舒缓不急促
-        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.04))  // D
-        allNodes = allNodes.concat(playLoopChord([220, 330, 370], 0.025)) // A
-        // 低音缓慢进行
-        allNodes = allNodes.concat(playLoopArpeggio([147, 220, 294, 370, 440], 0.8, 0.02))
-        // 增加一个稳定的低音持续
+        // 和弦进行：Am - G - F - E
+        allNodes = allNodes.concat(playLoopChord([440, 554, 659], 0.03)) // Am
         const bass = createLoopOsc(110, 'sine', 0.02, 9999)
         allNodes.push(bass.osc, bass.gain)
+        allNodes = allNodes.concat(playLoopArpeggio([659, 554, 440, 330, 440], 0.5, 0.02))
+        // 雨声
+        const rain = createRainSound(9999, 0.07)
+        allNodes.push(rain.source, rain.gain)
+      } else if (emoId === 'angry') {
+        // 和弦进行：D - A - Bm - G
+        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.035)) // D
+        allNodes = allNodes.concat(playLoopChord([220, 330, 370], 0.025)) // A
+        const bass = createLoopOsc(73, 'sine', 0.03, 9999)
+        allNodes.push(bass.osc, bass.gain)
+        allNodes = allNodes.concat(playLoopArpeggio([147, 220, 294, 370, 440], 0.7, 0.02))
+        const pulse = createLoopOsc(1.0, 'sine', 0.02, 9999)
+        allNodes.push(pulse.osc, pulse.gain)
       } else if (emoId === 'calm') {
-        // 平静：G 大调，波浪式
-        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.03))  // G
-        allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.02))  // Em
-        // 波浪琶音
-        allNodes = allNodes.concat(playLoopArpeggio([392, 440, 494, 588, 494, 440, 392], 0.4, 0.02))
-        // 添加一个滑音效果（用正弦波调频）
+        // 和弦进行：G - D - Em - C
+        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.03)) // G
+        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.02)) // D
+        const bass = createLoopOsc(98, 'sine', 0.015, 9999)
+        allNodes.push(bass.osc, bass.gain)
+        allNodes = allNodes.concat(playLoopArpeggio([392, 440, 494, 588, 494, 440], 0.4, 0.02))
+        // 滑音效果
         const slide = audioCtx.createOscillator()
         slide.type = 'sine'
         slide.frequency.setValueAtTime(440, audioCtx.currentTime)
-        slide.frequency.linearRampToValueAtTime(520, audioCtx.currentTime + 4)
-        slide.frequency.linearRampToValueAtTime(440, audioCtx.currentTime + 8)
+        slide.frequency.linearRampToValueAtTime(520, audioCtx.currentTime + 6)
+        slide.frequency.linearRampToValueAtTime(440, audioCtx.currentTime + 12)
         const gainSlide = audioCtx.createGain()
         gainSlide.gain.value = 0.015
         slide.connect(gainSlide)
         gainSlide.connect(audioCtx.destination)
         slide.start()
-        slide.stop(audioCtx.currentTime + 8)
+        slide.stop(audioCtx.currentTime + 12)
         allNodes.push(slide)
       } else if (emoId === 'anxious') {
-        // 焦虑：用 E 大调，稳定呼吸感
-        allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.035))  // E
-        allNodes = allNodes.concat(playLoopChord([247, 330, 415], 0.025))  // B
-        // 柔和的上升琶音，拉长时间
-        allNodes = allNodes.concat(playLoopArpeggio([330, 415, 494, 659, 494, 415], 0.7, 0.015))
-        // 添加一个低频心跳
-        const pulse = createLoopOsc(0.8, 'sine', 0.02, 9999)
+        // 和弦进行：Em - Am - Bm - Em
+        allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.03)) // Em
+        allNodes = allNodes.concat(playLoopChord([220, 330, 415], 0.02)) // Am
+        const bass = createLoopOsc(82, 'sine', 0.02, 9999)
+        allNodes.push(bass.osc, bass.gain)
+        allNodes = allNodes.concat(playLoopArpeggio([330, 415, 494, 330, 494, 415], 0.6, 0.02))
+        const pulse = createLoopOsc(0.7, 'sine', 0.025, 9999)
         allNodes.push(pulse.osc, pulse.gain)
+        const trem = createLoopOsc(1200, 'sine', 0.008, 9999)
+        allNodes.push(trem.osc, trem.gain)
       } else if (emoId === 'miss') {
-        // 想念：F 大调，温暖
-        allNodes = allNodes.concat(playLoopChord([349, 440, 523], 0.04))  // F
-        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.025)) // C
-        // 温柔琶音
+        // 和弦进行：F - C - Dm - Bb
+        allNodes = allNodes.concat(playLoopChord([349, 440, 523], 0.04)) // F
+        allNodes = allNodes.concat(playLoopChord([262, 330, 392], 0.025)) // C
+        const bass = createLoopOsc(87, 'sine', 0.02, 9999)
+        allNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([349, 440, 523, 659, 523, 440], 0.35, 0.025))
-        // 高音点缀
-        allNodes = allNodes.concat(playLoopArpeggio([698, 880], 0.8, 0.01))
+        allNodes = allNodes.concat(playLoopArpeggio([698, 880, 1047], 0.8, 0.012))
       }
 
       allNodes.forEach(n => soundNodes.push(n))
     }
 
     // ============================================================
-    // 情绪特效（视觉增强，更清晰）
+    // 情绪特效（视觉增强）
     // ============================================================
     function clearEffect() {
       const el = document.getElementById('emotionEffect')
@@ -814,6 +817,7 @@
       clearEffect()
       const el = document.getElementById('emotionEffect')
       if (emoId === 'sad') {
+        // 雨滴
         for (let i = 0; i < 80; i++) {
           const drop = document.createElement('div')
           drop.className = 'rain-drop'
@@ -827,6 +831,7 @@
         el.classList.add('active')
         playEmotionSound('sad')
       } else if (emoId === 'angry') {
+        // 火星
         for (let i = 0; i < 40; i++) {
           const p = document.createElement('div')
           p.className = 'fire-particle'
@@ -841,6 +846,7 @@
         el.classList.add('active')
         playEmotionSound('angry')
       } else if (emoId === 'miss') {
+        // 爱心
         const hearts = ['💜', '💕', '✨', '💗', '🌟']
         for (let i = 0; i < 25; i++) {
           const h = document.createElement('div')
@@ -856,6 +862,7 @@
         el.classList.add('active')
         playEmotionSound('miss')
       } else if (emoId === 'calm') {
+        // 水波环（增强）
         for (let i = 0; i < 16; i++) {
           const wave = document.createElement('div')
           wave.className = 'wave-ring'
@@ -867,12 +874,13 @@
           wave.style.animationDuration = (3 + Math.random() * 3) + 's'
           wave.style.animationDelay = (Math.random() * 4) + 's'
           wave.style.borderWidth = '3px'
-          wave.style.borderColor = 'rgba(72,201,176,0.3)'
+          wave.style.borderColor = 'rgba(72,201,176,0.35)'
           el.appendChild(wave)
         }
         el.classList.add('active')
         playEmotionSound('calm')
       } else if (emoId === 'anxious') {
+        // 风线（增强）
         for (let i = 0; i < 30; i++) {
           const line = document.createElement('div')
           const rot = Math.random() * 360
@@ -881,13 +889,13 @@
           line.style.top = Math.random() * 100 + '%'
           line.style.setProperty('--rot', rot + 'deg')
           line.style.width = (50 + Math.random() * 80) + 'px'
-          line.style.background = 'linear-gradient(90deg, transparent, rgba(142,68,173,0.35), transparent)'
+          line.style.background = 'linear-gradient(90deg, transparent, rgba(142,68,173,0.4), transparent)'
           el.appendChild(line)
         }
         el.classList.add('active')
         playEmotionSound('anxious')
       } else {
-        // 开心
+        // 开心：星尘
         for (let i = 0; i < 50; i++) {
           const dust = document.createElement('div')
           const tx = (Math.random() - 0.5) * 100
@@ -1136,7 +1144,7 @@
     await loadLetters()
     subscribeLetters()
 
-    console.log('✦ 只属于我们的星河 · Ink × Yyi (纯净音效+清晰特效)')
+    console.log('✦ 只属于我们的星河 · Ink × Yyi (完整版)')
   </script>
 </body>
 </html>
