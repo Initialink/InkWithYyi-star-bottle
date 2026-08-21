@@ -47,7 +47,7 @@
     .top-stats { font-size:12px; color:#8a7a6a; letter-spacing:1px; text-shadow:0 0 20px rgba(0,0,0,0.6); }
     .top-stats span { color:#d4c0b0; }
 
-    /* ===== 瓶子（大圆筒简洁版） ===== */
+    /* ===== 瓶子 ===== */
     .bottle-wrapper { position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; margin-top:-10px; }
     .bottle-container { width:min(380px, 85vw); cursor:pointer; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); animation:floatBottle 7s ease-in-out infinite; filter:drop-shadow(0 16px 60px rgba(0,0,0,0.7)); }
     .bottle-container:active { transform:scale(0.96); }
@@ -58,7 +58,6 @@
     @keyframes bottleShake { 0%,100%{transform:rotate(0deg) translate(0,0);} 15%{transform:rotate(-7deg) translate(-10px,4px);} 35%{transform:rotate(7deg) translate(10px,-4px);} 55%{transform:rotate(-6deg) translate(-8px,3px);} 75%{transform:rotate(6deg) translate(8px,-3px);} }
     .bottle-svg { width:100%; height:auto; display:block; }
 
-    /* ===== 星星计数 ===== */
     .star-count-wrap { margin-top:18px; display:flex; align-items:center; gap:28px; z-index:2; flex-wrap:wrap; justify-content:center; }
     .star-count { font-size:16px; color:#b8a08c; letter-spacing:2px; }
     .star-count strong { color:#f5e6d3; font-size:22px; font-weight:700; }
@@ -118,7 +117,7 @@
     .filter-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
     .filter-btn { padding:4px 14px; border-radius:20px; border:1px solid rgba(245,230,211,0.06); background:transparent; color:#8a7a6a; font-size:12px; cursor:pointer; transition:all 0.2s; }
     .filter-btn.active { border-color:rgba(212,165,116,0.2); color:#f5e6d3; background:rgba(212,165,116,0.06); }
-    /* 情绪特效层（增强版） */
+    /* 情绪特效层 */
     .emotion-effect { position:fixed; inset:0; z-index:5; pointer-events:none; opacity:0; transition:opacity 0.8s ease; }
     .emotion-effect.active { opacity:1; }
     .rain-drop { position:absolute; width:1.5px; background:rgba(180,210,240,0.25); animation:rainFall linear infinite; }
@@ -171,7 +170,7 @@
       <div class="top-stats">✦ <span id="totalStars">0</span> 颗星星</div>
     </div>
 
-    <!-- 大圆筒玻璃瓶 -->
+    <!-- 瓶子 SVG -->
     <div class="bottle-wrapper">
       <div class="bottle-container" id="bottleContainer">
         <svg viewBox="0 0 280 320" xmlns="http://www.w3.org/2000/svg" class="bottle-svg">
@@ -188,12 +187,11 @@
             <linearGradient id="metalRing" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stop-color="#d0c0b0"/><stop offset="50%" stop-color="#b0a090"/><stop offset="100%" stop-color="#908070"/>
             </linearGradient>
-            <radialGradient id="bottomShadow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="rgba(0,0,0,0.15)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-            </radialGradient>
-            <clipPath id="bottleClip">
-              <rect x="50" y="70" width="180" height="200" rx="20"/>
-            </clipPath>
+            <clipPath id="bottleClip"><rect x="50" y="70" width="180" height="200" rx="20"/></clipPath>
+            <filter id="glowTrail" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
           </defs>
           <ellipse cx="140" cy="278" rx="85" ry="10" fill="rgba(0,0,0,0.30)"/>
           <rect x="112" y="8" width="56" height="10" rx="4" fill="url(#metalRing)" stroke="#f0e0d0" stroke-width="0.4"/>
@@ -205,11 +203,6 @@
           <path d="M 68,90 L 68,250" stroke="rgba(255,255,255,0.15)" stroke-width="3" stroke-linecap="round" fill="none"/>
           <path d="M 212,100 L 212,230" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" stroke-linecap="round" fill="none"/>
           <ellipse cx="140" cy="268" rx="40" ry="4" fill="rgba(255,255,255,0.04)"/>
-          <!-- 发光滤镜 -->
-          <filter id="glowTrail" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur"/>
-            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
         </svg>
       </div>
       <div class="star-count-wrap">
@@ -250,7 +243,7 @@
 
   <script type="module">
     // ============================================================
-    // Supabase 配置（已填入您的项目信息）
+    // Supabase 配置
     // ============================================================
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -387,19 +380,10 @@
     }
 
     // ============================================================
-    // 星星物理（适配大圆筒瓶，强化防穿模）
+    // 星星物理
     // ============================================================
     let activeStars = [], pendingStars = [], physRunning = false, physRaf = null, physLast = 0
-    const BOTTLE = {
-      left: 60,
-      right: 220,
-      mouthY: 76,
-      bottomY: function(x) {
-        const cx = 140, cy = 270, ry = 8
-        const t = (x - cx) / 80
-        return cy + ry * (1 - Math.sqrt(1 - t * t))
-      }
-    }
+    const BOTTLE = { left: 60, right: 220, mouthY: 76, bottomY: (x) => { const cx=140,cy=270,ry=8; const t=(x-cx)/80; return cy+ry*(1-Math.sqrt(1-t*t)); } }
     const PHYS = { gravity: 620, restitution: 0.40, friction: 0.88, drag: 0.992 }
     let releaseAccum = 0
     const TRAIL_LENGTH = 12
@@ -640,7 +624,7 @@
     }
 
     // ============================================================
-    // 全新音效引擎（每种情绪独特、舒缓）
+    // 🎵 轻音乐音效引擎 — 全部温和、抚慰、不刺耳
     // ============================================================
     let audioCtx = null
     let soundNodes = []
@@ -659,18 +643,62 @@
       soundNodes = []
     }
 
-    // 工具：生成白噪音 buffer
-    function createNoiseBuffer(duration, amp = 0.5, freqMod = 0) {
+    // 工具：生成柔和的环境噪声（低通滤波）
+    function createSoftNoise(duration, amp = 0.06, cutoff = 800) {
       const sampleRate = audioCtx.sampleRate
       const bufferSize = duration * sampleRate
       const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate)
       const data = buffer.getChannelData(0)
+      // 用正弦波叠加模拟温暖噪声
       for (let i = 0; i < bufferSize; i++) {
-        let val = (Math.random() * 2 - 1) * amp
-        if (freqMod) val += 0.3 * amp * Math.sin(i / freqMod)
-        data[i] = val
+        let val = 0
+        for (let k = 1; k <= 5; k++) {
+          val += Math.sin(i / (100 + k * 80) * 2 * Math.PI) * (0.15 / k)
+        }
+        data[i] = (val * 0.5 + (Math.random() - 0.5) * 0.3) * amp
       }
       return buffer
+    }
+
+    // 播放和弦（多个振荡器叠加）
+    function playChord(frequencies, duration = 4, volume = 0.04, type = 'sine') {
+      const now = audioCtx.currentTime
+      const nodes = []
+      frequencies.forEach(freq => {
+        const osc = audioCtx.createOscillator()
+        osc.type = type
+        osc.frequency.value = freq
+        const gain = audioCtx.createGain()
+        gain.gain.setValueAtTime(volume, now)
+        gain.gain.exponentialRampToValueAtTime(volume * 0.001, now + duration)
+        osc.connect(gain)
+        gain.connect(audioCtx.destination)
+        osc.start(now)
+        osc.stop(now + duration + 0.5)
+        nodes.push(osc, gain)
+      })
+      return nodes
+    }
+
+    // 播放轻柔的琶音/旋律线
+    function playArpeggio(notes, interval = 0.3, volume = 0.03) {
+      const now = audioCtx.currentTime
+      const nodes = []
+      notes.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        const gain = audioCtx.createGain()
+        const startTime = now + i * interval
+        gain.gain.setValueAtTime(volume, startTime)
+        gain.gain.exponentialRampToValueAtTime(volume * 0.001, startTime + interval * 0.8)
+        osc.connect(gain)
+        gain.connect(audioCtx.destination)
+        osc.start(startTime)
+        osc.stop(startTime + interval * 0.9)
+        nodes.push(osc, gain)
+      })
+      return nodes
     }
 
     function playEmotionSound(emoId) {
@@ -678,198 +706,169 @@
       stopAllSounds()
       if (!audioCtx) return
 
+      let allNodes = []
+      const now = audioCtx.currentTime
       const masterGain = audioCtx.createGain()
-      masterGain.gain.value = 0.20
+      masterGain.gain.value = 0.18
       masterGain.connect(audioCtx.destination)
 
-      let osc, gainNode, buffer, source
-
+      // ---- 每种情绪独特的轻音乐 ----
       if (emoId === 'happy') {
-        // 钟琴音 + 高频泛音闪烁
-        const notes = [523, 659, 784, 1047]
-        notes.forEach((freq, i) => {
-          osc = audioCtx.createOscillator()
-          osc.type = 'sine'
-          osc.frequency.value = freq
-          gainNode = audioCtx.createGain()
-          gainNode.gain.value = 0.03 * (1 - i * 0.15)
-          osc.connect(gainNode)
-          gainNode.connect(masterGain)
-          osc.start()
-          osc.stop(audioCtx.currentTime + 0.6)
-          soundNodes.push(osc)
-          // 颤音
-          const lfo = audioCtx.createOscillator()
-          lfo.frequency.value = 4 + i
-          const lfoGain = audioCtx.createGain()
-          lfoGain.gain.value = 2
-          lfo.connect(lfoGain)
-          lfoGain.connect(osc.frequency)
-          lfo.start()
-          lfo.stop(audioCtx.currentTime + 0.6)
-          soundNodes.push(lfo)
-        })
-        // 白噪音星尘
-        buffer = createNoiseBuffer(2, 0.04, 300)
-        source = audioCtx.createBufferSource()
-        source.buffer = buffer
+        // 明亮轻快的 C 大调上行 + 钟琴泛音
+        const chord = [523, 659, 784, 1047] // C5, E5, G5, C6
+        allNodes = allNodes.concat(playChord(chord, 4, 0.035, 'sine'))
+        // 轻柔的琶音
+        const arp = [523, 587, 659, 784, 880, 784, 659, 587]
+        allNodes = allNodes.concat(playArpeggio(arp, 0.15, 0.025))
+        // 环境噪声星尘
+        const noise = createSoftNoise(5, 0.04, 1200)
+        const source = audioCtx.createBufferSource()
+        source.buffer = noise
         source.loop = true
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.06
-        source.connect(gainNode)
-        gainNode.connect(masterGain)
+        const gainN = audioCtx.createGain()
+        gainN.gain.value = 0.04
+        source.connect(gainN)
+        gainN.connect(masterGain)
         source.start()
-        soundNodes.push(source)
+        allNodes.push(source)
       } else if (emoId === 'sad') {
-        // 雨声：白噪音 + 低频调制
-        buffer = createNoiseBuffer(4, 0.5, 150)
-        source = audioCtx.createBufferSource()
-        source.buffer = buffer
+        // 温柔的大调变体 A 大调 - 抚慰而非悲伤
+        const chord = [440, 554, 659] // A4, C#5, E5
+        allNodes = allNodes.concat(playChord(chord, 5, 0.04, 'sine'))
+        // 低音温暖铺垫
+        const bass = [220, 277]
+        allNodes = allNodes.concat(playChord(bass, 5, 0.03, 'sine'))
+        // 轻柔的环境雨声（白噪音低音量）
+        const noise = createSoftNoise(6, 0.05, 400)
+        const source = audioCtx.createBufferSource()
+        source.buffer = noise
         source.loop = true
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.25
-        source.connect(gainNode)
-        gainNode.connect(masterGain)
+        const gainN = audioCtx.createGain()
+        gainN.gain.value = 0.06
+        source.connect(gainN)
+        gainN.connect(masterGain)
         source.start()
-        soundNodes.push(source)
-        // 低沉的雷声（衰减正弦）
-        osc = audioCtx.createOscillator()
-        osc.type = 'sine'
-        osc.frequency.value = 80
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.06
-        osc.connect(gainNode)
-        gainNode.connect(masterGain)
-        osc.start()
-        // 缓慢衰减
-        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 4)
-        soundNodes.push(osc)
-        soundNodes.push(gainNode)
+        allNodes.push(source)
+        // 缓慢的呼吸感
+        const pulse = audioCtx.createOscillator()
+        pulse.type = 'sine'
+        pulse.frequency.value = 1.0
+        const gainP = audioCtx.createGain()
+        gainP.gain.value = 0.015
+        pulse.connect(gainP)
+        gainP.connect(masterGain)
+        pulse.start()
+        allNodes.push(pulse)
       } else if (emoId === 'angry') {
-        // 深沉的低音脉冲（非刺耳）
-        osc = audioCtx.createOscillator()
-        osc.type = 'sine'
-        osc.frequency.value = 55
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.12
-        osc.connect(gainNode)
-        gainNode.connect(masterGain)
-        osc.start()
-        soundNodes.push(osc)
-        // 低频噪声
-        buffer = createNoiseBuffer(3, 0.08, 100)
-        source = audioCtx.createBufferSource()
-        source.buffer = buffer
+        // 改为温暖厚实的 D 大调 - 像拥抱而非愤怒
+        const chord = [294, 370, 440] // D4, F#4, A4
+        allNodes = allNodes.concat(playChord(chord, 5, 0.045, 'sine'))
+        // 低音支持
+        const bass = [147, 220]
+        allNodes = allNodes.concat(playChord(bass, 5, 0.03, 'sine'))
+        // 柔和的环境低频
+        const noise = createSoftNoise(5, 0.03, 300)
+        const source = audioCtx.createBufferSource()
+        source.buffer = noise
         source.loop = true
-        const gainNoise = audioCtx.createGain()
-        gainNoise.gain.value = 0.08
-        source.connect(gainNoise)
-        gainNoise.connect(masterGain)
+        const gainN = audioCtx.createGain()
+        gainN.gain.value = 0.05
+        source.connect(gainN)
+        gainN.connect(masterGain)
         source.start()
-        soundNodes.push(source)
-        // 缓慢的心跳脉冲
+        allNodes.push(source)
+        // 稳定心跳
         const pulse = audioCtx.createOscillator()
-        pulse.type = 'square'
-        pulse.frequency.value = 1.5
-        const gainPulse = audioCtx.createGain()
-        gainPulse.gain.value = 0.02
-        pulse.connect(gainPulse)
-        gainPulse.connect(masterGain)
+        pulse.type = 'sine'
+        pulse.frequency.value = 0.8
+        const gainP = audioCtx.createGain()
+        gainP.gain.value = 0.02
+        pulse.connect(gainP)
+        gainP.connect(masterGain)
         pulse.start()
-        soundNodes.push(pulse)
+        allNodes.push(pulse)
       } else if (emoId === 'calm') {
-        // 水波：sine 调制 + 风铃
-        osc = audioCtx.createOscillator()
-        osc.type = 'sine'
-        osc.frequency.value = 180
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.04
-        osc.connect(gainNode)
-        gainNode.connect(masterGain)
-        osc.start()
-        soundNodes.push(osc)
-        // LFO 缓慢调制
-        const lfo = audioCtx.createOscillator()
-        lfo.frequency.value = 0.6
-        const lfoGain = audioCtx.createGain()
-        lfoGain.gain.value = 15
-        lfo.connect(lfoGain)
-        lfoGain.connect(osc.frequency)
-        lfo.start()
-        soundNodes.push(lfo)
-        // 白噪音水声
-        buffer = createNoiseBuffer(3, 0.03, 200)
-        source = audioCtx.createBufferSource()
-        source.buffer = buffer
+        // 水波般流动的 G 大调
+        const chord = [392, 494, 588] // G4, B4, D5
+        allNodes = allNodes.concat(playChord(chord, 6, 0.035, 'sine'))
+        // 轻柔的上升琶音
+        const arp = [392, 440, 494, 588, 494, 440, 392]
+        allNodes = allNodes.concat(playArpeggio(arp, 0.25, 0.02))
+        // 水声噪声
+        const noise = createSoftNoise(6, 0.03, 600)
+        const source = audioCtx.createBufferSource()
+        source.buffer = noise
         source.loop = true
-        const gainWater = audioCtx.createGain()
-        gainWater.gain.value = 0.05
-        source.connect(gainWater)
-        gainWater.connect(masterGain)
+        const gainN = audioCtx.createGain()
+        gainN.gain.value = 0.04
+        source.connect(gainN)
+        gainN.connect(masterGain)
         source.start()
-        soundNodes.push(source)
+        allNodes.push(source)
       } else if (emoId === 'anxious') {
-        // 风声 + 不规则轻柔脉动
-        buffer = createNoiseBuffer(4, 0.15, 400)
-        source = audioCtx.createBufferSource()
-        source.buffer = buffer
+        // 改为稳定安心的 E 大调 - 缓慢呼吸感
+        const chord = [330, 415, 494] // E4, G#4, B4
+        allNodes = allNodes.concat(playChord(chord, 6, 0.035, 'sine'))
+        // 低音支撑
+        const bass = [165, 247]
+        allNodes = allNodes.concat(playChord(bass, 6, 0.025, 'sine'))
+        // 柔和风声
+        const noise = createSoftNoise(6, 0.04, 400)
+        const source = audioCtx.createBufferSource()
+        source.buffer = noise
         source.loop = true
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.10
-        source.connect(gainNode)
-        gainNode.connect(masterGain)
+        const gainN = audioCtx.createGain()
+        gainN.gain.value = 0.05
+        source.connect(gainN)
+        gainN.connect(masterGain)
         source.start()
-        soundNodes.push(source)
-        // 轻微脉动
-        osc = audioCtx.createOscillator()
-        osc.type = 'sine'
-        osc.frequency.value = 1.2
-        gainNode = audioCtx.createGain()
-        gainNode.gain.value = 0.02
-        osc.connect(gainNode)
-        gainNode.connect(masterGain)
-        osc.start()
-        soundNodes.push(osc)
-      } else if (emoId === 'miss') {
-        // 温暖 pad 和弦 + 心跳
-        const freqs = [220, 330, 440]
-        freqs.forEach((f, i) => {
-          osc = audioCtx.createOscillator()
-          osc.type = 'sine'
-          osc.frequency.value = f
-          gainNode = audioCtx.createGain()
-          gainNode.gain.value = 0.035 * (1 - i * 0.2)
-          osc.connect(gainNode)
-          gainNode.connect(masterGain)
-          osc.start()
-          soundNodes.push(osc)
-        })
-        // 心跳感
+        allNodes.push(source)
+        // 稳定节拍（安抚）
         const pulse = audioCtx.createOscillator()
-        pulse.type = 'square'
-        pulse.frequency.value = 0.9
-        const gainPulse = audioCtx.createGain()
-        gainPulse.gain.value = 0.025
-        pulse.connect(gainPulse)
-        gainPulse.connect(masterGain)
+        pulse.type = 'sine'
+        pulse.frequency.value = 0.6
+        const gainP = audioCtx.createGain()
+        gainP.gain.value = 0.015
+        pulse.connect(gainP)
+        gainP.connect(masterGain)
         pulse.start()
-        soundNodes.push(pulse)
-        // 柔和噪声
-        buffer = createNoiseBuffer(3, 0.02, 500)
-        source = audioCtx.createBufferSource()
-        source.buffer = buffer
+        allNodes.push(pulse)
+      } else if (emoId === 'miss') {
+        // 温暖深情的 F 大调 - 像拥抱
+        const chord = [349, 440, 523] // F4, A4, C5
+        allNodes = allNodes.concat(playChord(chord, 6, 0.04, 'sine'))
+        // 温柔的高音点缀
+        const high = [698, 880]
+        allNodes = allNodes.concat(playChord(high, 4, 0.015, 'sine'))
+        // 环境暖噪声
+        const noise = createSoftNoise(6, 0.02, 500)
+        const source = audioCtx.createBufferSource()
+        source.buffer = noise
         source.loop = true
-        const gainNoise = audioCtx.createGain()
-        gainNoise.gain.value = 0.04
-        source.connect(gainNoise)
-        gainNoise.connect(masterGain)
+        const gainN = audioCtx.createGain()
+        gainN.gain.value = 0.03
+        source.connect(gainN)
+        gainN.connect(masterGain)
         source.start()
-        soundNodes.push(source)
+        allNodes.push(source)
+        // 心跳
+        const pulse = audioCtx.createOscillator()
+        pulse.type = 'sine'
+        pulse.frequency.value = 0.7
+        const gainP = audioCtx.createGain()
+        gainP.gain.value = 0.02
+        pulse.connect(gainP)
+        gainP.connect(masterGain)
+        pulse.start()
+        allNodes.push(pulse)
       }
+
+      // 收集所有节点以便停止
+      allNodes.forEach(n => soundNodes.push(n))
     }
 
     // ============================================================
-    // 情绪特效（视觉增强）
+    // 情绪特效（视觉）
     // ============================================================
     function clearEffect() {
       const el = document.getElementById('emotionEffect')
@@ -882,26 +881,26 @@
       clearEffect()
       const el = document.getElementById('emotionEffect')
       if (emoId === 'sad') {
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 70; i++) {
           const drop = document.createElement('div')
           drop.className = 'rain-drop'
           drop.style.left = Math.random() * 100 + '%'
           drop.style.animationDuration = (0.4 + Math.random() * 0.6) + 's'
           drop.style.animationDelay = (Math.random() * 2) + 's'
-          drop.style.height = (10 + Math.random() * 20) + 'px'
-          drop.style.opacity = 0.2 + Math.random() * 0.3
-          drop.style.background = 'rgba(180,210,240,0.3)'
+          drop.style.height = (10 + Math.random() * 18) + 'px'
+          drop.style.opacity = 0.2 + Math.random() * 0.25
+          drop.style.background = 'rgba(180,210,240,0.25)'
           el.appendChild(drop)
         }
         el.classList.add('active')
         playEmotionSound('sad')
       } else if (emoId === 'angry') {
-        for (let i = 0; i < 40; i++) {
+        for (let i = 0; i < 35; i++) {
           const p = document.createElement('div')
           p.className = 'fire-particle'
           p.style.left = Math.random() * 100 + '%'
           p.style.top = (40 + Math.random() * 50) + '%'
-          p.style.width = (4 + Math.random() * 12) + 'px'
+          p.style.width = (4 + Math.random() * 10) + 'px'
           p.style.height = p.style.width
           p.style.animationDuration = (0.8 + Math.random() * 1.2) + 's'
           p.style.animationDelay = (Math.random() * 2) + 's'
@@ -912,7 +911,7 @@
         playEmotionSound('angry')
       } else if (emoId === 'miss') {
         const hearts = ['💜', '💕', '✨', '💗', '🌟']
-        for (let i = 0; i < 25; i++) {
+        for (let i = 0; i < 22; i++) {
           const h = document.createElement('div')
           h.className = 'heart-float'
           h.textContent = hearts[i % hearts.length]
@@ -926,7 +925,7 @@
         el.classList.add('active')
         playEmotionSound('miss')
       } else if (emoId === 'calm') {
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 14; i++) {
           const wave = document.createElement('div')
           wave.className = 'wave-ring'
           const size = 40 + Math.random() * 80
@@ -936,28 +935,28 @@
           wave.style.top = Math.random() * 100 + '%'
           wave.style.animationDuration = (3 + Math.random() * 3) + 's'
           wave.style.animationDelay = (Math.random() * 4) + 's'
-          wave.style.borderColor = 'rgba(72,201,176,0.25)'
+          wave.style.borderColor = 'rgba(72,201,176,0.22)'
           el.appendChild(wave)
         }
         el.classList.add('active')
         playEmotionSound('calm')
       } else if (emoId === 'anxious') {
-        for (let i = 0; i < 30; i++) {
+        for (let i = 0; i < 28; i++) {
           const line = document.createElement('div')
           const rot = Math.random() * 360
           line.className = 'wind-line'
           line.style.left = Math.random() * 100 + '%'
           line.style.top = Math.random() * 100 + '%'
           line.style.setProperty('--rot', rot + 'deg')
-          line.style.width = (40 + Math.random() * 80) + 'px'
-          line.style.background = 'rgba(142,68,173,0.25)'
+          line.style.width = (40 + Math.random() * 70) + 'px'
+          line.style.background = 'rgba(142,68,173,0.22)'
           el.appendChild(line)
         }
         el.classList.add('active')
         playEmotionSound('anxious')
       } else {
         // 开心
-        for (let i = 0; i < 50; i++) {
+        for (let i = 0; i < 45; i++) {
           const dust = document.createElement('div')
           const tx = (Math.random() - 0.5) * 80
           const ty = -20 - Math.random() * 60
@@ -970,7 +969,7 @@
           dust.style.height = dust.style.width
           dust.style.animationDuration = (2 + Math.random() * 4) + 's'
           dust.style.animationDelay = (Math.random() * 3) + 's'
-          dust.style.background = 'rgba(244,208,63,0.6)'
+          dust.style.background = 'rgba(244,208,63,0.55)'
           el.appendChild(dust)
         }
         el.classList.add('active')
@@ -1182,7 +1181,7 @@
     await loadLetters()
     subscribeLetters()
 
-    console.log('✦ 只属于我们的星河 · Ink × Yyi (情绪音效全面升级版)')
+    console.log('✦ 只属于我们的星河 · Ink × Yyi (轻音乐版)')
   </script>
 </body>
 </html>
