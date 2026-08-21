@@ -745,14 +745,11 @@
         // 添加一些高音泛音
         allNodes = allNodes.concat(playLoopArpeggio([1047, 1319, 1568], 1.0, 0.015))
       } else if (emoId === 'sad') {
-        // 难过：小调背景 + 雨声
+        // 难过：小调背景，舒缓
         allNodes = allNodes.concat(playLoopChord([440, 554, 659], 0.03))  // Am
         allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.02))  // Dm
-        // 慢速琶音，舒缓
+        // 慢速琶音
         allNodes = allNodes.concat(playLoopArpeggio([440, 554, 659, 880, 659, 554], 0.6, 0.02))
-        // 添加雨声
-        const rain = createRainSound(9999, 0.07)
-        allNodes.push(rain.source, rain.gain)
       } else if (emoId === 'angry') {
         // 生气：用大调但低音厚实，节奏舒缓不急促
         allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.04))  // D
