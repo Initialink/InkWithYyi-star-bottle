@@ -747,9 +747,6 @@
         const bass = createLoopOsc(110, 'sine', 0.02, 9999)
         allNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([659, 554, 440, 330, 440], 0.5, 0.02))
-        // 雨声
-        const rain = createRainSound(9999, 0.07)
-        allNodes.push(rain.source, rain.gain)
       } else if (emoId === 'angry') {
         // 和弦进行：D - A - Bm - G
         allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.035)) // D
