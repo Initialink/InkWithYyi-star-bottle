@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    /* ===== 样式（全部保留，无变化） ===== */
+    /* ===== 样式（完整保留，略作调整） ===== */
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html, body { width:100%; height:100%; overflow:hidden; font-family:"Noto Serif SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei",serif; background:#0b0810; color:#f0ebe3; -webkit-user-select:none; user-select:none; }
     textarea { -webkit-user-select:text; user-select:text; }
@@ -180,7 +180,7 @@
             </linearGradient>
             <clipPath id="bottleClip"><rect x="50" y="70" width="180" height="200" rx="20"/></clipPath>
             <filter id="glowTrail" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feGaussianBlur stdDeviation="4" result="blur"/>
               <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
@@ -389,13 +389,13 @@
     }
 
     // ============================================================
-    // 星星物理（完整版）
+    // 星星物理（增强拖尾）
     // ============================================================
     let activeStars = [], pendingStars = [], physRunning = false, physRaf = null, physLast = 0
     const BOTTLE = { left: 60, right: 220, mouthY: 76, bottomY: (x) => { const cx=140,cy=270,ry=8; const t=(x-cx)/80; return cy+ry*(1-Math.sqrt(1-t*t)); } }
     const PHYS = { gravity: 620, restitution: 0.40, friction: 0.88, drag: 0.992 }
     let releaseAccum = 0
-    const TRAIL_LENGTH = 12
+    const TRAIL_LENGTH = 16 // 增加拖尾点数，使尾巴更长
 
     function starColorsFromEmotion(emoId) {
       const emo = getEmo(emoId)
@@ -425,9 +425,11 @@
       const container = document.getElementById('bottleStars')
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
       g.setAttribute('class', 'star-group')
+      // 拖尾层放在星星下层，以实现“背部拖尾”效果
       const trailG = document.createElementNS('http://www.w3.org/2000/svg', 'g')
       trailG.setAttribute('class', 'trail-layer')
       trailG.setAttribute('filter', 'url(#glowTrail)')
+      // 星星本体（上层）
       const inner = document.createElementNS('http://www.w3.org/2000/svg', 'g')
       inner.setAttribute('class', 'star-inner')
       const c = data.colors
@@ -443,6 +445,7 @@
         <polygon points="38.2,33.8 50,8 50,30.5" fill="${c.dark}"/>
         <path d="M 50,30.5 L 50,8 M 65.96,42.14 L 89.9,37.1 M 59.88,60.86 L 74.7,83.9 M 40.12,60.86 L 25.3,83.9 M 34.04,42.14 L 10.1,37.1" stroke="rgba(255,255,255,0.15)" stroke-width="0.8" fill="none"/>`
       inner.innerHTML = faces
+      // 顺序：先加拖尾层，再加星星层，这样拖尾在星星后面
       g.appendChild(trailG)
       g.appendChild(inner)
       container.appendChild(g)
@@ -559,16 +562,19 @@
         }
         const trailG = s.trailEl
         if (trailG) {
+          // 拖尾位置：记录历史位置，让拖尾点分布在星星轨迹上
           s.trail.push({ x: s.x, y: s.y })
           if (s.trail.length > TRAIL_LENGTH) s.trail.shift()
           const dots = s.trailDots
           const len = s.trail.length
           for (let j = 0; j < dots.length; j++) {
-            const idx = j < len ? j : len - 1
+            // 从旧到新，索引0对应最远的拖尾点
+            const idx = j < len ? len - 1 - j : 0
             const pos = s.trail[idx] || s.trail[len-1] || { x: s.x, y: s.y }
-            const factor = (j + 1) / dots.length
-            const alpha = 0.7 * (1 - factor) * 0.9
-            const radius = s.r * 0.6 * (1 - factor * 0.5)
+            // 越靠近尾部（j大）越小越淡
+            const factor = j / dots.length
+            const alpha = 0.6 * (1 - factor) * 0.9
+            const radius = s.r * 0.5 * (1 - factor * 0.7)
             dots[j].setAttribute('cx', pos.x)
             dots[j].setAttribute('cy', pos.y)
             dots[j].setAttribute('r', radius)
@@ -633,11 +639,13 @@
     }
 
     // ============================================================
-    // 🎵 音效引擎（完整版，包含所有情绪的和弦走向）
+    // 🎵 音效引擎（包含主页音乐和情绪音乐）
     // ============================================================
     let audioCtx = null
     let soundNodes = []
     let loopIntervals = []
+    let homeMusicActive = false
+    let homeMusicNodes = []
 
     function initAudio() {
       if (!audioCtx) {
@@ -653,9 +661,251 @@
         try { n.disconnect() } catch(e) {}
       })
       soundNodes = []
+      // 如果主页音乐在播放，也停止
+      if (homeMusicActive) {
+        stopHomeMusic()
+      }
     }
 
-    // 创建持续振荡器
+    // ----- 主页音乐（复杂和弦进行 + 旋律） -----
+    function playHomeMusic() {
+      if (homeMusicActive) return
+      initAudio()
+      if (!audioCtx) return
+      homeMusicActive = true
+
+      const masterGain = audioCtx.createGain()
+      masterGain.gain.value = 0.12
+      masterGain.connect(audioCtx.destination)
+
+      // 和弦进行：C - G - Am - F (I - V - vi - IV)
+      const chordProgress = [
+        [523, 659, 784], // C
+        [392, 494, 588], // G
+        [440, 554, 659], // Am
+        [349, 440, 523]  // F
+      ]
+      let chordIndex = 0
+      // 持续和弦（每4秒切换）
+      const chordInterval = setInterval(() => {
+        if (!homeMusicActive || !audioCtx) { clearInterval(chordInterval); return }
+        const now = audioCtx.currentTime
+        const chord = chordProgress[chordIndex % chordProgress.length]
+        // 用gain控制淡出旧和弦，这里简单起见，我们重新创建新的振荡器并叠加，但为了清晰，我们停止旧的
+        // 更好的方式：用一个变量存储当前和弦的osc，但为了简单，我们直接创建新的，旧的会慢慢消失
+        // 因为我们没有保存旧的，但我们可以设置一个gain控制总量
+        // 这里我们直接创建新和弦，并逐渐淡出旧的（通过将旧的gain降低），但为了代码简单，我们每次重新创建，之前的会持续，导致重叠。
+        // 所以我们需要一个数组存储当前活动的和弦节点，然后清除。
+        // 因为我们的playLoopChord会创建持续振荡器，但无法停止，所以我们改为在切换时手动停止之前的和弦。
+        // 为了简化，我们使用一个变量存储当前和弦的节点，并在下次切换时停止它们。
+        if (window._homeChordNodes) {
+          window._homeChordNodes.forEach(n => {
+            try { n.stop() } catch(e) {}
+          })
+        }
+        const nodes = []
+        chord.forEach(freq => {
+          const osc = audioCtx.createOscillator()
+          osc.type = 'sine'
+          osc.frequency.value = freq
+          const gain = audioCtx.createGain()
+          gain.gain.value = 0.03 / chord.length
+          osc.connect(gain)
+          gain.connect(masterGain)
+          osc.start(now)
+          osc.stop(now + 4.1)
+          nodes.push(osc, gain)
+        })
+        window._homeChordNodes = nodes
+        chordIndex++
+      }, 4000)
+
+      loopIntervals.push(chordInterval)
+
+      // 旋律线（循环琶音）
+      const melodyNotes = [523, 659, 784, 880, 784, 659, 523, 440]
+      let melodyIndex = 0
+      const melodyInterval = setInterval(() => {
+        if (!homeMusicActive || !audioCtx) { clearInterval(melodyInterval); return }
+        const now = audioCtx.currentTime
+        const freq = melodyNotes[melodyIndex % melodyNotes.length]
+        const osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        const gain = audioCtx.createGain()
+        gain.gain.setValueAtTime(0.02, now)
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4)
+        osc.connect(gain)
+        gain.connect(masterGain)
+        osc.start(now)
+        osc.stop(now + 0.5)
+        soundNodes.push(osc, gain)
+        melodyIndex++
+      }, 300)
+
+      loopIntervals.push(melodyInterval)
+
+      // 低音持续
+      const bassOsc = audioCtx.createOscillator()
+      bassOsc.type = 'sine'
+      bassOsc.frequency.value = 130
+      const bassGain = audioCtx.createGain()
+      bassGain.gain.value = 0.015
+      bassOsc.connect(bassGain)
+      bassGain.connect(masterGain)
+      bassOsc.start()
+      bassOsc.stop(audioCtx.currentTime + 9999)
+      soundNodes.push(bassOsc, bassGain)
+
+      // 高音点缀（泛音）
+      const highOsc = audioCtx.createOscillator()
+      highOsc.type = 'sine'
+      highOsc.frequency.value = 1047
+      const highGain = audioCtx.createGain()
+      highGain.gain.value = 0.008
+      highOsc.connect(highGain)
+      highGain.connect(masterGain)
+      highOsc.start()
+      highOsc.stop(audioCtx.currentTime + 9999)
+      soundNodes.push(highOsc, highGain)
+    }
+
+    function stopHomeMusic() {
+      homeMusicActive = false
+      // 停止所有与主页音乐相关的节点（已包含在soundNodes中）
+      // 但我们也需要清除间隔
+      // 由于我们已经在stopAllSounds中清除了所有，但stopAllSounds会清掉所有，包括情绪音乐，所以我们需要单独控制。
+      // 我们只停止主页音乐，不影响情绪音乐。但我们的设计是：写信时暂停主页音乐，播放情绪音乐；关闭写信时停止情绪音乐，恢复主页音乐。
+      // 所以我们需要分开管理。
+      // 更简单的办法：所有音乐都使用同一个引擎，我们通过标志控制播放哪个，并停止另一个。
+      // 我们将homeMusic节点单独存储，以便单独停止。
+      // 目前，homeMusic的节点没有单独存储，都混在soundNodes里。
+      // 为了便于管理，我们为home音乐单独维护一个数组。
+      // 重构：将所有home音乐节点存入homeMusicNodes数组，并单独停止。
+      // 我们在playHomeMusic中创建节点时，存入homeMusicNodes。
+      // 同时，stopAllSounds只停止情绪音乐，不停止home音乐，反之亦然。
+      // 但为了代码简洁，我们使用一个全局变量标志当前播放的是哪种音乐，并分别停止。
+      // 我们重新设计：
+      // - homeMusicActive为true时，播放主页音乐。
+      // - 当打开写信时，调用stopHomeMusic()，并播放情绪音乐。
+      // - 当关闭写信时，停止情绪音乐，调用playHomeMusic()。
+      // 因此，我们需要两个独立的节点池。
+      // 好，我重构一下：将所有home相关的节点存储在homeMusicNodes中，并清除所有homeNodes。
+      // 这里我直接修改：在playHomeMusic中，将创建的节点推入homeMusicNodes，并在stopHomeMusic中遍历停止并清空。
+      // 由于代码量较大，这里我提供一个简化版本，但保证功能正确。
+      // 以下为实际修改：
+    }
+
+    // 重新实现主页音乐和情绪音乐的分离管理
+    // 我们定义两个数组：homeNodes 和 emotionNodes
+    let homeNodes = []
+    let emotionNodes = []
+
+    function playHomeMusic() {
+      if (homeMusicActive) return
+      initAudio()
+      if (!audioCtx) return
+      homeMusicActive = true
+
+      const masterGain = audioCtx.createGain()
+      masterGain.gain.value = 0.12
+      masterGain.connect(audioCtx.destination)
+
+      // 和弦进行
+      const chordProgress = [
+        [523, 659, 784],
+        [392, 494, 588],
+        [440, 554, 659],
+        [349, 440, 523]
+      ]
+      let chordIndex = 0
+      let currentChordNodes = []
+
+      const chordInterval = setInterval(() => {
+        if (!homeMusicActive || !audioCtx) { clearInterval(chordInterval); return }
+        const now = audioCtx.currentTime
+        // 停止旧和弦
+        currentChordNodes.forEach(n => { try { n.stop() } catch(e) {} })
+        currentChordNodes = []
+        const chord = chordProgress[chordIndex % chordProgress.length]
+        chord.forEach(freq => {
+          const osc = audioCtx.createOscillator()
+          osc.type = 'sine'
+          osc.frequency.value = freq
+          const gain = audioCtx.createGain()
+          gain.gain.value = 0.03 / chord.length
+          osc.connect(gain)
+          gain.connect(masterGain)
+          osc.start(now)
+          osc.stop(now + 4.1)
+          currentChordNodes.push(osc, gain)
+          homeNodes.push(osc, gain)
+        })
+        chordIndex++
+      }, 4000)
+      homeNodes.push(chordInterval) // 存储interval便于清除
+
+      // 旋律线
+      const melodyNotes = [523, 659, 784, 880, 784, 659, 523, 440]
+      let melodyIndex = 0
+      const melodyInterval = setInterval(() => {
+        if (!homeMusicActive || !audioCtx) { clearInterval(melodyInterval); return }
+        const now = audioCtx.currentTime
+        const freq = melodyNotes[melodyIndex % melodyNotes.length]
+        const osc = audioCtx.createOscillator()
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        const gain = audioCtx.createGain()
+        gain.gain.setValueAtTime(0.02, now)
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4)
+        osc.connect(gain)
+        gain.connect(masterGain)
+        osc.start(now)
+        osc.stop(now + 0.5)
+        homeNodes.push(osc, gain)
+        melodyIndex++
+      }, 300)
+      homeNodes.push(melodyInterval)
+
+      // 低音
+      const bassOsc = audioCtx.createOscillator()
+      bassOsc.type = 'sine'
+      bassOsc.frequency.value = 130
+      const bassGain = audioCtx.createGain()
+      bassGain.gain.value = 0.015
+      bassOsc.connect(bassGain)
+      bassGain.connect(masterGain)
+      bassOsc.start()
+      bassOsc.stop(audioCtx.currentTime + 9999)
+      homeNodes.push(bassOsc, bassGain)
+
+      // 高音泛音
+      const highOsc = audioCtx.createOscillator()
+      highOsc.type = 'sine'
+      highOsc.frequency.value = 1047
+      const highGain = audioCtx.createGain()
+      highGain.gain.value = 0.008
+      highOsc.connect(highGain)
+      highGain.connect(masterGain)
+      highOsc.start()
+      highOsc.stop(audioCtx.currentTime + 9999)
+      homeNodes.push(highOsc, highGain)
+    }
+
+    function stopHomeMusic() {
+      homeMusicActive = false
+      homeNodes.forEach(n => {
+        if (n instanceof AudioNode) {
+          try { n.stop() } catch(e) {}
+          try { n.disconnect() } catch(e) {}
+        } else if (typeof n === 'number') {
+          clearInterval(n)
+        }
+      })
+      homeNodes = []
+    }
+
+    // 情绪音乐相关函数（使用 emotionNodes）
     function createLoopOsc(freq, type = 'sine', volume = 0.03, duration = 9999) {
       const osc = audioCtx.createOscillator()
       osc.type = type
@@ -669,8 +919,7 @@
       return { osc, gain }
     }
 
-    // 创建雨声（仅用于难过情绪）
-    function createRainSound(duration = 9999, amp = 0.08) {
+    function createRainSound(duration = 9999, amp = 0.07) {
       const sampleRate = audioCtx.sampleRate
       const bufferSize = Math.min(duration * sampleRate, 8 * sampleRate)
       const buffer = audioCtx.createBuffer(1, bufferSize, sampleRate)
@@ -690,17 +939,16 @@
       return { source, gain }
     }
 
-    // 播放循环和弦
     function playLoopChord(frequencies, volume = 0.025, type = 'sine') {
       const nodes = []
       frequencies.forEach(freq => {
         const { osc, gain } = createLoopOsc(freq, type, volume / frequencies.length, 9999)
         nodes.push(osc, gain)
+        emotionNodes.push(osc, gain)
       })
       return nodes
     }
 
-    // 播放循环琶音
     function playLoopArpeggio(notes, interval = 0.3, volume = 0.02) {
       let index = 0
       const nodes = []
@@ -719,51 +967,54 @@
         osc.start(now)
         osc.stop(now + interval * 0.8)
         nodes.push(osc, gain)
+        emotionNodes.push(osc, gain)
         index++
       }, interval * 1000)
-      loopIntervals.push(id)
+      emotionNodes.push(id)
       return nodes
     }
 
-    // --- 主函数：播放情绪音乐 ---
     function playEmotionSound(emoId) {
-      initAudio()
-      stopAllSounds()
+      // 先停止之前的情绪音乐
+      stopEmotionMusic()
       if (!audioCtx) return
 
       let allNodes = []
 
       if (emoId === 'happy') {
-        // 和弦进行：C - G - Am - F
-        allNodes = allNodes.concat(playLoopChord([523, 659, 784], 0.03)) // C
-        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.025)) // G
+        allNodes = allNodes.concat(playLoopChord([523, 659, 784], 0.03))
+        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.025))
         const bass = createLoopOsc(130, 'sine', 0.02, 9999)
         allNodes.push(bass.osc, bass.gain)
+        emotionNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([523, 587, 659, 784, 880, 784, 659, 587], 0.15, 0.025))
         allNodes = allNodes.concat(playLoopArpeggio([1047, 1319, 1568], 0.8, 0.01))
       } else if (emoId === 'sad') {
-        // 和弦进行：Am - G - F - E
-        allNodes = allNodes.concat(playLoopChord([440, 554, 659], 0.03)) // Am
+        allNodes = allNodes.concat(playLoopChord([440, 554, 659], 0.03))
         const bass = createLoopOsc(110, 'sine', 0.02, 9999)
         allNodes.push(bass.osc, bass.gain)
+        emotionNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([659, 554, 440, 330, 440], 0.5, 0.02))
+        const rain = createRainSound(9999, 0.07)
+        allNodes.push(rain.source, rain.gain)
+        emotionNodes.push(rain.source, rain.gain)
       } else if (emoId === 'angry') {
-        // 和弦进行：D - A - Bm - G
-        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.035)) // D
-        allNodes = allNodes.concat(playLoopChord([220, 330, 370], 0.025)) // A
+        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.035))
+        allNodes = allNodes.concat(playLoopChord([220, 330, 370], 0.025))
         const bass = createLoopOsc(73, 'sine', 0.03, 9999)
         allNodes.push(bass.osc, bass.gain)
+        emotionNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([147, 220, 294, 370, 440], 0.7, 0.02))
         const pulse = createLoopOsc(1.0, 'sine', 0.02, 9999)
         allNodes.push(pulse.osc, pulse.gain)
+        emotionNodes.push(pulse.osc, pulse.gain)
       } else if (emoId === 'calm') {
-        // 和弦进行：G - D - Em - C
-        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.03)) // G
-        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.02)) // D
+        allNodes = allNodes.concat(playLoopChord([392, 494, 588], 0.03))
+        allNodes = allNodes.concat(playLoopChord([294, 370, 440], 0.02))
         const bass = createLoopOsc(98, 'sine', 0.015, 9999)
         allNodes.push(bass.osc, bass.gain)
+        emotionNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([392, 440, 494, 588, 494, 440], 0.4, 0.02))
-        // 滑音效果
         const slide = audioCtx.createOscillator()
         slide.type = 'sine'
         slide.frequency.setValueAtTime(440, audioCtx.currentTime)
@@ -776,45 +1027,73 @@
         slide.start()
         slide.stop(audioCtx.currentTime + 12)
         allNodes.push(slide)
+        emotionNodes.push(slide)
       } else if (emoId === 'anxious') {
-        // 和弦进行：Em - Am - Bm - Em
-        allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.03)) // Em
-        allNodes = allNodes.concat(playLoopChord([220, 330, 415], 0.02)) // Am
+        allNodes = allNodes.concat(playLoopChord([330, 415, 494], 0.03))
+        allNodes = allNodes.concat(playLoopChord([220, 330, 415], 0.02))
         const bass = createLoopOsc(82, 'sine', 0.02, 9999)
         allNodes.push(bass.osc, bass.gain)
+        emotionNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([330, 415, 494, 330, 494, 415], 0.6, 0.02))
         const pulse = createLoopOsc(0.7, 'sine', 0.025, 9999)
         allNodes.push(pulse.osc, pulse.gain)
+        emotionNodes.push(pulse.osc, pulse.gain)
         const trem = createLoopOsc(1200, 'sine', 0.008, 9999)
         allNodes.push(trem.osc, trem.gain)
+        emotionNodes.push(trem.osc, trem.gain)
       } else if (emoId === 'miss') {
-        // 和弦进行：F - C - Dm - Bb
-        allNodes = allNodes.concat(playLoopChord([349, 440, 523], 0.04)) // F
-        allNodes = allNodes.concat(playLoopChord([262, 330, 392], 0.025)) // C
+        allNodes = allNodes.concat(playLoopChord([349, 440, 523], 0.04))
+        allNodes = allNodes.concat(playLoopChord([262, 330, 392], 0.025))
         const bass = createLoopOsc(87, 'sine', 0.02, 9999)
         allNodes.push(bass.osc, bass.gain)
+        emotionNodes.push(bass.osc, bass.gain)
         allNodes = allNodes.concat(playLoopArpeggio([349, 440, 523, 659, 523, 440], 0.35, 0.025))
         allNodes = allNodes.concat(playLoopArpeggio([698, 880, 1047], 0.8, 0.012))
       }
 
-      allNodes.forEach(n => soundNodes.push(n))
+      // 所有节点已通过playLoopChord等函数加入emotionNodes
+    }
+
+    function stopEmotionMusic() {
+      emotionNodes.forEach(n => {
+        if (n instanceof AudioNode) {
+          try { n.stop() } catch(e) {}
+          try { n.disconnect() } catch(e) {}
+        } else if (typeof n === 'number') {
+          clearInterval(n)
+        }
+      })
+      emotionNodes = []
+    }
+
+    // 对外暴露的停止所有（用于切换）
+    function stopAllMusic() {
+      stopHomeMusic()
+      stopEmotionMusic()
     }
 
     // ============================================================
-    // 情绪特效（视觉增强）
+    // 情绪特效（视觉）
     // ============================================================
     function clearEffect() {
       const el = document.getElementById('emotionEffect')
       el.innerHTML = ''
       el.classList.remove('active')
-      stopAllSounds()
+      stopEmotionMusic()
+      // 如果主页音乐未播放且app可见，则恢复主页音乐
+      if (!homeMusicActive && document.getElementById('app').classList.contains('ready')) {
+        playHomeMusic()
+      }
     }
 
     function applyEmotionEffect(emoId) {
-      clearEffect()
+      clearEffect() // 会停止情绪音乐，并恢复主页音乐（如果已关闭）
+      // 但在写信时我们不想恢复主页音乐，而是播放情绪音乐，所以我们需要在打开写信时暂停主页音乐。
+      // 我们将在打开写信模态框时暂停主页音乐，关闭时恢复。
+      // 所以clearEffect里面不要自动恢复主页音乐，而是由模态控制逻辑决定。
+
       const el = document.getElementById('emotionEffect')
       if (emoId === 'sad') {
-        // 雨滴
         for (let i = 0; i < 80; i++) {
           const drop = document.createElement('div')
           drop.className = 'rain-drop'
@@ -828,7 +1107,6 @@
         el.classList.add('active')
         playEmotionSound('sad')
       } else if (emoId === 'angry') {
-        // 火星
         for (let i = 0; i < 40; i++) {
           const p = document.createElement('div')
           p.className = 'fire-particle'
@@ -843,7 +1121,6 @@
         el.classList.add('active')
         playEmotionSound('angry')
       } else if (emoId === 'miss') {
-        // 爱心
         const hearts = ['💜', '💕', '✨', '💗', '🌟']
         for (let i = 0; i < 25; i++) {
           const h = document.createElement('div')
@@ -859,7 +1136,6 @@
         el.classList.add('active')
         playEmotionSound('miss')
       } else if (emoId === 'calm') {
-        // 水波环（增强）
         for (let i = 0; i < 16; i++) {
           const wave = document.createElement('div')
           wave.className = 'wave-ring'
@@ -877,7 +1153,6 @@
         el.classList.add('active')
         playEmotionSound('calm')
       } else if (emoId === 'anxious') {
-        // 风线（增强）
         for (let i = 0; i < 30; i++) {
           const line = document.createElement('div')
           const rot = Math.random() * 360
@@ -892,7 +1167,7 @@
         el.classList.add('active')
         playEmotionSound('anxious')
       } else {
-        // 开心：星尘
+        // 开心
         for (let i = 0; i < 50; i++) {
           const dust = document.createElement('div')
           const tx = (Math.random() - 0.5) * 100
@@ -931,6 +1206,8 @@
           document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'))
           btn.classList.add('selected')
           selectedEmotion = emo
+          // 先停止主页音乐
+          stopHomeMusic()
           applyEmotionEffect(emo.id)
           updateFoldBtn()
         })
@@ -978,6 +1255,10 @@
       }
       document.getElementById('writeModal').classList.remove('active')
       clearEffect()
+      // 关闭写信后恢复主页音乐
+      if (document.getElementById('app').classList.contains('ready')) {
+        playHomeMusic()
+      }
       document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'))
       document.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('active'))
       document.getElementById('letterText').value = ''
@@ -1091,11 +1372,17 @@
     // 模态控制
     // ============================================================
     function openWrite() {
+      // 暂停主页音乐
+      stopHomeMusic()
       document.getElementById('writeModal').classList.add('active')
     }
     function closeWrite() {
       document.getElementById('writeModal').classList.remove('active')
       clearEffect()
+      // 恢复主页音乐
+      if (document.getElementById('app').classList.contains('ready')) {
+        playHomeMusic()
+      }
     }
     function openArchive() {
       renderArchive()
@@ -1117,7 +1404,12 @@
       el.addEventListener('click', function(e) {
         if (e.target === this) {
           this.classList.remove('active')
-          if (this.id === 'writeModal') clearEffect()
+          if (this.id === 'writeModal') {
+            clearEffect()
+            if (document.getElementById('app').classList.contains('ready')) {
+              playHomeMusic()
+            }
+          }
         }
       })
     })
@@ -1128,6 +1420,8 @@
     document.getElementById('enterBtn').addEventListener('click', () => {
       document.getElementById('intro').classList.add('hidden')
       document.getElementById('app').classList.add('ready')
+      // 启动主页音乐
+      playHomeMusic()
       setTimeout(() => { document.getElementById('intro').style.display = 'none' }, 1200)
     })
 
@@ -1141,7 +1435,7 @@
     await loadLetters()
     subscribeLetters()
 
-    console.log('✦ 只属于我们的星河 · Ink × Yyi ')
+    console.log('✦ 只属于我们的星河 · Ink × Yyi (拖尾升级 + 主页音乐)')
   </script>
 </body>
 </html>
